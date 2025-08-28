@@ -18,6 +18,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0 # Fetch all history for git tag checks
+
+      - name: Fetch all tags
+        run: git fetch --tags
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -54,19 +58,27 @@ jobs:
         id: get_version
         run: echo "PACKAGE_VERSION=$(node -p "require('./frontend/package.json').version")" >> $GITHUB_ENV
 
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          TAG_NAME="v${{ env.PACKAGE_VERSION }}"
+          if git tag -l "$TAG_NAME" | grep -q "$TAG_NAME"; then
+            echo "Tag $TAG_NAME already exists. Skipping release."
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "Tag $TAG_NAME does not exist. Proceeding with release."
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ env.PACKAGE_VERSION }}
-          release_name: Release v${{ env.PACKAGE_VERSION }}
-          draft: false
-          prerelease: false
 
       - name: Upload Release Asset
         id: upload-release-asset
+        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

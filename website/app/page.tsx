@@ -9,11 +9,11 @@ import remarkGfm from "remark-gfm";
 import { TableOfContents } from '../components/TableOfContents';
 
 export const metadata: Metadata = {
-  title: 'HoHatch - JPG/DDS Image Converter for Special K',
-  description: 'A desktop application for converting JPG and DDS images, especially for Special K. Download the latest version and learn how to use it for modding games like Shadowverse: Worlds Beyond.',
+  title: 'HoHatch - JPG/DDS Image Converter for ShadowverseWB',
+  description: 'A desktop application for converting JPG and DDS images, especially for Shadowverse: Worlds Beyond. Download the latest version and learn how to use it for modding games like Shadowverse: Worlds Beyond.',
   openGraph: {
     title: 'HoHatch',
-    description: 'A desktop application for converting JPG and DDS images, especially for Special K.',
+    description: 'A desktop application for converting JPG and DDS images, especially for Shadowverse: Worlds Beyond.',
     url: 'https://hohatch.draco.moe',
     siteName: 'HoHatch',
     images: [

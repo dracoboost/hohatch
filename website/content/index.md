@@ -1,8 +1,6 @@
 ## 📥 Download
 
-To use HoHatch download the latest executable `HoHatch.exe` from the [releases page](https://github.com/dracoboost/hohatch/releases).
-
-Run the downloaded executable to launch.
+To use HoHatch, download the [latest executable](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch.exe). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
 
 ## ✨ Features
 
