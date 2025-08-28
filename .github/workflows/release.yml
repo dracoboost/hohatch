@@ -73,8 +73,14 @@ jobs:
       - name: Create Release
         id: create_release
         if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
+        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.PACKAGE_VERSION }}
+          release_name: Release v${{ env.PACKAGE_VERSION }}
+          draft: false
+          prerelease: false
 
       - name: Upload Release Asset
         id: upload-release-asset
