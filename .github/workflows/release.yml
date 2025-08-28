@@ -1,0 +1,77 @@
+name: Release Executable
+
+on:
+  workflow_run:
+    workflows: ["Preflight Check"]
+    branches: [master]
+    types:
+      - completed
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+
+      - name: Install Python dependencies
+        run: |
+          python -m venv venv
+          .\venv\Scripts\pip install -r requirements.txt
+
+      - name: Install Node.js dependencies
+        working-directory: .\frontend
+        run: npm install
+
+      - name: Build frontend
+        working-directory: .\frontend
+        run: npm run frontend
+
+      - name: Build executable
+        working-directory: .\frontend
+        run: npm run backend:windows
+        shell: cmd
+
+      - name: List dist directory
+        run: ls dist
+
+      - name: Get package version
+        id: get_version
+        run: echo "PACKAGE_VERSION=$(node -p "require('./frontend/package.json').version")" >> $GITHUB_ENV
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ env.PACKAGE_VERSION }}
+          release_name: Release v${{ env.PACKAGE_VERSION }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .\dist\HoHatch.exe
+          asset_name: HoHatch.exe
+          asset_content_type: application/octet-stream

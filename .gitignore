@@ -1,0 +1,15 @@
+__pycache__/
+_next/
+.pytest_cache/
+.vscode/
+build/
+dist/
+node_modules/
+scripts/
+venv/
+
+*.exe
+*.lnk
+
+input.md
+tsconfig.tsbuildinfo

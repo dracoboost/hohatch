@@ -1,0 +1,15 @@
+@reference "./globals.css"
+
+/* OKLCH color definitions (see https://oklch.com/) */
+:root {
+  --hochan-red: oklch(0.552 0.1466 12.58);
+  --hochan-navy-blue: oklch(0.2687 0.0446 268.69);
+  --hochan-white: oklch(0.8533 0.0191 347.5);
+}
+
+/* Theme variables mapping */
+@theme inline {
+  --color-hochan-red: var(--hochan-red);
+  --color-hochan-navy-blue: var(--hochan-navy-blue);
+  --color-hochan-white: var(--hochan-white);
+}

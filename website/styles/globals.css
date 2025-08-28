@@ -1,0 +1,21 @@
+/* Font */
+@font-face {
+  font-family: 'balootamma2';
+  src: url('/fonts/BalooTamma2-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Tailwind extensions */
+@import "tailwindcss";
+@import "tw-animate-css";
+@plugin "@tailwindcss/typography";  /* For Markdown styling */
+@config "../tailwind.config.ts";
+
+/* Hero UI integration */
+@plugin '../lib/hero.ts';
+@source '../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}';
+
+/* Hero UI dark mode variant */
+@custom-variant dark (&:is(.dark *));

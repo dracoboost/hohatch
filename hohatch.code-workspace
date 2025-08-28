@@ -1,0 +1,29 @@
+{
+  "folders": [
+    {
+      "path": "frontend"
+    },
+    {
+      "path": "website"
+    },
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "cSpell.words": [
+      "autouse",
+      "Baloo",
+      "balootamma",
+      "hohatch",
+      "LANCZOS",
+      "oklch",
+      "onexc",
+      "pywebviewready",
+      "sonner",
+      "startfile",
+      "Tamma",
+      "UNORM"
+    ]
+  }
+}
