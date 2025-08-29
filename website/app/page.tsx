@@ -63,6 +63,7 @@ export default async function Home() {
           href={props.href}
           isExternal={isExternal ? true : undefined}
           rel={isExternal ? "noopener noreferrer" : undefined}
+          showAnchorIcon
           target={isExternal ? "_blank" : undefined}
         >
           {props.children}
@@ -95,11 +96,11 @@ export default async function Home() {
         <p className="mt-3 max-w-md mx-auto text-base text-muted-foreground sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
           A desktop application for converting JPG and DDS images, especially for Special K.
         </p>
-        <div className="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
+        <div className="mt-5 sm:mt-8 flex justify-center">
           <div className="rounded-md shadow">
             <Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch.exe" isExternal>
-              <Button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 md:py-4 md:text-lg md:px-10">
-                Download Latest
+              <Button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#B7465A] hover:bg-[#B7465A]/80 md:py-4 md:text-lg md:px-10">
+                Download Latest <span className="flex items-center justify-center gap-x-1"><Image src="/images/icons/hohatch.jpg" alt="HoHatch App Image" className="rounded-lg" width={24} height={24} />HoHatch.exe</span>
               </Button>
             </Link>
           </div>
@@ -236,7 +237,7 @@ export default async function Home() {
       <footer className="text-center py-6 mt-2">
         <p suppressHydrationWarning>
           &copy; {new Date().getFullYear()}{" "}
-          <Link href="https://x.com/dracoboost" isExternal className="text-link-color hover:opacity-75 active:opacity-50">
+          <Link href="https://x.com/dracoboost" isExternal showAnchorIcon className="text-link-color hover:opacity-75 active:opacity-50">
             dracoboost
           </Link>
           . All rights reserved.

@@ -56,19 +56,21 @@ jobs:
 
       - name: Get package version
         id: get_version
-        run: echo "PACKAGE_VERSION=$(node -p "require('./frontend/package.json').version")" >> $GITHUB_ENV
+        run: |
+          $packageVersion = (node -p "require('./frontend/package.json').version")
+          "PACKAGE_VERSION=$packageVersion" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
       - name: Check if tag already exists
         id: check_tag
         run: |
-          TAG_NAME="v${{ env.PACKAGE_VERSION }}"
-          if git tag -l "$TAG_NAME" | grep -q "$TAG_NAME"; then
-            echo "Tag $TAG_NAME already exists. Skipping release."
-            echo "tag_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "Tag $TAG_NAME does not exist. Proceeding with release."
-            echo "tag_exists=false" >> $GITHUB_OUTPUT
-          fi
+          $TAG_NAME = "v${{ env.PACKAGE_VERSION }}"
+          if ((git tag -l $TAG_NAME | Select-String -Pattern $TAG_NAME) -ne $null) {
+            Write-Host "Tag $TAG_NAME already exists. Skipping release."
+            "tag_exists=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          } else {
+            Write-Host "Tag $TAG_NAME does not exist. Proceeding with release."
+            "tag_exists=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          }
 
       - name: Create Release
         id: create_release
