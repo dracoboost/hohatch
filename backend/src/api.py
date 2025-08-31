@@ -200,7 +200,8 @@ class Api:
     def get_app_version(self):
         logging.debug("get_app_version called")
         # In a real application, this would be read from a version file generated during build
-        return {"success": True, "version": "1.0.0"}
+        from .version import APP_VERSION
+        return {"success": True, "version": APP_VERSION}
 
     def check_for_updates(self):
         logging.debug("check_for_updates called")
