@@ -85,6 +85,12 @@ venv\Scripts\activate
 
 Note that `npx` has been deprecated, and its role has been transferred to `npm exec`.
 
+### Version Management
+
+The versions for `frontend` and `website` are managed in their respective `package.json` files.
+
+The `scripts/update_project_versions.py` script is used to update the version numbers in `README.md` files and download links. This script is executed by running `npm run update-readme-version` in either the `frontend` or `website` directory.
+
 ### Writing Tests
 
 Expanding tests to cover the specific problem area is often the quickest way to identify the root cause and verify the solution. Therefore, actively create tests for the relevant parts when errors occur.
