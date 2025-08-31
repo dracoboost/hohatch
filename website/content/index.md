@@ -13,7 +13,7 @@ This section explains how to convert a JPG image to DDS and inject it into the g
 ![Inject JPG into ShadowverseWB](/images/guide/inject-jpg-into-shadowversewb.png)
 
 1. Prepare the JPG for injection
-2. Launch ShadowverseWB with Special K, then extract the DDS*
+2. Launch ShadowverseWB with [Special K](https://www.special-k.info/), then extract the DDS*
 3. Inject the JPG as DDS**
 4. Done! Enjoy!
 
