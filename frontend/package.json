@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "backend": "run-script-os",
-    "backend:windows": "cd .. && venv\\Scripts\\python scripts\\update_backend_version.py && venv\\Scripts\\pyinstaller backend\\specs\\build-windows-release.spec --version-file backend\\version.rc",
+    "backend:windows": "cd .. && venv\\Scripts\\python -m scripts.version_management.manager update_backend_version_entry_point && venv\\Scripts\\pyinstaller backend\\specs\\build-windows-release.spec --version-file backend\\version.rc",
     "backend-test": "cd .. && set \"PYTHONPATH=%CD%\\backend\\src;%PYTHONPATH%\" && venv\\Scripts\\pytest backend\\src",
     "build": "npm run frontend && npm run backend",
     "clean": "jest --clearCache",
@@ -21,7 +21,7 @@
     "lint:fix": "npm exec eslint -- --fix --ext .js,.jsx,.mjs,.ts,.tsx && npm exec prettier -- --write \"**/*.{ts,tsx}\" > NUL",
     "lint:fix:windows": "npm exec eslint -- --fix --ext .js,.jsx,.mjs,.ts,.tsx && npm exec prettier -- --write \"**/*.{ts,tsx}\" > NUL",
     "preflight": "npm run frontend-test && npm run backend-test",
-    "update-readme-version": "python ../scripts/update_project_versions.py"
+    "update-readme-version": "python -m scripts.version_management.manager update_project_readme_versions_entry_point"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
