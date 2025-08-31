@@ -36,7 +36,7 @@ jobs:
         id: get_version
         run: |
           $packageVersion = (node -p "require('./frontend/package.json').version")
-          echo "package_version=$packageVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "package_version=$packageVersion" >> $env:GITHUB_OUTPUT
 
       - name: Check if tag already exists
         id: check_tag
@@ -44,10 +44,10 @@ jobs:
           $TAG_NAME = "v${{ steps.get_version.outputs.package_version }}"
           if ((git tag -l $TAG_NAME | Select-String -Pattern $TAG_NAME) -ne $null) {
             Write-Host "Tag $TAG_NAME already exists. Skipping release."
-            echo "tag_exists=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            echo "tag_exists=true" >> $env:GITHUB_OUTPUT
           } else {
             Write-Host "Tag $TAG_NAME does not exist. Proceeding with release."
-            echo "tag_exists=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+            echo "tag_exists=false" >> $env:GITHUB_OUTPUT
           }
 
   build-and-release:
@@ -105,7 +105,7 @@ jobs:
         run: |
           $ARCHIVE_NAME = "HoHatch-v${{ needs.check-version.outputs.package_version }}.zip"
           Compress-Archive -Path "release_package/*" -DestinationPath $ARCHIVE_NAME
-          echo "ARCHIVE_NAME=$ARCHIVE_NAME" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "ARCHIVE_NAME=$ARCHIVE_NAME" >> $env:GITHUB_OUTPUT
         shell: powershell
 
       - name: Create Release
