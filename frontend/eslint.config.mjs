@@ -35,7 +35,7 @@ export default defineConfig([
       compat.extends(
         "plugin:@next/next/recommended",
         "plugin:react/recommended",
-        "plugin:prettier/recommended",
+        "prettier",
         "plugin:react-hooks/recommended",
         "plugin:jsx-a11y/recommended",
         "plugin:import/recommended",
