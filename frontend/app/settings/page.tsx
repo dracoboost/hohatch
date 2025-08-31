@@ -15,8 +15,8 @@ interface SettingsData {
   last_image_dir: string;
   special_k_folder_path: string;
   texconv_executable_path: string;
-  imageHeight: number;
-  imageWidth: number;
+  output_height: number;
+  output_width?: number;
   last_active_view: "dump" | "inject";
 }
 
@@ -26,8 +26,7 @@ const SettingsScreen: React.FC = () => {
     last_image_dir: "",
     special_k_folder_path: "",
     texconv_executable_path: "",
-    imageHeight: 0,
-    imageWidth: 0,
+    output_height: 0,
     last_active_view: "dump",
   });
   const [loading, setLoading] = useState<boolean>(true);
@@ -79,7 +78,8 @@ const SettingsScreen: React.FC = () => {
     const saveChanges = async () => {
       setIsSaving(true);
       try {
-        const result = await window.pywebview.api.save_settings(settings);
+        const { output_width: _, ...settingsToSend } = settings;
+        const result = await window.pywebview.api.save_settings(settingsToSend);
         if (result.success) {
           toast.success("Settings saved automatically.");
           await window.pywebview.api.notify_settings_changed();
@@ -120,30 +120,7 @@ const SettingsScreen: React.FC = () => {
     validateSkFolder();
   }, [settings.special_k_folder_path]);
 
-  useEffect(() => {
-    if (settings.imageHeight) {
-      const calculatedWidth = Math.round(settings.imageHeight * (53 / 64));
-      setSettings((prevSettings: any) => {
-        if (prevSettings.imageWidth === calculatedWidth) {
-          return prevSettings;
-        }
-        return {
-          ...prevSettings,
-          imageWidth: calculatedWidth,
-        };
-      });
-    } else {
-      setSettings((prevSettings: any) => {
-        if (!("imageWidth" in prevSettings) || prevSettings.imageWidth === "") {
-          return prevSettings;
-        }
-        return {
-          ...prevSettings,
-          imageWidth: "",
-        };
-      });
-    }
-  }, [settings.imageHeight]);
+  const output_width = settings.output_height ? Math.round(settings.output_height * (53 / 64)) : 0;
 
   const handleSelectSpecialKFolder = async () => {
     try {
@@ -249,12 +226,12 @@ const SettingsScreen: React.FC = () => {
                   min={0}
                   startContent={<MoveVertical size={18} />}
                   type="number"
-                  value={settings.imageHeight}
+                  value={settings.output_height}
                   onChange={(e) => {
                     const value = parseInt(e.target.value, 10);
                     setSettings((prevSettings: any) => ({
                       ...prevSettings,
-                      imageHeight: isNaN(value) ? 0 : value,
+                      output_height: isNaN(value) ? 0 : value,
                     }));
                   }}
                 />
@@ -268,7 +245,7 @@ const SettingsScreen: React.FC = () => {
                   label={i18n.dds_to_jpg_width_label || "Image Width (auto-calculated)"}
                   startContent={<MoveHorizontal size={18} />}
                   type="number"
-                  value={settings.imageWidth?.toString() || ""}
+                  value={output_width?.toString() || ""}
                 />
               </div>
             </div>

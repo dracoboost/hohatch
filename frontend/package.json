@@ -1,6 +1,6 @@
 {
   "name": "hohatch-frontend",
-  "version": "1.0.2",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -68,6 +68,9 @@
     "eslint-plugin-unused-imports": "^4.2.0",
     "jest": "^30.1.1",
     "jest-environment-jsdom": "^30.1.1",
-    "prettier-plugin-tailwindcss": "^0.6.14"
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "run-script-os": "^1.1.6",
+    "tailwindcss": "^4.1.11",
+    "tw-animate-css": "^1.3.7"
   }
 }

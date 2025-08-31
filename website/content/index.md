@@ -1,6 +1,6 @@
 ## 📥 Download
 
-To use HoHatch, download the [latest HoHatch](https://github.com/dracoboost/hohatch/releases/latest). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
+To use HoHatch, download the [latest HoHatch](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch.zip). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
 
 ## 🛠️ Usage Guide
 

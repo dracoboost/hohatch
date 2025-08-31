@@ -60,8 +60,14 @@ class HoHatchBackend:
     def get_current_settings(self) -> Dict[str, Any]:
         settings = self.config_service.get_settings()
         return {
-            **settings.__dict__,
-            "imageWidth": settings.output_width,
+            "language": settings.language,
+            "last_image_dir": settings.last_image_dir,
+            "special_k_folder_path": settings.special_k_folder_path,
+            "texconv_executable_path": settings.texconv_executable_path,
+            "output_height": settings.output_height,
+            "output_width": settings.output_width,
+            "last_active_view": settings.last_active_view,
+            "theme": settings.theme,
             "dump_folder_path": self.image_service.get_dump_folder_path(),
             "inject_folder_path": self.image_service.get_inject_folder_path(),
         }
