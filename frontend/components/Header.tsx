@@ -79,6 +79,7 @@ export const Header: React.FC<HeaderProps> = ({
             alt="Website"
             height={20}
             src="https://img.shields.io/badge/Website-hohatch.draco.moe-b7465a"
+            width={120}
           />
         </a>
         <a
@@ -92,6 +93,7 @@ export const Header: React.FC<HeaderProps> = ({
             alt="version"
             height={20}
             src={`https://img.shields.io/badge/version-${appVersion || "unknown"}-b7465a`}
+            width={120}
           />
         </a>
         {page === "index" && (
