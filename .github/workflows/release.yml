@@ -2,7 +2,7 @@ name: Release Application
 
 on:
   workflow_run:
-    workflows: ["Preflight Check"]
+    workflows: ["Preflight"]
     branches: [master]
     types:
       - completed
