@@ -22,7 +22,7 @@
 
 HoHatch is a Windows-only application.
 
-To use HoHatch, download the latest HoHatch application directly: [HoHatch.zip](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch.zip). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
+To use HoHatch, download the latest HoHatch application directly: [HoHatch.zip](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.0.1.zip). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
 
 ## Changelogs
 

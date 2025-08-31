@@ -5,6 +5,14 @@ const nextConfig = {
   distDir: "dist",
   images: {
     unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'img.shields.io',
+        port: '',
+        pathname: '/badge/**',
+      },
+    ],
   },
   trailingSlash: true,
 };

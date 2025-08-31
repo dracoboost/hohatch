@@ -29,6 +29,7 @@ export default defineConfig([
     "**/*.config.mjs",
     "**/next-env.d.ts",
     "!**/jest.config.cjs",
+    "jest.setup.js",
   ]),
   {
     extends: fixupConfigRules(

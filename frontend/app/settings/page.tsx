@@ -78,6 +78,7 @@ const SettingsScreen: React.FC = () => {
     const saveChanges = async () => {
       setIsSaving(true);
       try {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const {output_width: _, ...settingsToSend} = settings;
         const result = await window.pywebview.api.save_settings(settingsToSend);
         if (result.success) {

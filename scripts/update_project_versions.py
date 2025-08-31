@@ -104,7 +104,7 @@ def update_readme_versions():
         project_root,
         "website/package.json",
         "website/README.md",
-        r'(!\[version\]\\(https://img\.shields\.io/badge/version-)[0-9]+\\.[0-9]+\\.[0-9]+(-[^\]]+\\))',
+        r'(!\[version\]\\(https://img\.shields\.io/badge/version-)[0-9]+\\.[0-9]+\\.[0-9]+(-[^\\]+\\))',
         "Website README.md badge",
     )
 
@@ -141,8 +141,8 @@ def update_readme_versions():
         project_root,
         "website/content/index.md",
         frontend_version,
-        r'\[latest HoHatch\]\\(https://github\\.com/dracoboost/hohatch/releases/latest\)',
-        r'\[latest HoHatch\](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip)',
+        r'\[latest HoHatch\](https://github\\.com/dracoboost/hohatch/releases/latest)',
+        r'[latest HoHatch](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip)',
         "Website content/index.md download link",
     )
 

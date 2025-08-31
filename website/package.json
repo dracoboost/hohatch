@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "npm run update-readme-version && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint:check": "npm exec eslint -- --ext .js,.jsx,.mjs,.ts,.tsx && tsc --noEmit",
@@ -43,10 +43,6 @@
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^4.1.11",
     "tw-animate-css": "^1.3.7",
-    "typescript": "^5.9.2"
-  }
-}
-^1.3.7",
     "typescript": "^5.9.2"
   }
 }

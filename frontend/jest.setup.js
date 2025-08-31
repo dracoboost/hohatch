@@ -53,6 +53,14 @@ jest.mock("next/navigation", () => ({
   useRouter: jest.fn(),
 }));
 
+jest.mock("next/image", () => ({
+  __esModule: true,
+  default: (props) => {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img {...props} />;
+  },
+}));
+
 jest.mock("@/config/consts", () => ({
   I18N: {
     en: {
