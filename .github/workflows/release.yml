@@ -14,11 +14,11 @@ jobs:
       tag_exists: ${{ steps.check_tag.outputs.tag_exists }}
       package_version: ${{ steps.get_version.outputs.package_version }}
     steps:
-      - name: Checkout code
+      - name: Checkout master branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
-          fetch-depth: 0 # Fetch all history for git tag checks
+          ref: master
+          fetch-depth: 0
 
       - name: Fetch all tags
         run: git fetch --tags
@@ -57,11 +57,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout code
+      - name: Checkout master branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha }}
-          fetch-depth: 0 # Fetch all history for git tag checks
+          ref: master
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
