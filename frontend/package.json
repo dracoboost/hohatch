@@ -6,8 +6,7 @@
   "scripts": {
     "backend": "run-script-os",
     "backend:windows": "cd .. && venv\\Scripts\\pyinstaller backend\\specs\\build-windows-release.spec",
-    "backend-test": "run-script-os",
-    "backend-test:windows": "cd .. && set \"PYTHONPATH=%CD%\\backend\\src;%PYTHONPATH%\" && venv\\Scripts\\pytest backend\\src",
+    "backend-test": "cd .. && set \"PYTHONPATH=%CD%\\backend\\src;%PYTHONPATH%\" && venv\\Scripts\\pytest backend\\src",
     "build": "npm run frontend && npm run backend",
     "clean": "jest --clearCache",
     "dev": "npm run update-readme-version && npm run frontend && run-script-os",
@@ -19,7 +18,7 @@
     "init": "npm install && run-script-os",
     "init:windows": "cd .. && python -m venv venv && venv\\Scripts\\pip install -r requirements.txt",
     "lint:check": "npm exec eslint -- --ext .js,.jsx,.mjs,.ts,.tsx && tsc --noEmit",
-    "lint:fix": "run-script-os",
+    "lint:fix": "npm exec eslint -- --fix --ext .js,.jsx,.mjs,.ts,.tsx && npm exec prettier -- --write \"**/*.{ts,tsx}\" > NUL",
     "lint:fix:windows": "npm exec eslint -- --fix --ext .js,.jsx,.mjs,.ts,.tsx && npm exec prettier -- --write \"**/*.{ts,tsx}\" > NUL",
     "preflight": "npm run frontend-test && npm run backend-test",
     "update-readme-version": "python ../scripts/update_project_versions.py"
