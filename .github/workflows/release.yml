@@ -8,11 +8,11 @@ on:
       - completed
 
 jobs:
-  build-and-release:
+  check-version:
     runs-on: windows-latest
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    permissions:
-      contents: write
+    outputs:
+      tag_exists: ${{ steps.check_tag.outputs.tag_exists }}
+      package_version: ${{ steps.get_version.outputs.package_version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,15 +23,50 @@ jobs:
       - name: Fetch all tags
         run: git fetch --tags
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24.x'
+
+      - name: Install Node.js dependencies
+        working-directory: .\frontend
+        run: npm install
+
+      - name: Get package version
+        id: get_version
+        run: |
+          $packageVersion = (node -p "require('./frontend/package.json').version")
+          echo "package_version=$packageVersion" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+
+      - name: Check if tag already exists
+        id: check_tag
+        run: |
+          $TAG_NAME = "v${{ steps.get_version.outputs.package_version }}"
+          if ((git tag -l $TAG_NAME | Select-String -Pattern $TAG_NAME) -ne $null) {
+            Write-Host "Tag $TAG_NAME already exists. Skipping release."
+            echo "tag_exists=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          } else {
+            Write-Host "Tag $TAG_NAME does not exist. Proceeding with release."
+            echo "tag_exists=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          }
+
+  build-and-release:
+    needs: check-version
+    runs-on: windows-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' && needs.check-version.outputs.tag_exists == 'false' }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          fetch-depth: 0 # Fetch all history for git tag checks
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
 
       - name: Install Python dependencies
         run: |
@@ -54,24 +89,6 @@ jobs:
       - name: List dist directory
         run: ls dist
 
-      - name: Get package version
-        id: get_version
-        run: |
-          $packageVersion = (node -p "require('./frontend/package.json').version")
-          "PACKAGE_VERSION=$packageVersion" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
-
-      - name: Check if tag already exists
-        id: check_tag
-        run: |
-          $TAG_NAME = "v${{ env.PACKAGE_VERSION }}"
-          if ((git tag -l $TAG_NAME | Select-String -Pattern $TAG_NAME) -ne $null) {
-            Write-Host "Tag $TAG_NAME already exists. Skipping release."
-            "tag_exists=true" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          } else {
-            Write-Host "Tag $TAG_NAME does not exist. Proceeding with release."
-            "tag_exists=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
-          }
-
       - name: Create README for release
         run: |
           mkdir release_package
@@ -86,26 +103,24 @@ jobs:
       - name: Create ZIP archive
         id: archive
         run: |
-          $ARCHIVE_NAME = "HoHatch-v${{ env.PACKAGE_VERSION }}.zip"
+          $ARCHIVE_NAME = "HoHatch-v${{ needs.check-version.outputs.package_version }}.zip"
           Compress-Archive -Path "release_package/*" -DestinationPath $ARCHIVE_NAME
-          "ARCHIVE_NAME=$ARCHIVE_NAME" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "ARCHIVE_NAME=$ARCHIVE_NAME" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
         shell: powershell
 
       - name: Create Release
         id: create_release
-        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ env.PACKAGE_VERSION }}
-          release_name: Release v${{ env.PACKAGE_VERSION }}
+          tag_name: v${{ needs.check-version.outputs.package_version }}
+          release_name: Release v${{ needs.check-version.outputs.package_version }}
           draft: false
           prerelease: false
 
       - name: Upload Release Asset
         id: upload-release-asset
-        if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
