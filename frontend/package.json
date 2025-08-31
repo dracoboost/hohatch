@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "backend": "run-script-os",
-    "backend:windows": "cd .. && venv\\Scripts\\python scripts\\update_backend_version.py && venv\\Scripts\\pyinstaller backend\\specs\\build-windows-release.spec",
+    "backend:windows": "cd .. && venv\\Scripts\\python scripts\\update_backend_version.py && venv\\Scripts\\pyinstaller backend\\specs\\build-windows-release.spec --version-file backend\\version.rc",
     "backend-test": "cd .. && set \"PYTHONPATH=%CD%\\backend\\src;%PYTHONPATH%\" && venv\\Scripts\\pytest backend\\src",
     "build": "npm run frontend && npm run backend",
     "clean": "jest --clearCache",

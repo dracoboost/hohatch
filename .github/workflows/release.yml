@@ -86,6 +86,19 @@ jobs:
         run: npm run backend:windows
         shell: cmd
 
+      - name: Decode and import PFX certificate
+        run: |
+          $pfx_base64 = "${{ secrets.CODE_SIGN_CERTIFICATE_PFX }}"
+          $pfx_bytes = [System.Convert]::FromBase64String($pfx_base64)
+          [System.IO.File]::WriteAllBytes("certificate.pfx", $pfx_bytes)
+          certutil -f -p "${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}" -importpfx certificate.pfx NoRoot
+        shell: powershell
+
+      - name: Sign executable
+        run: |
+          signtool sign /f certificate.pfx /p "${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}" /t http://timestamp.digicert.com /fd SHA256 /v dist/HoHatch.exe
+        shell: powershell
+
       - name: List dist directory
         run: ls dist
 
