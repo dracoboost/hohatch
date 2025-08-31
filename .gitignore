@@ -5,11 +5,11 @@ _next/
 build/
 dist/
 node_modules/
-scripts/
 venv/
 
 *.exe
 *.lnk
 
+COMMIT_EDITMSG
 input.md
 tsconfig.tsbuildinfo

@@ -1,7 +1,0 @@
-feat(website): redesign and enhance website
-
-- Implemented a new color scheme based on Zinc and Red for a modern look and feel.
-- Integrated Table and Tooltip components from @heroui/react to display data more effectively.
-- Replaced default list markers with the ChevronRight icon from lucide-react for better visual consistency.
-- Refactored component structure to comply with Next.js server/client component rules, resolving build errors.
-- Fixed various Tailwind CSS configuration issues, including `@apply` directive problems, to ensure a successful build.

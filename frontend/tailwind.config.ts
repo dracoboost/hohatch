@@ -11,6 +11,14 @@ const config = {
   darkMode: "class",
   theme: {
     extend: {
+      colors: {
+        "hochan-red": "#B7465A",
+        "hochan-navy-blue": "#1d253c",
+        "hochan-white": "#d9cad1",
+        background: "#1d253c",
+        foreground: "#d9cad1",
+        "link-color": "#B7465A",
+      },
       fontFamily: {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],

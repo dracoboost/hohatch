@@ -97,7 +97,7 @@ const AppRouter: React.FC = () => {
 
   return (
     <>
-      <Toaster />
+      <Toaster position="bottom-right" />
       <div className="App">
         {/* The actual page content will be rendered by Next.js based on the URL */}
       </div>

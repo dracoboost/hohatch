@@ -26,7 +26,7 @@ export const mockLangData = {
   replace_conversion_complete: "Replacement complete!",
   replace_conversion_failed: "Replacement Conversion Failed: ",
   replace_tooltip: "Replace DDS",
-  download_as_jpg_tooltip: "Download as JPG",
+  download_as_jpg_tooltip: "Convert to JPG",
   trash_btn_tooltip: "Delete",
   batch_download_processing: "Downloading selected images...",
 };

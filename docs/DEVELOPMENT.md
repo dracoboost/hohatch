@@ -44,10 +44,10 @@ Commands run within the `frontend` directory:
 - `npm init`
   Install the frontend and backend requirements.
 
-- `npm start`
-  Builds the frontend and starts the Python backend to run the application.
+- `npm run dev`
+  Starts the frontend development server and the Python backend for local development.
 
-- `npm run build`
+- `npm run backend`
   Creates a standalone executable for production. This command bundles the frontend and backend into a single file located in the project's root `dist/` directory.
 
 - `npm run preflight`
@@ -78,4 +78,16 @@ Commands run within the `frontend` directory:
 
   ```ps1
   > npm run dev
+  ```
+
+2. Build the website for production
+
+  ```ps1
+  > npm run build
+  ```
+
+3. Run preflight checks
+
+  ```ps1
+  > npm run preflight
   ```

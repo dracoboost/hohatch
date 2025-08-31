@@ -169,13 +169,24 @@ const SettingsScreen: React.FC = () => {
     }
   };
 
+  const handleOpenCacheFolder = async () => {
+    try {
+      const result = await window.pywebview.api.open_cache_folder();
+      if (!result.success) {
+        toast.error(result.error || "Failed to open cache folder.");
+      }
+    } catch (e: any) {
+      toast.error("Failed to open cache folder: " + e.message);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-300 text-black dark:bg-gray-900 dark:text-white">
-      <Toaster richColors />
+      <Toaster richColors position="bottom-right" />
       <Header page="settings" />
 
       <main className="flex flex-grow items-center justify-center">
@@ -261,6 +272,13 @@ const SettingsScreen: React.FC = () => {
                 />
               </div>
             </div>
+          </div>
+
+          <div className="flex w-full flex-col items-start gap-y-2 sm:flex-row sm:gap-x-2 sm:px-0">
+            <Button onClick={handleOpenCacheFolder}>
+              <Folder className="mr-2" size={18} />
+              {i18n.open_cache_folder_btn || "Open Cache Folder"}
+            </Button>
           </div>
         </div>
       </main>

@@ -62,14 +62,14 @@ const mockSettings = {
 
 const mockDumpedImages = [
   {
-    src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+    src: "", // Changed to empty string
     alt: "dumped_image_1.dds",
     path: "/dump/dumped_image_1.dds",
     width: 100,
     height: 100,
   },
   {
-    src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+    src: "", // Changed to empty string
     alt: "dumped_image_2.dds",
     path: "/dump/dumped_image_2.dds",
     width: 100,
@@ -79,7 +79,7 @@ const mockDumpedImages = [
 
 const mockInjectedImages = [
   {
-    src: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+    src: "", // Changed to empty string
     alt: "injected_image_1.dds",
     path: "/inject/injected_image_1.dds",
     width: 100,
@@ -91,9 +91,67 @@ describe("MainScreen", () => {
   let mockedApi: any;
 
   beforeEach(() => {
-    mockedApi = window.pywebview.api;
+    // Mock window.pywebview directly and assign to mockedApi
+    window.pywebview = {
+      api: {
+        get_settings: jest.fn().mockResolvedValue(mockSettings),
+        get_language_data: jest.fn().mockResolvedValue(mockLangData),
+        get_image_list: jest.fn().mockImplementation(async (folderType: string) => {
+          if (folderType === "dump") {
+            return Promise.resolve({
+              success: true,
+              images: mockDumpedImages,
+            });
+          }
+          if (folderType === "inject") {
+            return Promise.resolve({
+              success: true,
+              images: mockInjectedImages,
+            });
+          }
+          return Promise.resolve({success: false, error: "Invalid folder type"});
+        }),
+        get_inject_images: jest.fn().mockResolvedValue({success: true, injected_images: []}),
+        get_dump_images: jest.fn().mockResolvedValue({success: true, dumped_images: []}),
+        validate_sk_folder: jest.fn().mockResolvedValue({isValid: true}),
+        validate_texconv_executable: jest.fn().mockResolvedValue({isValid: true}),
+        open_file_dialog: jest.fn().mockResolvedValue({
+          success: true,
+          files: ["/mock/selected/file.jpg"],
+        }),
+        save_settings: jest.fn().mockResolvedValue({success: true}),
+        download_texconv: jest.fn().mockResolvedValue({success: true}),
+        download_special_k: jest.fn().mockResolvedValue({success: true}),
+        convert_single_dds_to_jpg: jest.fn().mockResolvedValue({success: true}),
+        replace_dds: jest.fn().mockResolvedValue({
+          success: true,
+          message: "Replacement complete!",
+        }),
+        batch_convert_dump_to_jpg: jest.fn().mockResolvedValue({success: true}),
+        batch_download_selected_dds_as_jpg: jest.fn().mockResolvedValue({success: true}),
+        frontend_ready: jest.fn().mockResolvedValue(undefined),
+        load_url: jest.fn().mockResolvedValue(undefined),
+        open_dump_folder: jest.fn().mockResolvedValue({success: true}),
+        open_inject_folder: jest.fn().mockResolvedValue({success: true}),
+        delete_dds_file: jest.fn().mockResolvedValue({success: true}),
+        batch_delete_selected_dds_files: jest.fn().mockResolvedValue({success: true}),
+        get_default_sk_path: jest.fn().mockResolvedValue("/mock/default/sk/path"),
+        open_cache_folder: jest.fn().mockResolvedValue({success: true}),
+        notify_settings_changed: jest.fn().mockResolvedValue({success: true}),
+        get_app_version: jest.fn().mockResolvedValue({success: true, version: "1.0.0"}),
+        check_for_updates: jest.fn().mockResolvedValue({success: true, latest_version: "1.0.0"}),
+        convert_dds_for_display: jest.fn().mockImplementation(async (imagePath: string) => {
+          // Simulate conversion by returning a dummy base64 string
+          return Promise.resolve({
+            success: true,
+            src: `data:image/png;base64,MOCK_DATA_FOR_${imagePath.replace(/[^a-zA-Z0-9]/g, "_")}`,
+          });
+        }),
+      } as Window["pywebview"]["api"], // Explicitly cast to the correct type
+    };
+    mockedApi = window.pywebview.api; // Assign after mocking window.pywebview
 
-    jest.clearAllMocks();
+    jest.clearAllMocks(); // Clear mocks after initial setup
 
     // Mock react-responsive
     (useMediaQuery as jest.Mock).mockImplementation((settings) => {
@@ -104,33 +162,6 @@ describe("MainScreen", () => {
         return true;
       }
       return false;
-    });
-
-    // Default successful mocks for pywebviewApi
-    mockedApi.get_settings.mockResolvedValue(mockSettings);
-    mockedApi.get_language_data.mockResolvedValue(mockLangData);
-    mockedApi.get_image_list.mockImplementation(async (folderType: string) => {
-      if (folderType === "dump") {
-        return Promise.resolve({
-          success: true,
-          images: mockDumpedImages,
-        });
-      }
-      if (folderType === "inject") {
-        return Promise.resolve({
-          success: true,
-          images: mockInjectedImages,
-        });
-      }
-      return Promise.resolve({success: false, error: "Invalid folder type"});
-    });
-    mockedApi.open_file_dialog.mockResolvedValue({
-      success: true,
-      files: ["/mock/selected/file.jpg"],
-    });
-    mockedApi.replace_dds.mockResolvedValue({
-      success: true,
-      message: "Replacement complete!",
     });
 
     // Mock window.addEventListener for pywebviewready
@@ -434,7 +465,7 @@ describe("MainScreen", () => {
       });
       const imageCardLabel = imageCardCheckbox.parentElement as HTMLElement;
 
-      const downloadButton = within(imageCardLabel).getByRole("button", {name: "Download as JPG"});
+      const downloadButton = within(imageCardLabel).getByRole("button", {name: "Convert to JPG"});
 
       mockedApi.open_file_dialog.mockResolvedValueOnce({
         success: true,
@@ -471,7 +502,7 @@ describe("MainScreen", () => {
       });
       const imageCardLabel = imageCardCheckbox.parentElement as HTMLElement;
 
-      const downloadButton = within(imageCardLabel).getByRole("button", {name: "Download as JPG"});
+      const downloadButton = within(imageCardLabel).getByRole("button", {name: "Convert to JPG"});
 
       // Mock the folder selection
       mockedApi.open_file_dialog.mockResolvedValueOnce({

@@ -1,8 +1,9 @@
 "use client";
 
-import {ThemeProvider as NextThemesProvider} from "next-themes";
-import {useRouter} from "next/navigation";
-import {HeroUIProvider} from "@heroui/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { useRouter } from "next/navigation";
+import { HeroUIProvider } from "@heroui/react";
 
 import "@/styles/globals.css";
 import "@/styles/tailwind.css";
@@ -24,6 +25,7 @@ export default function RootLayout({
             {children}
           </NextThemesProvider>
         </HeroUIProvider>
+        <SpeedInsights />
       </body>
     </html>
   );

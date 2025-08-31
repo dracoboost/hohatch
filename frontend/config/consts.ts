@@ -71,6 +71,7 @@ export const I18N = {
     no_inject_images: "No injected images found.",
     dump_folder: "Open Dump Folder",
     inject_folder: "Open Inject Folder",
+    open_cache_folder_btn: "Open Cache Folder",
   },
   ja: {
     dumped_images: "ダンプ済み画像",
@@ -145,5 +146,6 @@ export const I18N = {
     open_folder: "フォルダを開く",
     dump_folder: "Dumpフォルダを開く",
     inject_folder: "Injectフォルダを開く",
+    open_cache_folder_btn: "キャッシュフォルダを開く",
   },
 };

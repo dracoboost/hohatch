@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHeadingsData, HeadingItem } from '../lib/useHeadingsData';
 import { useIntersectionObserver } from '../lib/useIntersectionObserver';
 import { Link } from "@heroui/react";
@@ -22,9 +22,9 @@ const Headings: React.FC<HeadingsProps> = ({ headings, activeId }) => (
               behavior: "smooth"
             });
           }}
-          className={`flex items-center text-link-color active:font-bold ${heading.id === activeId ? '' : 'opacity-50'} hover:opacity-75 active:opacity-50`}
+          className={`flex items-start text-link-color active:font-bold ${heading.id === activeId ? '' : 'opacity-50'} hover:opacity-75 active:opacity-50`}
         >
-          <svg width="8" height="8" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="mr-2">
+          <svg width="8" height="8" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="mr-2 mt-2 flex-shrink-0">
             <circle cx="50" cy="50" r="45" fill="currentColor" strokeWidth="10" />
           </svg>
           {heading.title}
@@ -41,9 +41,9 @@ const Headings: React.FC<HeadingsProps> = ({ headings, activeId }) => (
                       behavior: "smooth"
                     });
                   }}
-                  className={`flex items-center text-link-color ${child.id === activeId ? '' : 'opacity-50'} hover:opacity-75 active:opacity-50 ml-2`}
+                  className={`flex items-start text-link-color ${child.id === activeId ? '' : 'opacity-50'} hover:opacity-75 active:opacity-50 ml-2`}
                 >
-                  <svg width="8" height="8" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="mr-2">
+                  <svg width="8" height="8" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" className="mr-2 mt-2 flex-shrink-0">
                     <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" strokeWidth="10" />
                   </svg>
                   {child.title}
@@ -61,6 +61,12 @@ export const TableOfContents: React.FC = () => {
   const [activeId, setActiveId] = useState<string>();
   const { nestedHeadings } = useHeadingsData();
   useIntersectionObserver(setActiveId, activeId);
+
+  useEffect(() => {
+    if (nestedHeadings.length > 0 && !activeId) {
+      setActiveId(nestedHeadings[0].id);
+    }
+  }, [nestedHeadings, activeId]);
 
   return (
     <nav aria-label="Table of contents" className="sticky top-6 max-h-[calc(100vh-40px)] overflow-y-auto">

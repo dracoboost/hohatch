@@ -53,6 +53,6 @@ The settings screen allows users to configure the application's behavior.
 - **Framework:** React (with Next.js)
 - **UI Components:** HeroUI (`@heroui/react`) and Lucide React (`lucide-react`) for icons.
 - **Styling:** Tailwind CSS
-- **Backend Communication:** `pywebview` API bridge
+- **Backend Communication:** `pywebview` API bridge, interacting with a Python backend structured with a service-oriented architecture.
 - **Notifications:** `sonner`
 - **State Management:** React Hooks (`useState`, `useEffect`, `useCallback`, `useTransition`)

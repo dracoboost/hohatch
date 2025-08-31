@@ -1,4 +1,4 @@
-name: Release Executable
+name: Release Application
 
 on:
   workflow_run:
@@ -72,6 +72,25 @@ jobs:
             "tag_exists=false" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
           }
 
+      - name: Create README for release
+        run: |
+          mkdir release_package
+          $readmeContent = "HoHatch - JPG/DDS Image Converter for Shadowverse: Worlds Beyond`r`n`r`nThank you for downloading HoHatch!`r`n`r`nRun HoHatch.exe to start the application.`r`n`r`nFor more information, please visit the official website:`r`nhttps://hohatch.draco.moe"
+          Set-Content -Path "release_package/README.txt" -Value $readmeContent
+        shell: powershell
+
+      - name: Prepare files for packaging
+        run: Copy-Item -Path "dist/HoHatch.exe" -Destination "release_package/"
+        shell: powershell
+
+      - name: Create ZIP archive
+        id: archive
+        run: |
+          $ARCHIVE_NAME = "HoHatch-v${{ env.PACKAGE_VERSION }}.zip"
+          Compress-Archive -Path "release_package/*" -DestinationPath $ARCHIVE_NAME
+          "ARCHIVE_NAME=$ARCHIVE_NAME" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+        shell: powershell
+
       - name: Create Release
         id: create_release
         if: ${{ steps.check_tag.outputs.tag_exists == 'false' }}
@@ -92,6 +111,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .\dist\HoHatch.exe
-          asset_name: HoHatch.exe
-          asset_content_type: application/octet-stream
+          asset_path: ${{ steps.archive.outputs.ARCHIVE_NAME }}
+          asset_name: ${{ steps.archive.outputs.ARCHIVE_NAME }}
+          asset_content_type: application/zip

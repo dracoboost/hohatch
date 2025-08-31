@@ -41,6 +41,7 @@ describe("SettingsScreen", () => {
       api: {
         get_settings: jest.fn().mockResolvedValue(mockSettings),
         get_language_data: jest.fn().mockResolvedValue(mockLangData),
+        get_image_list: jest.fn().mockResolvedValue({success: true, images: []}), // Added mock
         get_inject_images: jest.fn().mockResolvedValue({success: true, injected_images: []}),
         get_dump_images: jest.fn().mockResolvedValue({success: true, dumped_images: []}),
         validate_sk_folder: jest.fn().mockResolvedValue({isValid: true}),
@@ -56,6 +57,7 @@ describe("SettingsScreen", () => {
         replace_dds: jest.fn().mockResolvedValue({success: true}),
         batch_convert_dump_to_jpg: jest.fn().mockResolvedValue({success: true}),
         batch_download_selected_dds_as_jpg: jest.fn().mockResolvedValue({success: true}),
+        convert_dds_for_display: jest.fn().mockResolvedValue({success: true, src: "mock_src"}), // Added mock
         frontend_ready: jest.fn().mockResolvedValue(undefined),
         load_url: jest.fn().mockResolvedValue(undefined),
         open_dump_folder: jest.fn().mockResolvedValue({success: true}),
@@ -63,7 +65,10 @@ describe("SettingsScreen", () => {
         delete_dds_file: jest.fn().mockResolvedValue({success: true}),
         batch_delete_selected_dds_files: jest.fn().mockResolvedValue({success: true}),
         get_default_sk_path: jest.fn().mockResolvedValue("/mock/default/sk/path"),
+        open_cache_folder: jest.fn().mockResolvedValue({success: true}),
         notify_settings_changed: jest.fn().mockResolvedValue({success: true}),
+        get_app_version: jest.fn().mockResolvedValue({success: true, version: "1.0.0"}),
+        check_for_updates: jest.fn().mockResolvedValue({success: true, latest_version: "1.0.0"}),
       },
     };
   });

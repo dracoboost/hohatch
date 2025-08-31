@@ -6,6 +6,20 @@ This section provides essential guidelines for contributing to the HoHatch websi
 
 ### Building and Running
 
+To run the development server:
+
+```bash
+npm run dev
+```
+
+To build the website for production:
+
+```bash
+npm run build
+```
+
+To run the full suite of checks (linting, type checking, and building):
+
 ```bash
 npm run preflight
 ```

@@ -5,9 +5,7 @@ import sys
 # Add the parent directory of main.py to the Python path
 # This ensures that imports like 'from api import Api' work correctly,
 # especially when bundled with PyInstaller.
-sys.path.insert(0, str(Path(__file__).parent.resolve()))
-
-from api import Api
+from .api import Api
 
 if __name__ == "__main__":
     # Determine the path to the frontend build directory using pathlib for robustness
@@ -17,7 +15,7 @@ if __name__ == "__main__":
         frontend_dir = Path(sys._MEIPASS) / "frontend" / "dist"
     else:
         # Running in a normal Python environment
-        frontend_dir = Path(__file__).parent.parent / "frontend" / "dist"
+        frontend_dir = Path(__file__).parent.parent.parent / "frontend" / "dist"
 
     html_file_path = frontend_dir / "index.html"
 

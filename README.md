@@ -1,32 +1,58 @@
-# HoHatch
+<div align="center">
+  <div>
+    <a href="https://hohatch.draco.moe" target="_blank">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo-dark.png">
+        <img alt="HoHatch" src="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo-light.png" height="80" style="max-width: 100%;">
+      </picture>
+    </a>
+  </div>
+  <a href="https://github.com/dracoboost/hohatch/releases/latest">
+    <img alt="download latest" src="https://img.shields.io/badge/download_latest-HoHatch-b7465a">
+  </a>
+  <a href="https://github.com/dracoboost/hohatch/releases">
+    <img alt="version" src="https://img.shields.io/badge/version-1.0.1-b7465a">
+  </a>
+  <a href="https://github.com/dracoboost/hohatch/actions?query=workflow%3A%22Preflight+Check%22">
+    <img alt="Preflight" src="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml/badge.svg">
+  </a>
+  <a href="https://github.com/dracoboost/hohatch/actions?query=workflow%3A%22Release+Executable%22">
+    <img alt="Release Application" src="https://github.com/dracoboost/hohatch/actions/workflows/release.yml/badge.svg">
+  </a>
+  <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
+    <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
+  </a>
+  <a href="https://discord.gg/fEUMrTGb23">
+    <img alt="Discord" src="https://img.shields.io/discord/1408725175532519448">
+  </a>
+</div>
 
-[![Website](https://img.shields.io/badge/Website-hohatch.draco.moe-red)](https://hohatch.draco.moe)
-[![version](https://img.shields.io/badge/version-1.0.0-blue)](https://github.com/dracoboost/hohatch/releases)
-[![preflight](https://img.shields.io/badge/preflight-passing-brightgreen)](https://github.com/dracoboost/hohatch/actions?query=workflow%3A%22Preflight+Check%22)
-[![release](https://img.shields.io/badge/release-passing-brightgreen)](https://github.com/dracoboost/hohatch/actions?query=workflow%3A%22Release+Executable%22)
-[![Download Latest](https://img.shields.io/badge/Download_Latest-HoHatch.exe-green)](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch.exe)
-[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/dracoboost/hohatch/blob/master/LICENSE)
-
-**HoHatch** is a desktop application that supports the management and conversion of image files (JPG/DDS) for **Shadowverse: Worlds Beyond**. It provides functions to convert modded JPG files to DDS files and to convert DDS files dumped from the game to JPG files for mod creation.
-
-Website: <https://hohatch.draco.moe>
+**HoHatch** is a desktop application that supports the management and conversion of image files (JPG/DDS) for [**Shadowverse: Worlds Beyond**](https://shadowverse-wb.com/). It provides functions to convert modded JPG files to DDS files, to convert DDS files dumped from the game to JPG files for mod creation, and to delete DDS files.
 
 ## Installation
 
-To use HoHatch, download the [latest executable](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch.exe). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
+HoHatch is a Windows-only application.
 
-## Development
+To use HoHatch, download the latest HoHatch executable directly: [HoHatch.zip](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch.zip). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
 
-For detailed development guidelines and setup instructions for HoHatch and its website, please refer to [`DEVELOPMENT.md`](docs/DEVELOPMENT.md).
+## Changelogs
+
+For a detailed history of changes and updates, please refer to the specific changelogs:
+
+* [HoHatch Application Changelog](frontend/CHANGELOG.md)
+* [HoHatch Website Changelog](website/CHANGELOG.md)
+
+We maintain these logs to ensure transparency and effective communication with our users and contributors.
+
+## Logo Typeface
+
+The HoHatch logo uses [Baloo Tamma 2](https://fonts.google.com/specimen/Baloo+Tamma+2?preview.text=HoHatch&query=Baloo+Tamma+2), a playful, rounded display sans-serif typeface from Google Fonts, chosen for its approachable aesthetic.
 
 ## Contributing
 
-Contributions are welcome! Please refer to `GEMINI.md` for development guidelines and testing strategies.
+Contributions are welcome! Please refer to [`GEMINI.md`](GEMINI.md) for development guidelines and testing strategies.
+For detailed development guidelines and setup instructions for HoHatch and its website, please refer to [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
 
 ## License
 
 MIT License ― free to use, modify, and share, but you must include copyright and license notice.
-
-## Logo Typeface
-
-The HoHatch logo uses [**Baloo Tamma 2**](https://fonts.google.com/specimen/Baloo+Tamma+2?preview.text=HoHatch&query=Baloo+Tamma+2), a playful, rounded display sans-serif typeface from Google Fonts, chosen for its approachable aesthetic.

@@ -1,14 +1,12 @@
 # HoHatch
 
-[![Latest Release](https://img.shields.io/badge/download-latest-brightgreen.svg)](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch.exe)
-
-HoHatch is a desktop application for converting image formats between JPG and DDS, specifically designed for use with the Special K tool.
+**HoHatch** is a desktop application for converting image formats between JPG and DDS, specifically designed for use with the Special K tool.
 
 This application provides a user-friendly interface to manage and convert images for game modding purposes. The frontend is built with Next.js, React, and Tailwind CSS, while the backend logic is handled by a Python server using PyWebView.
 
 ## Features
 
-A detailed list of features can be found in [`docs/FEATURES.md`](https://github.com/dracoboost/hohatch/blob/master/docs/FEATURES.md).
+A detailed list of features can be found in [`docs/FEATURES.md`](../docs/FEATURES.md).
 
 ### Core Functionality
 
@@ -49,13 +47,14 @@ A detailed list of features can be found in [`docs/FEATURES.md`](https://github.
     ```
 
 4. **Run the application:**
-    - Start the Python backend: `python app.py` (from the root directory)
-    - In a separate terminal, start the frontend development server:
+    ```bash
+    npm run dev
+    ```
 
-      ```bash
-      cd frontend
-      npm run dev
-      ```
+    To run comprehensive checks before committing, use:
+    ```bash
+    npm run preflight
+    ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
@@ -74,8 +73,12 @@ This will create a distributable executable in the `frontend/dist` directory.
 This project uses a combination of Python for the backend and React/Next.js for the frontend.
 
 - **Backend**: The core logic resides in `app.py` (or similar, in the root directory). It uses `pywebview` to create a webview window and expose Python functions to the JavaScript frontend.
-- **Frontend**: The UI is located in the `frontend` directory. See the `frontend/README.md` for more details on the frontend architecture and development process.
-- **Shared Features**: A detailed feature list is maintained in `frontend/docs/FEATURES.md`.
+- **Frontend**: The UI is located in the `frontend` directory. See the [`frontend/README.md`](README.md) for more details on the frontend architecture and development process.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a pull request.
+velopment process.
 
 ## Contributing
 

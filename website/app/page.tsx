@@ -1,19 +1,23 @@
 import { Button, Link, Tooltip } from "@heroui/react";
 import { promises as fs } from "fs";
-import { ChevronRight } from "lucide-react";
+
 import type { Metadata } from 'next';
 import Image from "next/image";
 import path from "path";
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { TableOfContents } from '../components/TableOfContents';
 
 export const metadata: Metadata = {
   title: 'HoHatch - JPG/DDS Image Converter for ShadowverseWB',
-  description: 'A desktop application for converting JPG and DDS images, especially for Shadowverse: Worlds Beyond. Download the latest version and learn how to use it for modding games like Shadowverse: Worlds Beyond.',
+  description: 'HoHatch is a desktop application for converting JPG and DDS images, designed to streamline the modding workflow for Shadowverse: Worlds Beyond with Special K. Easily inject JPG mods as DDS files or extract game assets from DDS to JPG.',
+  alternates: {
+    canonical: 'https://hohatch.draco.moe',
+  },
   openGraph: {
     title: 'HoHatch',
-    description: 'A desktop application for converting JPG and DDS images, especially for Shadowverse: Worlds Beyond.',
+    description: 'A desktop application for converting JPG/DDS images to streamline the modding workflow for Shadowverse: Worlds Beyond with Special K.',
     url: 'https://hohatch.draco.moe',
     siteName: 'HoHatch',
     images: [
@@ -29,9 +33,34 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'HoHatch',
-    description: 'A desktop application for converting JPG and DDS images, especially for Special K.',
+    description: 'A desktop application for converting JPG/DDS images to streamline the modding workflow for Shadowverse: Worlds Beyond with Special K.',
     images: ['https://hohatch.draco.moe/og/ogp.png'],
   },
+  // @ts-expect-error: The 'script' property is not officially part of the 'Metadata' type yet.
+  // This is a valid workaround to inject JSON-LD structured data for enhanced SEO.
+  // See: https://github.com/vercel/next.js/issues/56320
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "HoHatch",
+        "operatingSystem": "Windows",
+        "applicationCategory": "MultimediaApplication",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "description": "HoHatch is a desktop application for converting JPG and DDS images, designed to streamline the modding workflow for Shadowverse: Worlds Beyond with Special K. Easily inject JPG mods as DDS files or extract game assets from DDS to JPG.",
+        "softwareRequirements": "Windows OS",
+        "url": "https://hohatch.draco.moe",
+        "downloadUrl": "https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.0.1.zip",
+        "image": "https://hohatch.draco.moe/og/ogp.png"
+      })
+    }
+  ]
 }
 
 export default async function Home() {
@@ -44,7 +73,7 @@ export default async function Home() {
 
   interface Components {
     a: React.FC<AnchorProps>;
-    li: React.FC<React.LiHTMLAttributes<HTMLLIElement>>;
+    blockquote: React.FC<React.QuoteHTMLAttributes<HTMLQuoteElement>>;
     h1: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
     h2: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
     h3: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
@@ -70,12 +99,13 @@ export default async function Home() {
         </Link>
       );
     },
-    li: ({children}) => (
-      <li className="flex items-start">
-        <ChevronRight className="h-5 w-5 mt-1 text-foreground flex-shrink-0" />
-        <span className="ml-2">{children}</span>
-      </li>
-    ),
+    blockquote: ({ children }) => {
+      return (
+        <div className="mt-2 bg-gray-500 text-base text-white rounded-lg px-4 py-1" role="alert">
+          {children}
+        </div>
+      );
+    },
     h1: ({children}) => <h1 className="text-h1 sm:text-sm-h1 md:text-md-h1 lg:text-lg-h1" id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h1>,
     h2: ({children}) => <h2 className="text-h2 sm:text-sm-h2 md:text-md-h2 lg:text-lg-h2 scroll-mt-2" id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h2>,
     h3: ({children}) => <h3 className="text-h3 sm:text-sm-h3 md:text-md-h3 lg:text-lg-h3 scroll-mt-2" id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h3>,
@@ -94,13 +124,13 @@ export default async function Home() {
           </h1>
         </div>
         <p className="mt-3 max-w-md mx-auto text-base text-muted-foreground sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-          A desktop application for converting JPG and DDS images, especially for Special K.
+          A desktop tool for converting and managing JPG/DDS images to streamline modding for Shadowverse: Worlds Beyond with Special K.
         </p>
         <div className="mt-5 sm:mt-8 flex justify-center">
           <div className="rounded-md shadow">
-            <Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch.exe" isExternal>
-              <Button className="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-[#B7465A] hover:bg-[#B7465A]/80 md:py-4 md:text-lg md:px-10">
-                Download Latest <span className="flex items-center justify-center gap-x-1"><Image src="/images/icons/hohatch.jpg" alt="HoHatch App Image" className="rounded-lg" width={24} height={24} />HoHatch.exe</span>
+            <Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.0.1.zip" isExternal>
+              <Button className="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-hochan-red hover:bg-hochan-red/80 md:py-4 md:text-lg md:px-10">
+                Download Latest <span className="ml-2 flex items-center justify-center gap-x-1"><Image src="/images/icons/hohatch.jpg" alt="HoHatch App Image" className="rounded-lg" width={24} height={24} />HoHatch</span>
               </Button>
             </Link>
           </div>
@@ -112,15 +142,15 @@ export default async function Home() {
         <div className="hidden lg:flex min-h-screen">
           {/* Social Icons Sidebar - Left (lg only) */}
           <aside className="flex flex-col justify-start items-center gap-4 p-6 w-20 border-r border-slate-700 sticky top-0 h-screen">
-            <Tooltip content="Join Discord Server">
+            <Tooltip content="Join the mod community">
               <Link href="https://discord.gg/fEUMrTGb23" isExternal>
                 <Button isIconOnly variant="light" className="rounded-full">
                   <Image src="/images/icons/discord-white.svg" alt="Join Discord" width={32} height={32} />
                 </Button>
               </Link>
             </Tooltip>
-            <Tooltip content="Share on X">
-              <Link href="https://x.com/intent/tweet?text=Check%20out%20Ho%20Hatch!%20https://github.com/dracoboost/hohatch" isExternal>
+            <Tooltip content="Share HoHatch">
+              <Link href="https://x.com/intent/tweet?text=HoHatch%3A%20A%20JPG/DDS%20image%20converter%20for%20Shadowverse%3A%20Worlds%20Beyond.%20%23HoHatch%20%23ShadowverseWB%20https://hohatch.draco.moe" isExternal>
                 <Button isIconOnly variant="light" className="rounded-full">
                   <Image src="/images/icons/x-white.svg" alt="Share on X" width={32} height={32} />
                 </Button>
@@ -137,7 +167,7 @@ export default async function Home() {
 
           {/* Main Content Area */}
           <article className="flex-1 p-8 max-w-4xl">
-            <div className="prose dark:prose-invert prose-lg max-w-none">
+            <div className="prose dark:prose-invert prose-lg max-w-none prose-p:mb-4 prose-ol:pl-5">
               <ReactMarkdown components={components} remarkPlugins={[remarkGfm]}>
                 {markdownContent}
               </ReactMarkdown>
@@ -147,9 +177,6 @@ export default async function Home() {
           {/* Table of Contents - Right (lg only) */}
           <nav className="w-64 p-8 border-l border-slate-700 bg-muted/30 sticky top-0 h-screen overflow-y-auto">
             <div className="sticky top-4">
-              <h3 id="table-of-contents-heading" className="text-lg font-semibold mb-4">
-                Table of Contents
-              </h3>
               <TableOfContents />
             </div>
           </nav>
@@ -159,7 +186,7 @@ export default async function Home() {
         <div className="hidden md:block lg:hidden">
           <div className="flex min-h-screen">
             <article className="flex-1 p-6">
-              <div className="prose dark:prose-invert prose-lg max-w-none">
+              <div className="prose dark:prose-invert prose-lg max-w-none prose-p:mb-4 prose-ol:pl-5">
                 <ReactMarkdown components={components} remarkPlugins={[remarkGfm]}>
                   {markdownContent}
                 </ReactMarkdown>
@@ -167,23 +194,20 @@ export default async function Home() {
             </article>
             <nav className="w-64 p-6 border-l border-slate-700 bg-muted/30">
               <div className="sticky top-4">
-                <h3 id="table-of-contents-heading" className="text-lg font-semibold mb-4">
-                  Table of Contents
-                </h3>
                 <TableOfContents />
               </div>
             </nav>
           </div>
           <div className="flex justify-center items-center gap-4 p-4 border-t border-slate-700 bg-muted/10">
-            <Tooltip content="Join Discord Server">
+            <Tooltip content="Join the mod community">
               <Link href="https://discord.gg/fEUMrTGb23" isExternal>
                 <Button isIconOnly variant="light" className="rounded-full">
                   <Image src="/images/icons/discord-white.svg" alt="Join Discord" width={32} height={32} />
                 </Button>
               </Link>
             </Tooltip>
-            <Tooltip content="Share on X">
-              <Link href="https://x.com/intent/tweet?text=HoHatch%20|%20JPG/DDS%20Image%20Converter%20for%20ShadowverseWB%20https://hohatch.draco.moe" isExternal>
+            <Tooltip content="Share HoHatch">
+              <Link href="https://x.com/intent/tweet?text=HoHatch%3A%20A%20JPG/DDS%20image%20converter%20for%20Shadowverse%3A%20Worlds%20Beyond.%20%23HoHatch%20%23ShadowverseWB%20https://hohatch.draco.moe" isExternal>
                 <Button isIconOnly variant="light" className="rounded-full">
                   <Image src="/images/icons/x-white.svg" alt="Share on X" width={32} height={32} />
                 </Button>
@@ -202,22 +226,22 @@ export default async function Home() {
         {/* Layout for sm: single column with main content, icons at bottom, TOC hidden */}
         <div className="block md:hidden">
           <article className="p-6">
-            <div className="prose dark:prose-invert prose-lg max-w-none">
+            <div className="prose dark:prose-invert prose-lg max-w-none prose-p:mb-4 prose-ol:pl-5">
               <ReactMarkdown components={components} remarkPlugins={[remarkGfm]}>
                 {markdownContent}
               </ReactMarkdown>
             </div>
           </article>
           <div className="flex justify-center items-center gap-4 p-4 border-t border-slate-700 bg-muted/10">
-            <Tooltip content="Join Discord Server">
+            <Tooltip content="Join the mod community">
               <Link href="https://discord.gg/fEUMrTGb23" isExternal>
                 <Button isIconOnly variant="light" className="rounded-full">
                   <Image src="/images/icons/discord-white.svg" alt="Join Discord" width={32} height={32} />
                 </Button>
               </Link>
             </Tooltip>
-            <Tooltip content="Share on X">
-              <Link href="https://x.com/intent/tweet?text=Check%20out%20Ho%20Hatch!%20https://github.com/dracoboost/hohatch" isExternal>
+            <Tooltip content="Share HoHatch">
+              <Link href="https://x.com/intent/tweet?text=HoHatch%3A%20A%20JPG/DDS%20image%20converter%20for%20Shadowverse%3A%20Worlds%20Beyond.%20%23HoHatch%20%23ShadowverseWB%20https://hohatch.draco.moe" isExternal>
                 <Button isIconOnly variant="light" className="rounded-full">
                   <Image src="/images/icons/x-white.svg" alt="Share on X" width={32} height={32} />
                 </Button>
@@ -237,10 +261,9 @@ export default async function Home() {
       <footer className="text-center py-6 mt-2">
         <p suppressHydrationWarning>
           &copy; {new Date().getFullYear()}{" "}
-          <Link href="https://x.com/dracoboost" isExternal showAnchorIcon className="text-link-color hover:opacity-75 active:opacity-50">
+          <Link href="https://x.com/dracoboost" isExternal className="text-link-color hover:opacity-75 active:opacity-50">
             dracoboost
           </Link>
-          . All rights reserved.
         </p>
       </footer>
     </div>

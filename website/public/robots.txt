@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hohatch.draco.moe/sitemap.xml

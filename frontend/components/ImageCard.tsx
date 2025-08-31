@@ -92,12 +92,12 @@ export const ImageCard: React.FC<ImageCardProps> = ({
           <p className="mb-2 truncate text-sm font-semibold text-white">{displayName}</p>
           <div className="inline-flex rounded-full p-0.5 dark:border-neutral-700">
             <Tooltip
-              content={languageData.download_as_jpg_tooltip || "Download as JPG"}
+              content={languageData.download_as_jpg_tooltip || "Convert to JPG"}
               placement="bottom"
             >
               <Button
                 isIconOnly
-                aria-label="Download as JPG"
+                aria-label="Convert to JPG"
                 buttonSize="size-6"
                 isDisabled={isProcessing}
                 onClick={() => onDownloadJPG(image.path)}

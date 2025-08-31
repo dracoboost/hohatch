@@ -20,6 +20,7 @@ interface HeaderProps {
   onBatchDownload?: () => Promise<void>;
   onBatchTrash?: () => Promise<void>;
   lang?: "en" | "ja";
+  appVersion?: string; // Added appVersion prop
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -30,6 +31,7 @@ export const Header: React.FC<HeaderProps> = ({
   onBatchDownload,
   onBatchTrash,
   lang = "en",
+  appVersion, // Destructure appVersion
 }) => {
   const router = useRouter();
   const i18n = I18N[lang];
@@ -76,8 +78,20 @@ export const Header: React.FC<HeaderProps> = ({
             unoptimized
             alt="Website"
             height={20}
-            src="https://img.shields.io/badge/Website-hohatch.draco.moe-red"
-            width={180}
+            src="https://img.shields.io/badge/Website-hohatch.draco.moe-b7465a"
+          />
+        </a>
+        <a
+          className="hidden lg:block"
+          href="https://github.com/dracoboost/hohatch/releases"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          <Image
+            unoptimized
+            alt="version"
+            height={20}
+            src={`https://img.shields.io/badge/version-${appVersion || "unknown"}-b7465a`}
           />
         </a>
         {page === "index" && (
@@ -85,7 +99,7 @@ export const Header: React.FC<HeaderProps> = ({
             {(selectedImagesCount ?? 0) > 0 && (
               <>
                 <button
-                  className="bg-hochan-sky-500 inline-flex items-center justify-center rounded-md px-3 py-1 text-sm font-semibold text-white transition-colors duration-200 hover:bg-sky-600"
+                  className="inline-flex items-center justify-center rounded-md bg-sky-500 px-3 py-1 text-sm font-semibold text-white transition-colors duration-200 hover:bg-sky-600"
                   data-testid="batch-download-button"
                   disabled={isProcessing}
                   onClick={onBatchDownload}

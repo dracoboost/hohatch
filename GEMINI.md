@@ -4,6 +4,8 @@
 
 HoHatch is an application designed for converting image formats, specifically between JPG and DDS, primarily for use with Special K. It is distributed as an executable.
 
+HoHatch is a Windows-only application.
+
 ### Core Functionality
 
 1. **JPG to DDS Conversion**: Convert modded JPG images to DDS format and move them into the `Special K/Profiles/Shadowverse Worlds Beyond/SK_Res/inject/textures` folder for injection.
@@ -11,7 +13,7 @@ HoHatch is an application designed for converting image formats, specifically be
 
 ### Detailed Features
 
-The application features a "Main" Screen for image conversion and a "Settings" Screen accessible from the Main Screen.
+The application features a **Main Screen** for image conversion and a **Settings Screen** accessible from the Main Screen.
 
 - **Main Screen**:
   - Displays thumbnails of images in two sections: "Dumped DDS Images" (from the game) and "Injected DDS Images" (for modding).
@@ -32,11 +34,11 @@ The application features a "Main" Screen for image conversion and a "Settings" S
 
 #### `settings.json` Location
 
-For applications that are open to the general public, it is most appropriate to store the `settings.json` in the user data directory. This allows each user to have his/her own settings and avoids permission issues.
+For applications that are open to the general public, it is most appropriate to store the `settings.json` in the user data directory `C:\Users\<USER_NAME>\AppData\Local\HoHatch\settings.json`. This allows each user to have his/her own settings and avoids permission issues.
 
 ### Image Format Note
 
-Due to known issues with `texconv`, this application exclusively supports JPG files for conversion and does not support PNG files.
+Due to known issues with `texconv`, this application exclusively supports JPG files for conversion (and does not support PNG files).
 
 ## Codebase Structure
 
@@ -57,23 +59,23 @@ This section provides essential guidelines for contributing to the HoHatch proje
 
 ### Building and Running
 
-Before submitting any changes, it is crucial to validate them by running the full preflight check. This command will build the repository, run all tests, check for type errors, and lint the code.
-
-To run the full suite of checks, execute the following command from the `frontend` directory:
+To run the development server for the HoHatch application:
 
 ```bash
-npm run preflight
+npm run dev
 ```
 
-This single command ensures that your changes meet all the quality gates of the project. While you can run the individual steps (`format`, `frontend`, `backend`, `frontend-test`, `backend-test`) separately, it is highly recommended to use `npm run preflight` to ensure a comprehensive validation.
-
-To build the executable for Windows, run the following command from the `frontend` directory:
+To build the executable for Windows:
 
 ```bash
 npm run backend
 ```
 
-This command uses PyInstaller with the `build-windows.spec` file to create a standalone executable in the `dist` directory.
+To run the full suite of checks (build, test, type check, and lint) for the HoHatch application:
+
+```bash
+npm run preflight
+```
 
 To activate the Python virtual environment, execute the following command:
 
@@ -253,13 +255,25 @@ When implementing new features or making significant changes to HoHatch ensure t
 
 The main branch for this project is called "master".
 
-## [Gemini CLI](https://github.com/google-gemini/gemini-cli) Errors
+## Gemini CLI
+
+This document is primarily maintained and updated using the [Gemini CLI](https://github.com/google-gemini/gemini-cli). The Gemini CLI is an interactive command-line interface that leverages large language models to assist with software engineering tasks, including code generation, refactoring, and documentation.
+
+### Errors
 
 ### the `replace` tool error
 
 My "mindset" was indeed in the realm of generating Python code. I implicitly assumed that the replace tool, operating within the Gemini CLI environment, would act as a "smart intermediary." I expected it to understand the context of my Pythonic intent – that `\n` was meant to be an escape sequence for Python – and therefore, it would correctly write the literal `\` and `n` characters into the file. I was, in a way, expecting the tool to "fill in the blanks" of its literal operation based on my higher-level programming intent.
 
+### `package.json` backslash escaping
+
+When modifying `package.json` scripts, especially for Windows commands, all backslashes (`\`) must be properly escaped as `\\` to ensure the JSON remains valid. Forgetting to do so will result in a `EJSONPARSE` error.
+
 ## Code Design Principles
+
+### Service-Oriented Architecture
+
+The backend is structured with a service-oriented architecture, where distinct services handle specific concerns (e.g., configuration, file operations, image processing). This improves modularity, testability, and maintainability.
 
 ### Feature Separation
 
@@ -272,3 +286,7 @@ Improve readability and maintainability, and strengthen security by ensuring con
 ### Step-by-step Debugging
 
 Resolve multiple errors one by one. Identify the root cause.
+
+### Maintainability
+
+Actively structure and functionalize code for maintainability.
