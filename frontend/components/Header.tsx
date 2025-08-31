@@ -75,7 +75,6 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
         <a href="https://hohatch.draco.moe" rel="noopener noreferrer" target="_blank">
           <Image
-            unoptimized
             alt="Website"
             src="https://img.shields.io/badge/Website-hohatch.draco.moe-b7465a"
           />
@@ -87,7 +86,6 @@ export const Header: React.FC<HeaderProps> = ({
           target="_blank"
         >
           <Image
-            unoptimized
             alt="version"
             src={`https://img.shields.io/badge/version-${appVersion || "unknown"}-b7465a`}
           />
