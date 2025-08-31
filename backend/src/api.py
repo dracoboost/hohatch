@@ -5,7 +5,7 @@ from pathlib import Path
 import webview
 import requests
 
-from .backend_api import HoHatchBackend
+from backend.src.backend_api import HoHatchBackend
 from .services import get_special_k_dir
 
 

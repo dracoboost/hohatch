@@ -1,11 +1,19 @@
 import webview
-from pathlib import Path
 import sys
+from pathlib import Path
 
-# Add the parent directory of main.py to the Python path
-# This ensures that imports like 'from api import Api' work correctly,
+if getattr(sys, "frozen", False):
+    # Running in a PyInstaller bundle
+    # sys._MEIPASS is the path to the temporary directory where the bundle is extracted
+    # We need to add the 'src' directory within the bundle to sys.path
+    sys.path.append(str(Path(sys._MEIPASS) / "backend" / "src"))
+else:
+    # Running in a normal Python environment
+    sys.path.append(str(Path(__file__).parent))
+
+# This ensures that imports like 'from backend.src.api import Api' work correctly,
 # especially when bundled with PyInstaller.
-from api import Api
+from backend.src.api import Api
 
 if __name__ == "__main__":
     # Determine the path to the frontend build directory using pathlib for robustness

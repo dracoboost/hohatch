@@ -7,7 +7,6 @@ a = Analysis(
         "../src/test_backend_api.py",
         "../src/test_refresh_scenario.py",
     ],
-    pathex=["../src"],
     binaries=[],
     datas=[("..\\..\\frontend\\dist", "frontend/dist")],
     hiddenimports=["appdirs"],
@@ -32,7 +31,7 @@ exe = EXE(
     upx=False,
     upx_exclude=[],
     runtime_tmpdir=None,
-    console=False,  # build
+    console=True,  # build
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,
