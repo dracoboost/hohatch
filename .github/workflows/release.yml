@@ -28,10 +28,6 @@ jobs:
         with:
           node-version: '24.x'
 
-      - name: Install Node.js dependencies
-        working-directory: .\frontend
-        run: npm install
-
       - name: Get package version
         id: get_version
         run: |
@@ -99,12 +95,14 @@ jobs:
           }
         shell: powershell
 
-      - name: Setup Developer Command Prompt
-        uses: microsoft/setup-msbuild@v2
-
       - name: Sign executable
         run: |
-          signtool sign /f certificate.pfx /p "${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}" /t http://timestamp.digicert.com /fd SHA256 /v dist/HoHatch.exe
+          $signtoolPath = (Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin" -Filter "signtool.exe" -Recurse | Select-Object -Last 1).FullName
+          if (!$signtoolPath) {
+            throw "signtool.exe not found!"
+          }
+          Write-Host "Found signtool.exe at: $signtoolPath"
+          & $signtoolPath sign /f certificate.pfx /p "${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}" /t http://timestamp.digicert.com /fd SHA256 /v "dist/HoHatch.exe"
         shell: powershell
 
       - name: List dist directory
