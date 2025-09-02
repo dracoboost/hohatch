@@ -1,6 +1,6 @@
 "use client";
 
-import {Tab, Tabs, Tooltip} from "@heroui/react";
+import {CircularProgress, Tab, Tabs, Tooltip} from "@heroui/react";
 import {Download, Folder, FolderCheck, FolderPen, MoveHorizontal, MoveVertical} from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {Toaster, toast} from "sonner";
@@ -9,6 +9,8 @@ import {Button} from "@/components/Button";
 import {FloatingUnderlineInput} from "@/components/FloatingUnderlineInput";
 import {Header} from "@/components/Header";
 import {I18N} from "@/config/consts";
+
+import packageJson from "../../package.json";
 
 interface SettingsData {
   language: "en" | "ja";
@@ -36,6 +38,7 @@ const SettingsScreen: React.FC = () => {
     message: string | null;
   }>({isValid: null, message: null});
   const isInitialMount = React.useRef(true);
+  const [appVersion, setAppVersion] = useState<string | undefined>(undefined);
 
   const i18n = settings?.language ? I18N[settings.language] : I18N.en;
 
@@ -54,6 +57,7 @@ const SettingsScreen: React.FC = () => {
       setLoading(true);
       const currentSettings = await window.pywebview.api.get_settings();
       setSettings(currentSettings);
+      setAppVersion(packageJson.version);
     } catch (e: any) {
       toast.error((i18n.error || "Error") + ": " + e.message);
     } finally {
@@ -159,13 +163,21 @@ const SettingsScreen: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex min-h-screen flex-col bg-slate-300 text-black dark:bg-gray-900 dark:text-white">
+        <Toaster richColors position="bottom-right" />
+        <Header appVersion={appVersion} page="settings" />
+        <main className="flex flex-grow items-center justify-center">
+          <CircularProgress aria-label="Loading..." color="primary" />
+        </main>
+      </div>
+    );
   }
 
   return (
     <div className="flex min-h-screen flex-col bg-slate-300 text-black dark:bg-gray-900 dark:text-white">
       <Toaster richColors position="bottom-right" />
-      <Header page="settings" />
+      <Header appVersion={appVersion} page="settings" />
 
       <main className="flex flex-grow items-center justify-center">
         <div className="flex w-full flex-col items-start gap-4 p-4 sm:p-2 lg:w-2/3">

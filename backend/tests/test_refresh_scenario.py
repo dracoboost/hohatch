@@ -7,7 +7,7 @@ from unittest.mock import patch, MagicMock
 import time
 
 from .backend_api import HoHatchBackend
-from .dto import ImageInfo
+from backend.dto import ImageInfo
 
 
 @pytest.fixture
@@ -17,12 +17,12 @@ def backend_instance():
         os.environ["LOCALAPPDATA"] = tmpdir
 
         # Mock services that HoHatchBackend uses
-        with patch("backend.src.backend_api.ConfigService") as MockConfigService, \
-             patch("backend.src.backend_api.DownloadService") as MockDownloadService, \
-             patch("backend.src.backend_api.FileService") as MockFileService, \
-             patch("backend.src.backend_api.ImageService") as MockImageService, \
-             patch("backend.src.backend_api.TexconvService") as MockTexconvService, \
-             patch("backend.src.backend_api.HoHatchBackend._ensure_texconv_exists") as mock_ensure_texconv_exists:
+        with patch("backend.backend_api.ConfigService") as MockConfigService, \
+             patch("backend.backend_api.DownloadService") as MockDownloadService, \
+             patch("backend.backend_api.FileService") as MockFileService, \
+             patch("backend.backend_api.ImageService") as MockImageService, \
+             patch("backend.backend_api.TexconvService") as MockTexconvService, \
+             patch("backend.backend_api.HoHatchBackend._ensure_texconv_exists") as mock_ensure_texconv_exists:
 
             # Prevent auto-download during init
             mock_ensure_texconv_exists.return_value = None

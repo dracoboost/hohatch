@@ -7,7 +7,7 @@ import base64
 import hashlib
 import subprocess
 import time
-from dataclasses import asdict
+from dataclasses import asdict, fields
 from pathlib import Path
 from typing import Dict, Any, List
 
@@ -61,7 +61,11 @@ class ConfigService:
         return self.settings
 
     def update_settings(self, new_settings: Dict[str, Any]) -> AppSettings:
-        updated = AppSettings(**{**asdict(self.settings), **new_settings})
+        # Filter out keys that are not part of AppSettings
+        valid_keys = {f.name for f in fields(AppSettings)}
+        filtered_new_settings = {k: v for k, v in new_settings.items() if k in valid_keys}
+
+        updated = AppSettings(**{**asdict(self.settings), **filtered_new_settings})
         self.save_settings(updated)
         return updated
 

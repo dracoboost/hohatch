@@ -1,11 +1,15 @@
+import { jest } from "@jest/globals";
 import "@testing-library/jest-dom";
-import {jest} from "@jest/globals";
-import {TextDecoder, TextEncoder} from "util";
+import { TextDecoder, TextEncoder } from "util";
+
+
+
+
 
 Object.assign(global, {TextDecoder, TextEncoder});
 
 // Mock the global window.pywebview.api object
-Object.defineProperty(window, 'pywebview', {
+Object.defineProperty(window, "pywebview", {
   value: {
     api: {
       get_settings: jest.fn(),
@@ -25,7 +29,7 @@ Object.defineProperty(window, 'pywebview', {
       frontend_ready: jest.fn(),
       load_url: jest.fn(),
       delete_dds_file: jest.fn(),
-      download_single_dds_as_jpg: jest.fn(),
+      convert_single_dds_to_jpg: jest.fn(),
       convert_dds_for_display: jest.fn(),
       open_dump_folder: jest.fn(),
       open_inject_folder: jest.fn(),

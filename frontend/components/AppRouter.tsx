@@ -1,3 +1,4 @@
+import {CircularProgress} from "@heroui/react";
 import React, {useEffect, useState} from "react";
 import {Toaster, toast} from "sonner";
 
@@ -85,14 +86,12 @@ const AppRouter: React.FC = () => {
     initialize();
   }, []);
 
-  // const handleLanguageChange = async () => {
-  //   setLoading(true);
-  //   await loadLangData();
-  //   setLoading(false);
-  // };
-
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-300 text-black dark:bg-gray-900 dark:text-white">
+        <CircularProgress aria-label="Loading..." color="primary" />
+      </div>
+    );
   }
 
   return (

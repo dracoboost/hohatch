@@ -5,7 +5,7 @@ from pathlib import Path
 import webview
 import requests
 
-from backend.src.backend_api import HoHatchBackend
+from backend.backend_api import HoHatchBackend
 from .services import get_special_k_dir
 
 
@@ -136,7 +136,7 @@ class Api:
 
     def convert_single_dds_to_jpg(self, dds_path, output_folder):
         logging.debug(f"convert_single_dds_to_jpg called for path: {dds_path}")
-        return self.backend.download_single_dds_as_jpg(dds_path, output_folder)
+        return self.backend.convert_single_dds_to_jpg(dds_path, output_folder)
 
     def replace_dds(self, target_dds_path, replacement_image_path, is_dump_image):
         if isinstance(replacement_image_path, (list, tuple)) and replacement_image_path:
@@ -146,7 +146,7 @@ class Api:
             return {"success": False, "error": "Target and replacement filenames cannot be the same."}
 
         logging.debug(f"replace_dds called for target: {target_dds_path}")
-        return self.backend.replace_dds(None, target_dds_path, replacement_image_path, is_dump_image)
+        return self.backend.replace_dds(target_dds_path, replacement_image_path, is_dump_image)
 
     def batch_download_selected_dds_as_jpg(self, dds_path_list, output_folder):
         logging.debug("batch_download_selected_dds_as_jpg called")
@@ -201,12 +201,12 @@ class Api:
         logging.debug("get_app_version called")
         # In a real application, this would be read from a version file generated during build
         from .version import APP_VERSION
+
         return {"success": True, "version": APP_VERSION}
 
     def check_for_updates(self):
         logging.debug("check_for_updates called")
         try:
-            import requests
             response = requests.get("https://api.github.com/repos/dracoboost/hohatch/releases/latest")
             response.raise_for_status()  # Raise an exception for HTTP errors
             latest_release = response.json()

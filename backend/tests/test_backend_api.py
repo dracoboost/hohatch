@@ -6,18 +6,18 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 from .backend_api import HoHatchBackend
-from .services import get_config_file
+from backend.services import get_config_file
 
 
 @pytest.fixture
 def backend():
     """Provides a backend instance with mocked services."""
-    with patch("backend.src.backend_api.ConfigService") as MockConfigService, \
-         patch("backend.src.backend_api.DownloadService") as MockDownloadService, \
-         patch("backend.src.backend_api.FileService") as MockFileService, \
-         patch("backend.src.backend_api.ImageService") as MockImageService, \
-         patch("backend.src.backend_api.TexconvService") as MockTexconvService, \
-         patch("backend.src.backend_api.HoHatchBackend._ensure_texconv_exists"):
+    with patch("backend.backend_api.ConfigService") as MockConfigService, \
+         patch("backend.backend_api.DownloadService") as MockDownloadService, \
+         patch("backend.backend_api.FileService") as MockFileService, \
+         patch("backend.backend_api.ImageService") as MockImageService, \
+         patch("backend.backend_api.TexconvService") as MockTexconvService, \
+         patch("backend.backend_api.HoHatchBackend._ensure_texconv_exists"):
 
         # Setup mock instances for each service
         mock_config_service = MockConfigService.return_value

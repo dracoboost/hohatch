@@ -119,7 +119,7 @@ export default async function Home() {
       <header className="text-center py-8">
         <div className="flex items-center justify-center">
           <Image src="/images/icons/hohatch.jpg" alt="HoHatch App Image" className="rounded-lg mr-4" width={48} height={48} />
-          <h1 className="relative top-1 text-3xl font-balootamma2 font-bold tracking-tight bg-gradient-to-r from-[#B7465A] to-[#D9CAD1] text-transparent bg-clip-text sm:text-5xl md:text-6xl leading-tight">
+          <h1 className="relative top-1 text-3xl font-balootamma2 font-bold tracking-tight text-hochan-red sm:text-5xl md:text-6xl leading-tight">
             HoHatch
           </h1>
         </div>

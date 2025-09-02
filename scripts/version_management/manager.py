@@ -2,6 +2,7 @@ import json
 import re
 from pathlib import Path
 
+
 class VersionManager:
     def __init__(self, project_root: Path):
         self.project_root = project_root
@@ -24,23 +25,24 @@ class VersionManager:
         try:
             frontend_version = self._read_version_from_package_json("frontend/package.json")
 
-            backend_version_file_path = self.project_root / "backend" / "src" / "version.py"
+            backend_version_file_path = self.project_root / "backend" / "version.py"
             rc_template_path = self.project_root / "backend" / "version.rc.template"
             rc_output_path = self.project_root / "backend" / "version.rc"
 
-            # Update backend/src/version.py
+            # Update backend/version.py
             with open(backend_version_file_path, "w", encoding="utf-8") as f:
-                f.write(f"APP_VERSION = \"{frontend_version}\"")
+                f.write(f'APP_VERSION = "{frontend_version}"')
             print(f"Updated backend version to: {frontend_version}")
 
             # Generate backend/version.rc from template
-            version_comma = frontend_version.replace(".", ",")
+            version_parts = frontend_version.split(".")
+            version_tuple_str = f"({version_parts[0]}, {version_parts[1]}, {version_parts[2]}, 0)"
             version_dot = frontend_version
 
             with open(rc_template_path, "r", encoding="utf-8") as f:
                 rc_template_content = f.read()
 
-            rc_content = rc_template_content.replace("{VERSION_COMMA}", version_comma)
+            rc_content = rc_template_content.replace("{VERSION_TUPLE}", version_tuple_str)
             rc_content = rc_content.replace("{VERSION_DOT}", version_dot)
 
             with open(rc_output_path, "w", encoding="utf-8") as f:
@@ -111,7 +113,7 @@ class VersionManager:
             self._update_readme_badge(
                 "frontend/package.json",
                 "README.md",
-                r'(<img alt="version" src="https://img\.shields\.io/badge/version-)[0-9]+\\.[0-9]+\\.[0-9]+(-.*?">)',
+                r'(<img alt="version" src="https://img\.shields\.io/badge/version-)[0-9]+\.[0-9]+\.[0-9]+(-.*?">)',
                 "Main README.md badge",
             )
 
@@ -119,7 +121,7 @@ class VersionManager:
             self._update_readme_badge(
                 "website/package.json",
                 "website/README.md",
-                r'(!\[version\]\\(https://img\.shields\.io/badge/version-)[0-9]+\\.[0-9]+\\.[0-9]+(-[^\\]+\\))',
+                r"(!\[version\]\(https://img\.shields\.io/badge/version-)[0-9]+\.[0-9]+\.[0-9]+(-[^\]]+\))",
                 "Website README.md badge",
             )
 
@@ -127,8 +129,8 @@ class VersionManager:
             self._update_download_link(
                 "README.md",
                 frontend_version,
-                r'\[HoHatch\\.zip\]\\(https://github\\.com/dracoboost/hohatch/releases/latest/download/HoHatch\\.zip\\)',
-                r'[HoHatch-v{version}\\.zip](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip)',
+                r"\[HoHatch\.zip\]\(https://github\.com/dracoboost/hohatch/releases/latest/download/HoHatch\.zip\)",
+                r"[HoHatch-v{version}\.zip](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip)",
                 "Main README.md download link",
             )
 
@@ -136,15 +138,15 @@ class VersionManager:
             self._update_download_link(
                 "website/app/page.tsx",
                 frontend_version,
-                r'"downloadUrl": "https://github\\.com/dracoboost/hohatch/releases/latest"' ,
-                r'"downloadUrl": "https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip"' ,
+                r'"downloadUrl": "https://github\.com/dracoboost/hohatch/releases/latest"',
+                r'"downloadUrl": "https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip"',
                 "Website app/page.tsx JSON-LD downloadUrl",
             )
             self._update_download_link(
                 "website/app/page.tsx",
                 frontend_version,
-                r'Link href="https://github\\.com/dracoboost/hohatch/releases/latest"' ,
-                r'Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip"' ,
+                r'Link href="https://github\.com/dracoboost/hohatch/releases/latest"',
+                r'Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip"',
                 "Website app/page.tsx Button download link",
             )
 
@@ -152,19 +154,38 @@ class VersionManager:
             self._update_download_link(
                 "website/content/index.md",
                 frontend_version,
-                r'\[latest HoHatch\](https://github\\.com/dracoboost/hohatch/releases/latest)',
-                r'[latest HoHatch](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip)',
+                r"\[latest HoHatch\](https://github\.com/dracoboost/hohatch/releases/latest)",
+                r"[latest HoHatch](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip)",
                 "Website content/index.md download link",
             )
         except Exception as e:
             print(f"An error occurred during project README version update: {e}")
             raise
 
+
 # Entry points for external scripts
 def update_backend_version_entry_point():
     manager = VersionManager(Path(__file__).parent.parent.parent)
     manager.update_backend_app_version()
 
+
 def update_project_readme_versions_entry_point():
     manager = VersionManager(Path(__file__).parent.parent.parent)
     manager.update_project_readme_versions()
+
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) != 2:
+        print("Usage: python -m scripts.version_management.manager <entry_point>")
+        sys.exit(1)
+
+    entry_point = sys.argv[1]
+    if entry_point == "update_backend_version_entry_point":
+        update_backend_version_entry_point()
+    elif entry_point == "update_project_readme_versions_entry_point":
+        update_project_readme_versions_entry_point()
+    else:
+        print(f"Unknown entry point: {entry_point}")
+        sys.exit(1)

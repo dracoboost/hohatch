@@ -1,11 +1,12 @@
 a = Analysis(
     [
-        "../src/main.py",
-        "../src/api.py",
-        "../src/backend_api.py",
-        "../src/test_api.py",
-        "../src/test_backend_api.py",
-        "../src/test_refresh_scenario.py",
+        "../main.py",
+        "../api.py",
+        "../backend_api.py",
+        "../dto.py",
+        "../exceptions.py",
+        "../services.py",
+        "../version.py",
     ],
     binaries=[],
     datas=[("..\\..\\frontend\\dist", "frontend/dist")],
@@ -28,7 +29,7 @@ exe = EXE(
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=False,
+    upx=True,
     upx_exclude=[],
     runtime_tmpdir=None,
     console=True,  # build
@@ -37,5 +38,6 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    version='../version.rc',
     icon="../../frontend/public/favicons/favicon.ico",
 )

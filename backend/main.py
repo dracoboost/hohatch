@@ -2,18 +2,20 @@ import webview
 import sys
 from pathlib import Path
 
+# Add the project root to sys.path to allow for absolute imports from the 'backend' package.
 if getattr(sys, "frozen", False):
-    # Running in a PyInstaller bundle
-    # sys._MEIPASS is the path to the temporary directory where the bundle is extracted
-    # We need to add the 'src' directory within the bundle to sys.path
-    sys.path.append(str(Path(sys._MEIPASS) / "backend" / "src"))
+    # When bundled with PyInstaller, sys._MEIPASS is the root directory.
+    project_root = Path(sys._MEIPASS)
+    sys.path.insert(0, str(project_root))
 else:
-    # Running in a normal Python environment
-    sys.path.append(str(Path(__file__).parent))
+    # In a normal development environment, the project root is two levels up from this file.
+    project_root = Path(__file__).resolve().parent.parent
+    sys.path.insert(0, str(project_root))
 
-# This ensures that imports like 'from backend.src.api import Api' work correctly,
+
+# This ensures that imports like 'from backend.api import Api' work correctly,
 # especially when bundled with PyInstaller.
-from backend.src.api import Api
+from backend.api import Api
 
 if __name__ == "__main__":
     # Determine the path to the frontend build directory using pathlib for robustness
@@ -23,7 +25,7 @@ if __name__ == "__main__":
         frontend_dir = Path(sys._MEIPASS) / "frontend" / "dist"
     else:
         # Running in a normal Python environment
-        frontend_dir = Path(__file__).parent.parent.parent / "frontend" / "dist"
+        frontend_dir = Path(__file__).parent.parent / "frontend" / "dist"
 
     html_file_path = frontend_dir / "index.html"
 

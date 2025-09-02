@@ -2,15 +2,15 @@ import pytest
 from unittest.mock import MagicMock, patch
 from pathlib import Path
 
-from .api import Api
+from backend.api import Api
 
 
 @pytest.fixture
 def mock_api_instance():
-    with patch("backend.src.api.HoHatchBackend") as MockHoHatchBackend, \
-         patch("backend.src.api.webview") as MockWebview, \
-         patch("backend.src.api.logging.info") as mock_logging_info, \
-         patch("backend.src.api.logging.error") as mock_logging_error:
+    with patch("backend.api.HoHatchBackend") as MockHoHatchBackend, \
+         patch("backend.api.webview") as MockWebview, \
+         patch("backend.api.logging.info") as mock_logging_info, \
+         patch("backend.api.logging.error") as mock_logging_error:
 
         mock_backend = MockHoHatchBackend.return_value
         mock_backend.get_current_settings.return_value = {"lang": "en"}
@@ -49,7 +49,7 @@ def test_load_url_success(mock_api_instance):
         result = api_instance.load_url("/settings")
         assert result["success"] is True
         mock_active_window.load_url.assert_called_once()
-        mock_logging_info.assert_called_with(f"Loading HTML file: {Path(__file__).parent.parent / 'frontend' / 'dist' / 'settings.html'}")
+        mock_logging_info.assert_called_with(f"Loading HTML file: {Path(__file__).parent.parent.parent / 'frontend' / 'dist' / 'settings.html'}")
 
 def test_load_url_window_not_set(mock_api_instance):
     api_instance, _, _, _, _, mock_logging_error = mock_api_instance

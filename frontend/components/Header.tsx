@@ -66,19 +66,14 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="flex items-center justify-between border-b border-gray-700 px-4 py-2">
-      <div className="flex items-center gap-4">
-        <div className="flex flex-row items-center gap-2">
-          <Image alt="Ho-chan" className="rounded-lg" height={32} src={hoHatchJpg} width={32} />
-          <h1 className="font-balootamma2 relative top-1 bg-gradient-to-r from-[#B7465A] to-[#D9CAD1] bg-clip-text text-4xl font-bold text-transparent">
-            HoHatch
-          </h1>
-        </div>
+      <div className="flex items-center gap-3">
         <a href="https://hohatch.draco.moe" rel="noopener noreferrer" target="_blank">
-          <Image
-            alt="Website"
-            height={20}
-            src="https://img.shields.io/badge/Website-hohatch.draco.moe-b7465a"
-          />
+          <div className="flex flex-row items-center gap-2">
+            <Image alt="Ho-chan" className="rounded-lg" height={32} src={hoHatchJpg} width={32} />
+            <h1 className="font-balootamma2 text-hochan-red relative top-1 text-4xl font-bold">
+              HoHatch
+            </h1>
+          </div>
         </a>
         <a
           className="hidden lg:block"
