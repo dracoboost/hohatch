@@ -91,8 +91,16 @@ jobs:
           $pfx_base64 = "${{ secrets.CODE_SIGN_CERTIFICATE_PFX }}"
           $pfx_bytes = [System.Convert]::FromBase64String($pfx_base64)
           [System.IO.File]::WriteAllBytes("certificate.pfx", $pfx_bytes)
-          certutil -f -p "${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}" -importpfx certificate.pfx NoRoot
+          $password = "${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}"
+          if ($password) {
+            certutil -f -p "$password" -importpfx certificate.pfx NoRoot
+          } else {
+            certutil -f -importpfx certificate.pfx NoRoot
+          }
         shell: powershell
+
+      - name: Setup Developer Command Prompt
+        uses: microsoft/setup-msbuild@v2
 
       - name: Sign executable
         run: |
