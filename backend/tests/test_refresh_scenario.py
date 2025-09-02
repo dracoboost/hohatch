@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 import time
 
-from .backend_api import HoHatchBackend
+from backend.backend_api import HoHatchBackend
 from backend.dto import ImageInfo
 
 

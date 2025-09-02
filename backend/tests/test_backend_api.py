@@ -5,7 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from .backend_api import HoHatchBackend
+from backend.backend_api import HoHatchBackend
 from backend.services import get_config_file
 
 

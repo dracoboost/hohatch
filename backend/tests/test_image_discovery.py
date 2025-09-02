@@ -2,8 +2,8 @@ import pytest
 from unittest.mock import MagicMock, patch
 from pathlib import Path
 
-from .backend_api import HoHatchBackend
-from .services import get_config_file
+from backend.backend_api import HoHatchBackend
+from backend.services import get_config_file
 from backend.dto import ImageInfo
 
 
