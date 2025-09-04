@@ -1,4 +1,5 @@
 import webview
+import os
 import sys
 from pathlib import Path
 
@@ -46,7 +47,7 @@ if __name__ == "__main__":
 
         window.events.loaded += on_loaded
 
-        webview.start(debug=True)  # dev
-        # webview.start(debug=False)  # prod
+        debug_mode = os.environ.get("HOHATCH_DEBUG", "false").lower() == "true"
+        webview.start(debug=debug_mode)
     except Exception as e:
         print(f"Error: {e}")

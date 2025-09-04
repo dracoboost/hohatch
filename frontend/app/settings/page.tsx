@@ -2,6 +2,7 @@
 
 import {CircularProgress, Tab, Tabs, Tooltip} from "@heroui/react";
 import {Download, Folder, FolderCheck, FolderPen, MoveHorizontal, MoveVertical} from "lucide-react";
+import {useTheme} from "next-themes";
 import React, {useEffect, useState} from "react";
 import {Toaster, toast} from "sonner";
 
@@ -22,7 +23,7 @@ interface SettingsData {
   last_active_view: "dump" | "inject";
 }
 
-const SettingsScreen: React.FC = () => {
+export default function SettingsScreen() {
   const [settings, setSettings] = useState<SettingsData>({
     language: "en",
     last_image_dir: "",
@@ -39,6 +40,12 @@ const SettingsScreen: React.FC = () => {
   }>({isValid: null, message: null});
   const isInitialMount = React.useRef(true);
   const [appVersion, setAppVersion] = useState<string | undefined>(undefined);
+  const [mounted, setMounted] = useState(false);
+  const {theme} = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const i18n = settings?.language ? I18N[settings.language] : I18N.en;
 
@@ -164,9 +171,9 @@ const SettingsScreen: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen flex-col bg-slate-300 text-black dark:bg-gray-900 dark:text-white">
+      <div className="flex min-h-screen flex-col bg-gray-200 text-black dark:bg-gray-900 dark:text-white">
         <Toaster richColors position="bottom-right" />
-        <Header appVersion={appVersion} page="settings" />
+        <Header appVersion={appVersion} mounted={mounted} page="settings" theme={theme} />
         <main className="flex flex-grow items-center justify-center">
           <CircularProgress aria-label="Loading..." color="primary" />
         </main>
@@ -175,14 +182,14 @@ const SettingsScreen: React.FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-300 text-black dark:bg-gray-900 dark:text-white">
+    <div className="flex min-h-screen flex-col bg-gray-200 text-black dark:bg-gray-900 dark:text-white">
       <Toaster richColors position="bottom-right" />
-      <Header appVersion={appVersion} page="settings" />
+      <Header appVersion={appVersion} mounted={mounted} page="settings" theme={theme} />
 
       <main className="flex flex-grow items-center justify-center">
         <div className="flex w-full flex-col items-start gap-4 p-4 sm:p-2 lg:w-2/3">
           <div className="gap-0">
-            <label className="mb-2 block text-sm font-medium text-gray-400">
+            <label className="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-400">
               {i18n.language_setting || "Language"}
             </label>
             <Tabs
@@ -219,7 +226,11 @@ const SettingsScreen: React.FC = () => {
             >
               <Folder size={24} />
             </Button>
-            <Tooltip content={i18n.download_special_k_btn} placement="bottom">
+            <Tooltip
+              color={mounted && theme === "light" ? "foreground" : "default"}
+              content={i18n.download_special_k_btn}
+              placement="bottom"
+            >
               <Button
                 isIconOnly
                 aria-label="Download Special K Installer"
@@ -274,6 +285,4 @@ const SettingsScreen: React.FC = () => {
       </main>
     </div>
   );
-};
-
-export default SettingsScreen;
+}

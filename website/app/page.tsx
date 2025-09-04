@@ -137,7 +137,7 @@ export default async function Home() {
         </div>
       </header>
 
-      <main className="bg-background">
+      <main>
         {/* Layout for lg: 3-column with sticky sidebar and TOC */}
         <div className="hidden lg:flex min-h-screen">
           {/* Social Icons Sidebar - Left (lg only) */}

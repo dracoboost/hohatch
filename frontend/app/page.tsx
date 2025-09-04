@@ -32,6 +32,8 @@ interface ImageSectionProps {
   onReplaceDDS: (imagePath: string) => void;
   onSelectAll: () => void;
   onTrash: (imagePath: string) => void;
+  mounted: boolean;
+  theme: string | undefined;
 }
 
 const ImageSection: React.FC<ImageSectionProps> = ({
@@ -40,9 +42,11 @@ const ImageSection: React.FC<ImageSectionProps> = ({
   imagesPerPage,
   isProcessing,
   isLoading,
+  mounted,
   languageData,
   noImagesMessage,
   selectedImages,
+  theme,
   folderType,
   isAllSelected,
   isPartiallySelected,
@@ -62,7 +66,7 @@ const ImageSection: React.FC<ImageSectionProps> = ({
 
   return (
     <div
-      className="flex flex-grow flex-col rounded-lg bg-slate-500 p-1 dark:bg-gray-800"
+      className="flex flex-grow flex-col rounded-lg bg-gray-300 p-1 dark:bg-gray-800"
       data-testid={`image-section-${folderType}`}
     >
       <div className="flex w-full flex-row items-center gap-1">
@@ -76,7 +80,7 @@ const ImageSection: React.FC<ImageSectionProps> = ({
               onClick={onSelectAll}
             >
               <SelectAllIcon
-                className="text-black dark:text-white"
+                className="text-gray-800 dark:text-white"
                 data-testid={
                   isAllSelected
                     ? "icon-square-check"
@@ -128,6 +132,8 @@ const ImageSection: React.FC<ImageSectionProps> = ({
                   isProcessing={isProcessing}
                   isSelected={selectedImages.has(image.path)}
                   languageData={languageData}
+                  mounted={mounted}
+                  theme={theme}
                   onDownloadJPG={onDownloadJPG}
                   onReplaceDDS={onReplaceDDS}
                   onSelectionChange={onImageSelectionChange}
@@ -173,7 +179,12 @@ export default function MainScreen() {
 
   const [activeView, setActiveView] = useState<"dump" | "inject">("dump");
   const isInitialMount = useRef(true);
-  const {setTheme} = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const {theme, setTheme} = useTheme();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const isMd = useMediaQuery({minWidth: 768});
   const isLg = useMediaQuery({minWidth: 1024});
@@ -596,14 +607,16 @@ export default function MainScreen() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-300 text-black dark:bg-gray-900 dark:text-white">
+    <div className="flex min-h-screen flex-col bg-gray-200 text-black dark:bg-gray-900 dark:text-white">
       <Toaster richColors position="bottom-right" />
       <Header
         appVersion={appVersion}
         isProcessing={isProcessing}
         lang={currentLangCode}
+        mounted={mounted}
         page="index"
         selectedImagesCount={selectedImages.size}
+        theme={theme}
         onBatchDownload={handleBatchDownload}
         onBatchTrash={handleBatchTrash}
         onReload={() => {
@@ -637,6 +650,7 @@ export default function MainScreen() {
                     {dumpImages.length}
                   </Chip>
                   <Tooltip
+                    color={mounted && theme === "light" ? "foreground" : "default"}
                     content={i18n.dump_folder || "Open Dump Folder"}
                     isDisabled={activeView !== "dump"}
                   >
@@ -662,11 +676,12 @@ export default function MainScreen() {
               key="inject"
               title={
                 <div className="flex items-center space-x-2">
-                  <span>{i18n.injected_images}</span>
+                  <span className="text-gray-800 dark:text-gray-500">{i18n.injected_images}</span>
                   <Chip size="sm" variant="faded">
                     {injectImages.length}
                   </Chip>
                   <Tooltip
+                    color={mounted && theme === "light" ? "foreground" : "default"}
                     content={i18n.inject_folder || "Open Inject Folder"}
                     isDisabled={activeView !== "inject"}
                   >
@@ -707,8 +722,10 @@ export default function MainScreen() {
             }
             isProcessing={isProcessing}
             languageData={i18n}
+            mounted={mounted}
             noImagesMessage={i18n.no_dump_images}
             selectedImages={selectedImages}
+            theme={theme}
             onDownloadJPG={handleDownloadSingle}
             onImageSelectionChange={handleImageSelectionChange}
             onPageChange={setCurrentPageDump}
@@ -744,8 +761,10 @@ export default function MainScreen() {
             }
             isProcessing={isProcessing}
             languageData={i18n}
+            mounted={mounted}
             noImagesMessage={i18n.no_inject_images}
             selectedImages={selectedImages}
+            theme={theme}
             onDownloadJPG={handleDownloadSingle}
             onImageSelectionChange={handleImageSelectionChange}
             onPageChange={setCurrentPageInject}

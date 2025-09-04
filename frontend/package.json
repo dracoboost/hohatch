@@ -1,6 +1,6 @@
 {
   "name": "hohatch-frontend",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -10,7 +10,7 @@
     "build": "npm run frontend && npm run backend",
     "clean": "jest --clearCache",
         "dev": "npm run update-readme-version && npm run frontend && run-script-os",
-    "dev:windows": "cd .. && venv\\Scripts\\python -m backend.main",
+    "dev:windows": "cd .. && cross-env HOHATCH_DEBUG=true venv\\Scripts\\python -m backend.main",
     "freeze": "run-script-os",
     "freeze:windows": "cd .. && venv\\Scripts\\pip freeze > requirements.txt",
     "frontend": "next build",

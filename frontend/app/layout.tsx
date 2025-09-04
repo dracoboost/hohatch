@@ -20,7 +20,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 
   return (
     <html suppressHydrationWarning lang="en">
-      <body>
+      <body className="bg-background text-foreground antialiased">
         <HeroUIProvider navigate={navigateTo}>
           <NextThemesProvider attribute="class" defaultTheme="dark">
             <link href="/favicons/favicon.ico" rel="icon" />

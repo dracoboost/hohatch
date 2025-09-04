@@ -1,4 +1,4 @@
-[![version](https://img.shields.io/badge/version-1.0.1-1d253c)](https://github.com/dracoboost/hohatch/blob/master/website/package.json)
+[![version](https://img.shields.io/badge/version-1.0.2-1d253c)](https://github.com/dracoboost/hohatch/blob/master/website/package.json)
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 

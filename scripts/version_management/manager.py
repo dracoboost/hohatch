@@ -129,8 +129,8 @@ class VersionManager:
             self._update_download_link(
                 "README.md",
                 frontend_version,
-                r"\[HoHatch\.zip\]\(https://github\.com/dracoboost/hohatch/releases/latest/download/HoHatch\.zip\)",
-                r"[HoHatch-v{version}\.zip](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip)",
+                r"\[HoHatch-v[0-9]+\.[0-9]+\.[0-9]+\]\(https://github\.com/dracoboost/hohatch/releases/latest/download/HoHatch-v[0-9]+\.[0-9]+\.[0-9]+\.zip\)",
+                r"[HoHatch-v{version}](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v{version}.zip)",
                 "Main README.md download link",
             )
 

@@ -1,13 +1,12 @@
 "use client";
 
 import {Tooltip} from "@heroui/react";
-import {Download, Moon, RefreshCw, Settings, Sun, Trash2, X} from "lucide-react";
-import {useTheme} from "next-themes";
+import {Download, RefreshCw, Settings, Trash2, X} from "lucide-react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
 
 import {Button} from "@/components/Button";
+import {ThemeSwitcher} from "@/components/ThemeSwitcher";
 import hoHatchJpg from "@/public/images/icons/hohatch.jpg";
 
 import {I18N} from "../config/consts";
@@ -20,52 +19,28 @@ interface HeaderProps {
   onBatchDownload?: () => Promise<void>;
   onBatchTrash?: () => Promise<void>;
   lang?: "en" | "ja";
-  appVersion?: string; // Added appVersion prop
+  appVersion?: string;
+  mounted: boolean;
+  theme: string | undefined;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  page,
-  onReload,
-  selectedImagesCount,
   isProcessing,
+  appVersion,
+  selectedImagesCount,
+  lang = "en",
+  mounted,
+  page,
+  theme,
   onBatchDownload,
   onBatchTrash,
-  lang = "en",
-  appVersion, // Destructure appVersion
+  onReload,
 }) => {
   const router = useRouter();
   const i18n = I18N[lang];
-  const [mounted, setMounted] = useState(false);
-  const {theme, setTheme} = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const ThemeSwitcher = () => {
-    if (!mounted) {
-      return <div className="size-8" />;
-    }
-
-    const handleThemeChange = (newTheme: "dark" | "light") => {
-      setTheme(newTheme);
-      window.pywebview.api.save_settings({theme: newTheme});
-    };
-
-    return (
-      <Button
-        isIconOnly
-        aria-label="Toggle Theme"
-        buttonSize="size-8"
-        onClick={() => handleThemeChange(theme === "dark" ? "light" : "dark")}
-      >
-        {theme === "dark" ? <Moon size={20} /> : <Sun size={20} />}
-      </Button>
-    );
-  };
 
   return (
-    <header className="flex items-center justify-between border-b border-gray-700 px-4 py-2">
+    <header className="flex items-center justify-between px-4 py-2">
       <div className="flex items-center gap-3">
         <a href="https://hohatch.draco.moe" rel="noopener noreferrer" target="_blank">
           <div className="flex flex-row items-center gap-2">
@@ -84,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Image
             alt="version"
             height={20}
-            src={`https://img.shields.io/badge/version-${appVersion || "unknown"}-b7465a`}
+            src={`https://img.shields.io/badge/version-${appVersion || "0.0.0"}-b7465a`}
           />
         </a>
         {page === "index" && (
@@ -116,7 +91,10 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
       <div className="flex items-center gap-2">
         {page === "index" && (
-          <Tooltip content={i18n.reload_btn}>
+          <Tooltip
+            color={mounted && theme === "light" ? "foreground" : "default"}
+            content={i18n.reload_btn}
+          >
             <Button isIconOnly aria-label="Reload" buttonSize="size-8" onClick={onReload}>
               <RefreshCw size={20} />
             </Button>

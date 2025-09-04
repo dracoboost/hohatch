@@ -24,16 +24,20 @@ interface ImageCardProps {
   isProcessing: boolean;
   isSelected: boolean;
   onSelectionChange: (path: string) => void;
+  mounted: boolean;
+  theme: string | undefined;
 }
 
 export const ImageCard: React.FC<ImageCardProps> = ({
   image,
-  onDownloadJPG,
-  onReplaceDDS,
-  onTrash,
   languageData,
   isProcessing,
   isSelected,
+  mounted,
+  theme,
+  onDownloadJPG,
+  onReplaceDDS,
+  onTrash,
   onSelectionChange,
 }) => {
   const [hasError, setHasError] = useState(false);
@@ -88,10 +92,13 @@ export const ImageCard: React.FC<ImageCardProps> = ({
             </div>
           )}
         </div>
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-          <p className="mb-2 truncate text-sm font-semibold text-white">{displayName}</p>
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/50 p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black/50">
+          <p className="mb-2 truncate text-sm font-semibold text-black dark:text-white">
+            {displayName}
+          </p>
           <div className="inline-flex rounded-full p-0.5 dark:border-neutral-700">
             <Tooltip
+              color={mounted && theme === "light" ? "foreground" : "default"}
               content={languageData.download_as_jpg_tooltip || "Convert to JPG"}
               placement="bottom"
             >
@@ -102,10 +109,14 @@ export const ImageCard: React.FC<ImageCardProps> = ({
                 isDisabled={isProcessing}
                 onClick={() => onDownloadJPG(image.path)}
               >
-                <Download color="white" size={16} />
+                <Download color={mounted && theme === "light" ? "black" : "white"} size={16} />
               </Button>
             </Tooltip>
-            <Tooltip content={languageData.replace_tooltip || "Replace"} placement="bottom">
+            <Tooltip
+              color={mounted && theme === "light" ? "foreground" : "default"}
+              content={languageData.replace_tooltip || "Replace"}
+              placement="bottom"
+            >
               <Button
                 isIconOnly
                 aria-label="Replace DDS"
@@ -113,10 +124,14 @@ export const ImageCard: React.FC<ImageCardProps> = ({
                 isDisabled={isProcessing}
                 onClick={() => onReplaceDDS(image.path, image.isDumpImage ?? false)}
               >
-                <PencilLine color="white" size={16} />
+                <PencilLine color={mounted && theme === "light" ? "black" : "white"} size={16} />
               </Button>
             </Tooltip>
-            <Tooltip content={languageData.trash_btn_tooltip || "Trash"} placement="bottom">
+            <Tooltip
+              color={mounted && theme === "light" ? "foreground" : "default"}
+              content={languageData.trash_btn_tooltip || "Trash"}
+              placement="bottom"
+            >
               <Button
                 isIconOnly
                 aria-label="Trash"

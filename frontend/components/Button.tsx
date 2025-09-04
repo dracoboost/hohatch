@@ -6,10 +6,10 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
   isDisabled?: boolean;
   variant?: "solid" | "bordered";
-  color?: "primary" | "danger"; // For regular buttons
+  color?: "primary" | "danger";
   isIconOnly?: boolean;
-  isOverlay?: boolean; // For image overlay icon buttons
-  buttonSize?: string; // New prop for button size
+  isOverlay?: boolean;
+  buttonSize?: string;
 }
 
 export const Button: React.FC<ButtonProps> = ({
@@ -20,7 +20,7 @@ export const Button: React.FC<ButtonProps> = ({
   isIconOnly,
   isOverlay,
   className,
-  buttonSize, // Destructure new prop
+  buttonSize,
   ...props
 }) => {
   const baseClasses =
@@ -32,12 +32,12 @@ export const Button: React.FC<ButtonProps> = ({
     // Icon-only button styles
     buttonClasses = cn(
       baseClasses,
-      buttonSize || "size-11", // Use buttonSize or default to size-11
+      buttonSize || "size-11",
       isOverlay
         ? // Image overlay icon-only button
-          "bg-gray-100 text-gray-800 dark:bg-neutral-700 dark:text-neutral-200"
+          "bg-gray-100 dark:bg-neutral-700"
         : // Other icon-only buttons (no background, with hover)
-          "text-gray-700 dark:text-neutral-400 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-neutral-700 dark:hover:text-neutral-200",
+          "hover:bg-white dark:hover:bg-neutral-700",
       isDisabled && "opacity-50 cursor-not-allowed",
       className,
     );
