@@ -1,4 +1,4 @@
-# Changelog
+# 📄 HoHatch Application Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -7,19 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2025-09-04
+
 ### Added
 
-- No unreleased content.
-
-## [1.0.2] - 2025-08-31
+- Updated various frontend dependencies including Next.js, React, Jest, ESLint, and Tailwind CSS.
 
 ### Changed
 
 - Simplified `backend-test` and `lint:fix` scripts in `package.json`.
+- Updated `backend-test` script to use `set "PYTHONPATH=%CD%\backend\;%PYTHONPATH%"` for correct module resolution.
+- Updated `dev:windows` script to use `cross-env HOHATCH_DEBUG=true` for debug mode.
+- Updated `freeze:windows` script to use `venv\Scripts\pip freeze > requirements.txt` for freezing dependencies.
+- Updated `lint:fix:windows` script to use `npm exec prettier -- --write "**/*.{ts,tsx}" > NUL` to suppress output.
 
 ### Fixed
 
 - Corrected image alignment and badge display in `README.md`.
+
 
 ## [1.0.1] - 2025-08-31
 
@@ -47,6 +52,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial commit.
 
 [unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.2...HEAD
-[1.0.2]: https://github.com/dracoboost/hohatch/compare/v1.0.1...v1.0.2
+[1.0.2]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.2
 [1.0.1]: https://github.com/dracoboost/hohatch/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.0
