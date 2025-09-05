@@ -125,26 +125,30 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="flex items-center justify-between px-4 py-2">
       <div className="flex items-center gap-3">
-        <a href="https://hohatch.draco.moe" rel="noopener noreferrer" target="_blank">
-          <div className="flex flex-row items-center gap-2">
-            <Image alt="Ho-chan" className="rounded-lg" height={32} src={hoHatchJpg} width={32} />
-            <h1 className="font-balootamma2 text-hochan-red relative top-1 text-4xl font-bold">
-              HoHatch
-            </h1>
-          </div>
-        </a>
-        <a
-          className="hidden lg:block"
-          href="https://github.com/dracoboost/hohatch/releases"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          <Image
-            alt="version"
-            height={20}
-            src={`https://img.shields.io/badge/version-${appVersion || "unknown"}-b7465a`}
-          />
-        </a>
+        <Tooltip content="Visit Website">
+          <a href="https://hohatch.draco.moe" rel="noopener noreferrer" target="_blank">
+            <div className="flex flex-row items-center gap-2">
+              <Image alt="Ho-chan" className="rounded-lg" height={32} src={hoHatchJpg} width={32} />
+              <h1 className="font-balootamma2 text-hochan-red relative top-1 text-4xl font-bold">
+                HoHatch
+              </h1>
+            </div>
+          </a>
+        </Tooltip>
+        <Tooltip content="View Latest Release">
+          <a
+            className="hidden lg:block"
+            href="https://github.com/dracoboost/hohatch/releases"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            <Image
+              alt="version"
+              height={20}
+              src={`https://img.shields.io/badge/version-${appVersion || "unknown"}-b7465a`}
+            />
+          </a>
+        </Tooltip>
         {page === "index" && (
           <>
             {(selectedImagesCount ?? 0) > 0 && (
