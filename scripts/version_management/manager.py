@@ -93,14 +93,14 @@ class VersionManager:
                     r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(" isExternal>)',
                     rf"\g<1>{website_version}\g<2>",
                 ),
-                (r"(Download Latest HoHatch \(v)[0-9]+\.[0-9]+\.[0-9]+(\))", rf"\g<1>{website_version}\g<2>"),
+                (r"(Download Latest HoHatch \(v)[0-9]+\.[0-9]+\.[0-9]+(\)\])", rf"\g<1>{website_version}\g<2>"),
             ]
             self._update_file_content(page_tsx_path, page_tsx_patterns, "website/app/page.tsx")
 
             # Update website/content/index.md
             index_md_path = self.project_root / "website" / "content" / "index.md"
             index_md_patterns = [
-                (r"(\[latest HoHatch \(v)[0-9.]+\)\]", rf"\g<1>{website_version}\g<2>"),
+                (r"(\[latest HoHatch \(v)[0-9.]+(\)\])", rf"\g<1>{website_version}\g<2>"),
                 (
                     r"(\(https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9.]+(\.zip\))",
                     rf"\g<1>{website_version}\g<2>",
@@ -111,4 +111,74 @@ class VersionManager:
             # Update frontend/config/consts.ts
             self._update_file_content(
                 self.project_root / "frontend" / "config" / "consts.ts",
-                [(r'(export const appVersion = ")([0-9]+\.[0-9]+\.[0-9]+)(")', rf"\g<1>{frontend_version}\g<3>
+                [(r'(export const appVersion = ")([0-9]+\.[0-9]+\.[0-9]+)(")', rf"\g<1>{frontend_version}\g<3>")],
+                "Frontend consts.ts version",
+            )
+
+            # Update main README.md badge
+            self._update_file_content(
+                self.project_root / "README.md",
+                [
+                    (
+                        r'(<img alt="version" src="https://img.shields.io/badge/version-)[0-9]+\.[0-9]+\.[0-9]+(-.*?")>',
+                        rf"\g<1>{frontend_version}\g<2>",
+                    )
+                ],
+                "Main README.md badge",
+            )
+
+            # Update website/README.md badge
+            self._update_file_content(
+                self.project_root / "website" / "README.md",
+                [
+                    (
+                        r"(!\[version\]\(https://img.shields.io/badge/version-)[0-9]+\.[0-9]+\.[0-9]+(-[^)]+\))",
+                        rf"\g<1>{website_version}\g<2>",
+                    )
+                ],
+                "Website README.md badge",
+            )
+
+            # Update README.md download link
+            self._update_file_content(
+                self.project_root / "README.md",
+                [
+                    (
+                        r"(\[HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\]\(https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9.]+(\.zip\))",
+                        rf"\g<1>{frontend_version}\g<2>{frontend_version}\g<3>",
+                    )
+                ],
+                "Main README.md download link",
+            )
+
+        except Exception as e:
+            print(f"An error occurred during project README version update: {e}")
+            raise
+
+
+# Entry points for external scripts
+def update_backend_version_entry_point():
+    manager = VersionManager(Path(__file__).parent.parent.parent)
+    manager.update_backend_app_version()
+
+
+def update_all_versions_entry_point():
+    manager = VersionManager(Path(__file__).parent.parent.parent)
+    manager.update_all_project_versions()
+
+
+if __name__ == "__main__":
+    import sys
+
+    if len(sys.argv) != 2:
+        print("Usage: python -m scripts.version_management.manager <entry_point>")
+        sys.exit(1)
+
+    entry_point = sys.argv[1]
+    if entry_point == "update_backend_version_entry_point":
+        update_backend_version_entry_point()
+    elif entry_point == "update_all_versions_entry_point":
+        update_all_versions_entry_point()
+    else:
+        print(f"Unknown entry point: {entry_point}")
+        sys.exit(1)
