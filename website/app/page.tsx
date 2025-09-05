@@ -1,8 +1,7 @@
-import { Button, Link } from "@heroui/react";
+import { Link } from "@heroui/react";
 import { promises as fs } from "fs";
 
 import type { Metadata } from 'next';
-import Image from "next/image";
 import path from "path";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -64,9 +63,13 @@ export const metadata: Metadata = {
   ]
 }
 
+import { WebsiteHeader } from "../components/WebsiteHeader";
+
 export default async function Home() {
   const markdownFilePath = path.join(process.cwd(), "content", "index.md");
   const markdownContent = await fs.readFile(markdownFilePath, "utf-8");
+
+  const appVersion = "1.0.3"; // Hardcoded version for now, will be dynamic later
 
   interface AnchorProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
     href?: string;
@@ -74,13 +77,13 @@ export default async function Home() {
 
   interface Components {
     a: React.FC<AnchorProps>;
-    blockquote: React.FC<React.QuoteHTMLAttributes<HTMLQuoteElement>>;
-    h1: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-    h2: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-    h3: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-    h4: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-    h5: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-    h6: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+    blockquote: React.FC<React.QuoteHTMLAttributes<HTMLQuoteElement>>; 
+    h1: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
+    h2: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
+    h3: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
+    h4: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
+    h5: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
+    h6: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
   }
 
   const components: Components = {
@@ -117,41 +120,7 @@ export default async function Home() {
 
   return (
     <div className="font-sans container mx-auto px-4 sm:px-6 lg:px-8">
-      <header className="text-center py-8">
-        <div className="flex items-center justify-center">
-          <Image src="/images/icons/hohatch.jpg" alt="HoHatch App Image" className="rounded-lg" width={48} height={48} />
-          <div className="relative">
-            <h1 className="relative top-1 text-3xl font-balootamma2 font-bold tracking-tight text-hochan-red sm:text-5xl md:text-6xl leading-tight">
-              HoHatch
-            </h1>
-            <a
-              className="absolute -bottom-2 right-0 hidden lg:block"
-              href="https://github.com/dracoboost/hohatch/releases"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <Image
-                alt="version"
-                height={16}
-                src="https://img.shields.io/badge/version-1.0.3-b7465a"
-                width={96}
-              />
-            </a>
-          </div>
-        </div>
-        <p className="mt-3 max-w-md mx-auto text-base text-muted-foreground sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-          A desktop tool for converting and managing JPG/DDS images to streamline modding for Shadowverse: Worlds Beyond with Special K.
-        </p>
-        <div className="mt-5 flex justify-center">
-          <div className="rounded-md shadow">
-            <Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.0.1.zip" isExternal>
-              <Button className="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-hochan-red hover:bg-hochan-red/80 md:py-4 md:text-lg md:px-10">
-                Download Latest HoHatch (v1.0.3)
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
+      <WebsiteHeader version={appVersion} />
 
       <main>
         {/* Layout for lg: 3-column with sticky sidebar and TOC */}
