@@ -12,8 +12,6 @@ import {Header} from "@/components/Header";
 import {ImageCard, ImageInfo} from "@/components/ImageCard";
 import {I18N} from "@/config/consts";
 
-import packageJson from "../package.json";
-
 interface ImageSectionProps {
   currentPage: number;
   images: ImageInfo[];
@@ -97,8 +95,10 @@ const ImageSection: React.FC<ImageSectionProps> = ({
           <div className="flex flex-grow justify-center">
             <Pagination
               isCompact
+              loop
               showControls
               aria-label="Pagination navigation"
+              color="secondary"
               initialPage={1}
               page={currentPage}
               total={Math.ceil(images.length / imagesPerPage)}
@@ -175,7 +175,6 @@ export default function MainScreen() {
   const [currentLangCode, setCurrentLangCode] = useState<"en" | "ja">("en");
   const [i18n, setI18n] = useState<LangData>(I18N.en);
   const [selectedImages, setSelectedImages] = useState<Set<string>>(new Set());
-  const [appVersion, setAppVersion] = useState<string | undefined>(undefined); // New state for app version
 
   const [activeView, setActiveView] = useState<"dump" | "inject">("dump");
   const isInitialMount = useRef(true);
@@ -297,9 +296,6 @@ export default function MainScreen() {
         setActiveView(settings.last_active_view || "dump");
         setTheme(settings.theme || "dark");
 
-        // Set app version from package.json
-        setAppVersion(packageJson.version);
-
         loadImages("dump");
         loadImages("inject");
       } catch (e: any) {
@@ -350,96 +346,6 @@ export default function MainScreen() {
 
     saveActiveView();
   }, [activeView]);
-
-  useEffect(() => {
-    // Only run checkUpdate if appVersion is available
-    if (!appVersion) return;
-
-    const checkUpdate = async () => {
-      try {
-        const currentVersion = appVersion; // Use appVersion state
-
-        const updateResponse = await window.pywebview.api.check_for_updates();
-        if (!updateResponse.success || !updateResponse.latest_version) {
-          console.error("Failed to check for updates:", updateResponse.error);
-          return;
-        }
-        const latestVersion = updateResponse.latest_version;
-
-        // Simple version comparison (e.g., "1.0.0" vs "1.0.1")
-        // This assumes semantic versioning (major.minor.patch)
-        const compareVersions = (current: string, latest: string): number => {
-          const currentParts = current.split(".").map(Number);
-          const latestParts = latest.split(".").map(Number);
-
-          for (let i = 0; i < Math.max(currentParts.length, latestParts.length); i++) {
-            const currentPart = currentParts[i] || 0;
-            const latestPart = latestParts[i] || 0;
-
-            if (latestPart > currentPart) {
-              return 1; // latest is newer
-            }
-            if (latestPart < currentPart) {
-              return -1; // current is newer
-            }
-          }
-          return 0; // versions are equal
-        };
-
-        const versionComparisonResult = compareVersions(currentVersion, latestVersion);
-
-        if (versionComparisonResult === 1) {
-          // A new official version is available
-          toast.info(
-            <div className="flex flex-col">
-              <span>A new version of HoHatch is available!</span>
-              <span>
-                Current: {currentVersion}, Latest: {latestVersion}
-              </span>
-              <a
-                className="text-blue-400 underline"
-                href="https://github.com/dracoboost/hohatch/releases"
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Download Latest Version
-              </a>
-            </div>,
-            {
-              duration: 10000, // Show for 10 seconds
-              position: "bottom-right",
-            },
-          );
-        } else if (versionComparisonResult === -1) {
-          // Local version is newer than latest official
-          toast.info(
-            <div className="flex flex-col">
-              <span>
-                You are running a newer version of HoHatch than the latest official release.
-              </span>
-              <span>
-                Current: {currentVersion}, Latest Official: {latestVersion}
-              </span>
-              <span>This might be a development or unreleased version.</span>
-            </div>,
-            {
-              duration: 10000, // Show for 10 seconds
-              position: "bottom-right",
-            },
-          );
-        }
-      } catch (e) {
-        console.error("Error during update check:", e);
-      }
-    };
-
-    // Run update check after initial data load, or after a short delay
-    const timer = setTimeout(() => {
-      checkUpdate();
-    }, 5000); // Check 5 seconds after app starts
-
-    return () => clearTimeout(timer);
-  }, [appVersion]); // Dependency array now includes appVersion
 
   const handleImageSelectionChange = (imagePath: string) => {
     setSelectedImages((prevSelected) => {
@@ -610,7 +516,6 @@ export default function MainScreen() {
     <div className="flex min-h-screen flex-col bg-gray-200 text-black dark:bg-gray-900 dark:text-white">
       <Toaster richColors position="bottom-right" />
       <Header
-        appVersion={appVersion}
         isProcessing={isProcessing}
         lang={currentLangCode}
         mounted={mounted}
@@ -631,10 +536,10 @@ export default function MainScreen() {
           <Tabs
             aria-label="Image types"
             classNames={{
-              tabList: "w-full relative rounded-none p-0 border-b border-divider gap-6",
-              cursor: "w-full bg-[#22d3ee]",
+              tabList: "w-full relative rounded-none p-0 border-b border-divider gap-3",
+              cursor: "w-full bg-hochan-red",
               tab: "max-w-fit px-0 h-12",
-              tabContent: "group-data-[selected=true]:text-[#06b6d4]",
+              tabContent: "group-data-[selected=true]:text-hochan-red",
             }}
             color="primary"
             selectedKey={activeView}
@@ -645,14 +550,15 @@ export default function MainScreen() {
               key="dump"
               title={
                 <div className="flex items-center space-x-2">
-                  <span>{i18n.dumped_images}</span>
+                  <span className={activeView === "dump" ? "text-hochan-red" : "text-gray-500"}>
+                    {i18n.dumped_images}
+                  </span>
                   <Chip size="sm" variant="faded">
                     {dumpImages.length}
                   </Chip>
                   <Tooltip
                     color={mounted && theme === "light" ? "foreground" : "default"}
                     content={i18n.dump_folder || "Open Dump Folder"}
-                    isDisabled={activeView !== "dump"}
                   >
                     <div
                       aria-label="Open Dump Folder"
@@ -676,14 +582,15 @@ export default function MainScreen() {
               key="inject"
               title={
                 <div className="flex items-center space-x-2">
-                  <span className="text-gray-800 dark:text-gray-500">{i18n.injected_images}</span>
+                  <span className={activeView === "inject" ? "text-hochan-red" : "text-gray-500"}>
+                    {i18n.injected_images}
+                  </span>
                   <Chip size="sm" variant="faded">
                     {injectImages.length}
                   </Chip>
                   <Tooltip
                     color={mounted && theme === "light" ? "foreground" : "default"}
                     content={i18n.inject_folder || "Open Inject Folder"}
-                    isDisabled={activeView !== "inject"}
                   >
                     <div
                       aria-label="Open Inject Folder"

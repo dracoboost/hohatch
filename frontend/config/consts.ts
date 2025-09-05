@@ -71,6 +71,7 @@ export const I18N = {
     no_inject_images: "No injected images found.",
     dump_folder: "Open Dump Folder",
     inject_folder: "Open Inject Folder",
+    cache_settings: "Cache",
     open_cache_folder_btn: "Open Cache Folder",
   },
   ja: {
@@ -146,6 +147,9 @@ export const I18N = {
     open_folder: "フォルダを開く",
     dump_folder: "Dumpフォルダを開く",
     inject_folder: "Injectフォルダを開く",
+    cache_settings: "キャッシュ",
     open_cache_folder_btn: "キャッシュフォルダを開く",
   },
 };
+
+export const appVersion = "1.0.3";

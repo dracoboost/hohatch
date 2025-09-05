@@ -1,5 +1,5 @@
 from pathlib import Path
-from scripts.version_management.manager import update_project_readme_versions_entry_point
+from scripts.version_management.manager import update_all_versions_entry_point
 
 if __name__ == "__main__":
-    update_project_readme_versions_entry_point()
+    update_all_versions_entry_point()

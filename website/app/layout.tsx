@@ -21,7 +21,8 @@ export default function RootLayout({
       <body className="bg-background text-foreground antialiased">
         <HeroUIProvider navigate={navigateTo}>
           <NextThemesProvider attribute="class" defaultTheme="dark">
-            <link href="/favicons/favicon.ico" rel="icon" />
+            <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+            <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
             {children}
           </NextThemesProvider>
         </HeroUIProvider>

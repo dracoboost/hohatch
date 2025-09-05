@@ -122,7 +122,6 @@ Bad sorting with warning: Callbacks (such as `onChange`, `onClick`, `onPress`) m
 
 ```js
 <Button
-  color="primary"
   isDisabled={isProcessing || images.length === 0}
   onPress={onSelectAll}
   size="sm"
@@ -133,7 +132,6 @@ Better
 
 ```js
 <Button
-  color="primary"
   isDisabled={isProcessing || images.length === 0}
   size="sm"
   onPress={onSelectAll}

@@ -30,6 +30,7 @@ jest.mock("@/config/consts", () => ({
       ja: mockLangData,
     };
   },
+  appVersion: "1.0.0",
 }));
 
 const mockLangData = {

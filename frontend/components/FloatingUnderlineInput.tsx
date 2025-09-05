@@ -5,17 +5,19 @@ import React from "react";
 import {cn} from "@/lib/utils";
 
 interface FloatingUnderlineInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  errorMessage?: string;
   label: string;
   startContent?: React.ReactNode;
-  errorMessage?: string;
+  readOnly?: boolean;
 }
 
 export const FloatingUnderlineInput: React.FC<FloatingUnderlineInputProps> = ({
+  readOnly,
+  className,
+  errorMessage,
   label,
   startContent,
   id,
-  className,
-  errorMessage,
   ...props
 }) => {
   const inputId = id || `floating-input-${label.replace(/\s+/g, "-")}`;
@@ -31,7 +33,7 @@ export const FloatingUnderlineInput: React.FC<FloatingUnderlineInputProps> = ({
         )}
         <input
           className={cn(
-            "peer block w-full border-0 border-b bg-transparent px-0 py-4", // border-b for static line
+            "peer block w-full border-0 border-b bg-transparent px-0 py-4",
             startContent ? "ps-8" : "ps-0",
             "placeholder:text-transparent focus:ring-0 focus:outline-none disabled:pointer-events-none disabled:opacity-50 sm:text-sm",
             "focus:pt-6 focus:pb-2",
@@ -63,8 +65,12 @@ export const FloatingUnderlineInput: React.FC<FloatingUnderlineInputProps> = ({
         {/* Animated underline */}
         <div
           className={cn(
-            "absolute bottom-0 left-0 h-0.5 w-full origin-center scale-x-0 transform bg-sky-500 transition-transform duration-200 ease-out peer-focus:scale-x-100",
-            hasError ? "bg-red-500" : "bg-sky-500",
+            "absolute bottom-0 left-0 h-0.5 w-full origin-center scale-x-0 transform transition-transform duration-200 ease-out peer-focus:scale-x-100",
+            hasError
+              ? "bg-red-500"
+              : readOnly
+                ? "bg-gray-500 dark:bg-neutral-500"
+                : "bg-hochan-red",
           )}
         />
       </div>

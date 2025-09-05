@@ -23,7 +23,7 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
       <body className="bg-background text-foreground antialiased">
         <HeroUIProvider navigate={navigateTo}>
           <NextThemesProvider attribute="class" defaultTheme="dark">
-            <link href="/favicons/favicon.ico" rel="icon" />
+            <link href="/favicon.ico" rel="icon" />
             {children}
           </NextThemesProvider>
         </HeroUIProvider>

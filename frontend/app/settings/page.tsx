@@ -11,8 +11,6 @@ import {FloatingUnderlineInput} from "@/components/FloatingUnderlineInput";
 import {Header} from "@/components/Header";
 import {I18N} from "@/config/consts";
 
-import packageJson from "../../package.json";
-
 interface SettingsData {
   language: "en" | "ja";
   last_image_dir: string;
@@ -39,7 +37,6 @@ export default function SettingsScreen() {
     message: string | null;
   }>({isValid: null, message: null});
   const isInitialMount = React.useRef(true);
-  const [appVersion, setAppVersion] = useState<string | undefined>(undefined);
   const [mounted, setMounted] = useState(false);
   const {theme} = useTheme();
 
@@ -64,7 +61,6 @@ export default function SettingsScreen() {
       setLoading(true);
       const currentSettings = await window.pywebview.api.get_settings();
       setSettings(currentSettings);
-      setAppVersion(packageJson.version);
     } catch (e: any) {
       toast.error((i18n.error || "Error") + ": " + e.message);
     } finally {
@@ -173,7 +169,7 @@ export default function SettingsScreen() {
     return (
       <div className="flex min-h-screen flex-col bg-gray-200 text-black dark:bg-gray-900 dark:text-white">
         <Toaster richColors position="bottom-right" />
-        <Header appVersion={appVersion} mounted={mounted} page="settings" theme={theme} />
+        <Header mounted={mounted} page="settings" theme={theme} />
         <main className="flex flex-grow items-center justify-center">
           <CircularProgress aria-label="Loading..." color="primary" />
         </main>
@@ -184,7 +180,7 @@ export default function SettingsScreen() {
   return (
     <div className="flex min-h-screen flex-col bg-gray-200 text-black dark:bg-gray-900 dark:text-white">
       <Toaster richColors position="bottom-right" />
-      <Header appVersion={appVersion} mounted={mounted} page="settings" theme={theme} />
+      <Header mounted={mounted} page="settings" theme={theme} />
 
       <main className="flex flex-grow items-center justify-center">
         <div className="flex w-full flex-col items-start gap-4 p-4 sm:p-2 lg:w-2/3">
@@ -194,7 +190,7 @@ export default function SettingsScreen() {
             </label>
             <Tabs
               aria-label="Language"
-              color="primary"
+              color="secondary"
               selectedKey={settings.language}
               variant="bordered"
               onSelectionChange={(key) => setSettings({...settings, language: key as "en" | "ja"})}
@@ -204,7 +200,7 @@ export default function SettingsScreen() {
             </Tabs>
           </div>
 
-          <div className="flex w-full flex-col items-center gap-y-2 sm:flex-row sm:gap-x-2 sm:px-0">
+          <div className="flex w-full flex-col items-center gap-y-2 pb-4 sm:flex-row sm:gap-x-2 sm:px-0">
             <div className="relative w-full flex-grow">
               <FloatingUnderlineInput
                 readOnly
@@ -275,11 +271,23 @@ export default function SettingsScreen() {
             </div>
           </div>
 
-          <div className="flex w-full flex-col items-start gap-y-2 sm:flex-row sm:gap-x-2 sm:px-0">
-            <Button onClick={handleOpenCacheFolder}>
-              <Folder className="mr-2" size={18} />
-              {i18n.open_cache_folder_btn || "Open Cache Folder"}
-            </Button>
+          <div className="w-full items-start gap-y-2 sm:flex-row sm:gap-x-2 sm:px-0">
+            <label className="flex items-center text-sm font-medium text-gray-800 dark:text-gray-400">
+              {i18n.cache_settings || "Cache"}
+              <Tooltip
+                color={mounted && theme === "light" ? "foreground" : "default"}
+                content={i18n.open_cache_folder_btn || "Open Cache Folder"}
+              >
+                <Button
+                  isIconOnly
+                  aria-label={i18n.open_cache_folder_btn || "Open Cache Folder"}
+                  buttonSize="size-10"
+                  onClick={handleOpenCacheFolder}
+                >
+                  <Folder size={18} />
+                </Button>
+              </Tooltip>
+            </label>
           </div>
         </div>
       </main>

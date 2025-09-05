@@ -4,12 +4,14 @@ import {Tooltip} from "@heroui/react";
 import {Download, RefreshCw, Settings, Trash2, X} from "lucide-react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
+import React, {useEffect} from "react";
+import {toast} from "sonner";
 
 import {Button} from "@/components/Button";
 import {ThemeSwitcher} from "@/components/ThemeSwitcher";
 import hoHatchJpg from "@/public/images/icons/hohatch.jpg";
 
-import {I18N} from "../config/consts";
+import {I18N, appVersion} from "../config/consts";
 
 interface HeaderProps {
   page: "index" | "settings";
@@ -19,14 +21,12 @@ interface HeaderProps {
   onBatchDownload?: () => Promise<void>;
   onBatchTrash?: () => Promise<void>;
   lang?: "en" | "ja";
-  appVersion?: string;
   mounted: boolean;
   theme: string | undefined;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   isProcessing,
-  appVersion,
   selectedImagesCount,
   lang = "en",
   mounted,
@@ -38,6 +38,89 @@ export const Header: React.FC<HeaderProps> = ({
 }) => {
   const router = useRouter();
   const i18n = I18N[lang];
+
+  useEffect(() => {
+    if (page !== "index") return;
+
+    const checkUpdate = async () => {
+      try {
+        const currentVersion = appVersion;
+
+        const updateResponse = await window.pywebview.api.check_for_updates();
+        if (!updateResponse.success || !updateResponse.latest_version) {
+          console.error("Failed to check for updates:", updateResponse.error);
+          return;
+        }
+        const latestVersion = updateResponse.latest_version;
+
+        const compareVersions = (current: string, latest: string): number => {
+          const currentParts = current.split(".").map(Number);
+          const latestParts = latest.split(".").map(Number);
+
+          for (let i = 0; i < Math.max(currentParts.length, latestParts.length); i++) {
+            const currentPart = currentParts[i] || 0;
+            const latestPart = latestParts[i] || 0;
+
+            if (latestPart > currentPart) {
+              return 1; // latest is newer
+            }
+            if (latestPart < currentPart) {
+              return -1; // current is newer
+            }
+          }
+          return 0; // versions are equal
+        };
+
+        const versionComparisonResult = compareVersions(currentVersion, latestVersion);
+
+        if (versionComparisonResult === 1) {
+          toast.info(
+            <div className="flex flex-col">
+              <span>A new version of HoHatch is available!</span>
+              <span>
+                Current: {currentVersion}, Latest: {latestVersion}
+              </span>
+              <a
+                className="text-blue-400 underline"
+                href="https://github.com/dracoboost/hohatch/releases"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Download Latest Version
+              </a>
+            </div>,
+            {
+              duration: 10000,
+              position: "bottom-right",
+            },
+          );
+        } else if (versionComparisonResult === -1) {
+          toast.info(
+            <div className="flex flex-col">
+              <span>
+                You are running a newer version of HoHatch than the latest official release.
+              </span>
+              <span>
+                Current: {currentVersion}, Latest Official: {latestVersion}
+              </span>
+            </div>,
+            {
+              duration: 10000,
+              position: "bottom-right",
+            },
+          );
+        }
+      } catch (e) {
+        console.error("Error during update check:", e);
+      }
+    };
+
+    const timer = setTimeout(() => {
+      checkUpdate();
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [appVersion, page]);
 
   return (
     <header className="flex items-center justify-between px-4 py-2">
@@ -59,7 +142,7 @@ export const Header: React.FC<HeaderProps> = ({
           <Image
             alt="version"
             height={20}
-            src={`https://img.shields.io/badge/version-${appVersion || "0.0.0"}-b7465a`}
+            src={`https://img.shields.io/badge/version-${appVersion || "unknown"}-b7465a`}
           />
         </a>
         {page === "index" && (
