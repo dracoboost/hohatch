@@ -39,5 +39,5 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     version='../version.rc',
-    icon="../../frontend/public/favicons/favicon.ico",
+    icon="../../frontend/public/favicon.ico",
 )
