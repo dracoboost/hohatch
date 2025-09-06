@@ -31,7 +31,7 @@ jobs:
       - name: Get package version
         id: get_version
         run: |
-          $packageVersion = (node -p "require('./frontend/package.json').version")
+          $packageVersion = node -p "require('./frontend/package.json').version"
           echo "package_version=$packageVersion" >> $env:GITHUB_OUTPUT
         shell: powershell
 
@@ -39,7 +39,7 @@ jobs:
         id: check_tag
         run: |
           $TAG_NAME = "v${{ steps.get_version.outputs.package_version }}"
-          if ((git tag -l $TAG_NAME | Select-String -Pattern $TAG_NAME) -ne $null) {
+          if (git tag -l $TAG_NAME) {
             Write-Host "Tag $TAG_NAME already exists. Skipping release."
             echo "tag_exists=true" >> $env:GITHUB_OUTPUT
           } else {
@@ -116,9 +116,9 @@ jobs:
           [System.IO.File]::WriteAllBytes("certificate.pfx", $pfx_bytes)
           $password = "${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}"
           if ($password) {
-            certutil -f -p "$password" -importpfx certificate.pfx NoRoot
+            certutil -user -f -p "$password" -importpfx certificate.pfx NoRoot
           } else {
-            certutil -f -importpfx certificate.pfx NoRoot
+            certutil -user -f -importpfx certificate.pfx NoRoot
           }
         shell: powershell
 
@@ -174,7 +174,7 @@ jobs:
             const { readFileSync } = require('fs');
             const changelog = readFileSync('./frontend/CHANGELOG.md', 'utf8');
             const version = process.env.PACKAGE_VERSION;
-            const regex = new RegExp('## \\[' + version + '\\] - (\\d{4}-\\d{2}-\\d{2})\\n([\\s\\S]*?)(?=## [\\d+.\\d+.\\d+]|$)\\n');
+            const regex = new RegExp('## \[' + version + '\] - (\d{4}-\d{2}-\d{2})\n([\s\S]*?)(?=## [\d+.\d+.\d+]|$)\n');
             const match = changelog.match(regex);
             if (match) {
               core.setOutput('release_notes', match[2].trim());
@@ -191,7 +191,7 @@ jobs:
             github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: ${{ steps.create_release.outputs.id }},
+              release_id: ${{ steps.create_release.outputs.release_id }},
               body: `${{ steps.generate_release_notes.outputs.release_notes }}`
             })
 

@@ -39,7 +39,7 @@ The HoHatch logo uses [Baloo Tamma 2](https://fonts.google.com/specimen/Baloo+Ta
 ## 🤝 Contributing
 
 Contributions are welcome! Please refer to [`GEMINI.md`](GEMINI.md) for development guidelines and testing strategies.
-For detailed development guidelines and setup instructions for HoHatch and its website, please refer to [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
+For detailed development guidelines and setup instructions for HoHatch and its website, please refer to [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md)..
 
 ## 📜 License
 
