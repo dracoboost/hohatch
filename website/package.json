@@ -1,6 +1,6 @@
 {
   "name": "hohatch-website",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "private": true,
   "scripts": {
@@ -15,6 +15,9 @@
   "dependencies": {
     "@heroui/react": "^2.8.1",
     "@heroui/system": "^2.4.20",
+    "@types/jest": "^30.0.0",
+    "@types/testing-library__jest-dom": "^5.14.9",
+    "@types/testing-library__react": "^10.0.1",
     "@vercel/speed-insights": "^1.2.0",
     "lucide-react": "^0.537.0",
     "next": "^15.5.0",

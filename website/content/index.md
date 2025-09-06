@@ -1,12 +1,13 @@
 ## 📥 Download
 
-To use HoHatch, download the [latest HoHatch (v1.0.3)\](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.0.3.zip). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
+To use HoHatch, download the [latest HoHatch (v1.0.4)](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.0.4.zip).  
+(For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).)
 
 ## 🛠️ Usage Guide
 
 This guide explains how to use HoHatch for modding Shadowverse: Worlds Beyond.
 
-### ➡️ Injecting JPGs (Modding the game)
+### ➡️ Injecting JPGs (Modding the Game)
 
 This section explains how to convert a JPG image to DDS and inject it into the game.
 
@@ -36,7 +37,7 @@ This section explains how to convert a JPG image to DDS and inject it into the g
 Just click the "Replace" button
 (If images don't load, click the "Reload" button)
 
-### ⬅️ Extracting JPGs (Getting game assets)
+### ⬅️ Extracting JPGs (Getting Game Assets)
 
 This section explains how to extract in-game images as JPG files.
 
@@ -62,7 +63,7 @@ You can perform individual actions on each image or select multiple for batch pr
 
 | Feature | Description |
 |---|---|
-| Download as JPG | Convert a single DDS image to JPG format and save it to a chosen location. |
+| Convert to JPG | Convert a single DDS image to JPG format and save it to a chosen location. |
 | Replace DDS | Replace an existing DDS file with a new JPG image, converting it to DDS during the process. |
 | Delete DDS | Permanently delete a single DDS file from its respective folder. |
 

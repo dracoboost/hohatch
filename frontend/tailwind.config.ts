@@ -26,7 +26,26 @@ const config = {
       },
     },
   },
-  plugins: [heroui()],
+  plugins: [
+    heroui({
+      themes: {
+        light: {
+          colors: {
+            secondary: {
+              DEFAULT: "#b7465a",
+            },
+          },
+        },
+        dark: {
+          colors: {
+            secondary: {
+              DEFAULT: "#b7465a",
+            },
+          },
+        },
+      },
+    }),
+  ],
 };
 
 module.exports = config;

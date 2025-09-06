@@ -43,7 +43,7 @@ export const Button: React.FC<ButtonProps> = ({
     // Regular button styles
     buttonClasses = cn(
       baseClasses,
-      "px-4 py-2 font-semibold text-black bg-hochan-navy-blue/50 hover:text-black/50 hover:bg-hochan-navy-blue/30 dark:text-white dark:bg-gray-100/50 dark:hover:text-white/50 dark:hover:bg-gray-100/30",
+      "px-4 py-2 font-semibold text-gray-900 bg-hochan-navy-blue/50 hover:text-gray-900/50 hover:bg-hochan-navy-blue/30 dark:text-white dark:bg-gray-100/50 dark:hover:text-white/50 dark:hover:bg-gray-100/30",
       variant === "bordered" && "border border-hochan-navy-blue dark:border-gray-100",
       isDisabled && "opacity-50 cursor-not-allowed",
       className,

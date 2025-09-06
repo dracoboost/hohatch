@@ -32,6 +32,7 @@ const mockLangData = {
   back_btn: "Back",
   language_setting: "Language",
   sk_folder_path_title: "Special K Folder Path",
+  sk_folder_path_label: "Path",
   select_sk_folder: "Browse",
   download_special_k_btn: "Download Special K Installer",
   special_k_download_success: "Special K downloaded successfully.",
@@ -87,7 +88,8 @@ describe("SettingsScreen", () => {
 
     await waitFor(() => {
       expect(mockedApi.get_settings).toHaveBeenCalled();
-      expect(screen.getByLabelText("Image Height")).toHaveValue(mockSettings.output_height);
+      const heightInput = screen.getByRole("spinbutton", {name: "Image Height"}); // Assuming a label or aria-label is present
+      expect(heightInput).toHaveValue(mockSettings.output_height);
     });
   });
 
@@ -139,6 +141,57 @@ describe("SettingsScreen", () => {
       });
     });
 
+    it("should handle cancelled file dialog for SK folder", async () => {
+      await act(async () => {
+        render(<SettingsScreen />);
+      });
+
+      const browseButton = screen.getByLabelText("Select Folder");
+      mockedApi.open_file_dialog.mockResolvedValueOnce({success: false, files: []});
+
+      fireEvent.click(browseButton);
+
+      await waitFor(() => {
+        expect(toast.error).not.toHaveBeenCalled();
+      });
+    });
+
+    it("should handle failed file dialog for SK folder", async () => {
+      await act(async () => {
+        render(<SettingsScreen />);
+      });
+
+      const browseButton = screen.getByLabelText("Select Folder");
+      mockedApi.open_file_dialog.mockImplementationOnce(() =>
+        Promise.reject(new Error("Dialog error")),
+      );
+
+      fireEvent.click(browseButton);
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith("Failed to open folder dialog: Dialog error");
+      });
+    });
+
+    it("should update Special K folder path on input change", async () => {
+      await act(async () => {
+        render(<SettingsScreen />);
+      });
+
+      const skPathInput = screen.getByDisplayValue(mockSettings.special_k_folder_path);
+      fireEvent.change(skPathInput, {target: {value: "/manual/path"}});
+
+      act(() => {
+        jest.advanceTimersByTime(500);
+      });
+
+      await waitFor(() => {
+        expect(mockedApi.save_settings).toHaveBeenCalledWith(
+          expect.objectContaining({special_k_folder_path: "/manual/path"}),
+        );
+      });
+    });
+
     it("should download Special K when download button is clicked", async () => {
       await act(async () => {
         render(<SettingsScreen />);
@@ -150,6 +203,23 @@ describe("SettingsScreen", () => {
       await waitFor(() => {
         expect(mockedApi.download_special_k).toHaveBeenCalled();
         expect(toast.success).toHaveBeenCalledWith(mockLangData.special_k_download_success);
+      });
+    });
+
+    it("should handle failed Special K download", async () => {
+      await act(async () => {
+        render(<SettingsScreen />);
+      });
+
+      const downloadButton = screen.getByLabelText("Download Special K Installer");
+      mockedApi.download_special_k.mockImplementationOnce(() =>
+        Promise.reject(new Error("Download error")),
+      );
+
+      fireEvent.click(downloadButton);
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith("Error: Download error");
       });
     });
 
@@ -175,7 +245,7 @@ describe("SettingsScreen", () => {
         render(<SettingsScreen />);
       });
 
-      const heightInput = screen.getByLabelText("Image Height");
+      const heightInput = screen.getByRole("spinbutton", {name: "Image Height"});
       fireEvent.change(heightInput, {target: {value: "2048"}});
 
       await waitFor(() => {
@@ -206,6 +276,40 @@ describe("SettingsScreen", () => {
 
       await waitFor(() => {
         expect(mockedApi.open_cache_folder).toHaveBeenCalled();
+      });
+    });
+
+    it("should handle failed cache folder opening", async () => {
+      await act(async () => {
+        render(<SettingsScreen />);
+      });
+
+      const cacheButton = screen.getByRole("button", {name: "Open Cache Folder"});
+      mockedApi.open_cache_folder.mockResolvedValueOnce({success: false, error: "Failed to open"});
+
+      fireEvent.click(cacheButton);
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith("Failed to open");
+      });
+    });
+
+    it("should handle save settings failure", async () => {
+      mockedApi.save_settings.mockResolvedValueOnce({success: false, error: "Save failed"});
+
+      await act(async () => {
+        render(<SettingsScreen />);
+      });
+
+      const japaneseTab = screen.getByRole("tab", {name: "Japanese"});
+      fireEvent.click(japaneseTab);
+
+      act(() => {
+        jest.advanceTimersByTime(500);
+      });
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith("Save failed");
       });
     });
   });

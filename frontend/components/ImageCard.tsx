@@ -93,19 +93,19 @@ export const ImageCard: React.FC<ImageCardProps> = ({
           )}
         </div>
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/50 p-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100 dark:bg-black/50">
-          <p className="mb-2 truncate text-sm font-semibold text-black dark:text-white">
+          <p className="mb-2 truncate text-sm font-semibold text-gray-900 dark:text-white">
             {displayName}
           </p>
           <div className="inline-flex rounded-full p-0.5 dark:border-neutral-700">
             <Tooltip
               color={mounted && theme === "light" ? "foreground" : "default"}
-              content={languageData.download_as_jpg_tooltip || "Convert to JPG"}
+              content={languageData.convert_to_jpg_tooltip || "Convert to JPG"}
               placement="bottom"
             >
               <Button
                 isIconOnly
                 aria-label="Convert to JPG"
-                buttonSize="size-6"
+                buttonSize="size-5"
                 isDisabled={isProcessing}
                 onClick={() => onDownloadJPG(image.path)}
               >
@@ -120,7 +120,7 @@ export const ImageCard: React.FC<ImageCardProps> = ({
               <Button
                 isIconOnly
                 aria-label="Replace DDS"
-                buttonSize="size-6"
+                buttonSize="size-5"
                 isDisabled={isProcessing}
                 onClick={() => onReplaceDDS(image.path, image.isDumpImage ?? false)}
               >
@@ -135,7 +135,7 @@ export const ImageCard: React.FC<ImageCardProps> = ({
               <Button
                 isIconOnly
                 aria-label="Trash"
-                buttonSize="size-6"
+                buttonSize="size-5"
                 data-testid="trash-button"
                 isDisabled={isProcessing}
                 onClick={() => onTrash(image.path)}

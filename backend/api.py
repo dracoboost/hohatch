@@ -207,11 +207,30 @@ class Api:
     def check_for_updates(self):
         logging.debug("check_for_updates called")
         try:
+            from .version import APP_VERSION
+
             response = requests.get("https://api.github.com/repos/dracoboost/hohatch/releases/latest")
             response.raise_for_status()  # Raise an exception for HTTP errors
             latest_release = response.json()
             latest_version = latest_release["tag_name"].lstrip("v")  # Remove 'v' prefix if present
-            return {"success": True, "latest_version": latest_version}
+
+            current_major, current_minor, current_patch = map(int, APP_VERSION.split("."))
+            latest_major, latest_minor, latest_patch = map(int, latest_version.split("."))
+
+            update_type = "none"
+            if latest_major > current_major:
+                update_type = "major"
+            elif latest_minor > current_minor:
+                update_type = "minor"
+            elif latest_patch > current_patch:
+                update_type = "patch"
+
+            return {
+                "success": True,
+                "current_version": APP_VERSION,
+                "latest_version": latest_version,
+                "update_type": update_type,
+            }
         except requests.exceptions.RequestException as e:
             logging.error(f"Error checking for updates: {e}")
             return {"success": False, "error": f"Failed to check for updates: {e}"}

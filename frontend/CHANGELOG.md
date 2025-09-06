@@ -7,6 +7,43 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2025-09-06
+
+### Added
+
+- Added logic to `check_for_updates` method in `backend/api.py` to determine major/minor/patch update types.
+- Added `sk_folder_path_label` and `image_size_label` i18n keys.
+- Added `aria-label` to "Image Height" and "Image Width" `UnderlineInput` components for better accessibility and testability.
+
+### Changed
+
+- Renamed `UnderlineInput` component to `FloatingUnderlineInput` and updated related files and tests.
+- Modified `scripts/version_management/manager.py` to ensure `backend/version.py` is correctly updated.
+- Fixed regex pattern for version badge in `README.md` to ensure accurate matching.
+- Customized Hero UI theme to map `secondary` color to `hochan-red` (`#b7465a`).
+- Removed unused i18n keys from `config/consts.ts`, `components/AppRouter.tsx`, and `lib/test-utils.tsx`.
+- Restructured "Cache" label and button in Settings screen to fix hit area.
+- Moved "Special K Folder Path" text to a separate label in Settings screen.
+- Created a new label for "Image Size" in Settings screen.
+- Made `label` prop of `UnderlineInput` optional.
+- Replaced `UnderlineInput` with `Input` for "Special K Folder Path".
+
+### Fixed
+
+- Improved test stability in `frontend/app/page.test.tsx` (fixed `act` warnings, missing mocks, and assertion mismatches).
+- Fixed label lookup errors in `frontend/app/settings/page.test.tsx`.
+- Added `jest` and `@testing-library/jest-dom` type definitions to `website/tsconfig.json` and installed related `@types` packages.
+
+## [1.0.3] - 2025-09-05
+
+### Added
+
+- Added tooltips to "Visit Website" and "View Latest Release" links in the Header.
+
+### Changed
+
+- Corrected PyInstaller icon path in `backend/specs/build-windows-release.spec`.
+
 ## [1.0.2] - 2025-09-04
 
 ### Added
@@ -24,7 +61,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Corrected image alignment and badge display in `README.md`.
-
 
 ## [1.0.1] - 2025-08-31
 
@@ -51,7 +87,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit.
 
-[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.2...HEAD
-[1.0.2]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.2
+[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.4
+[1.0.3]: https://github.com/dracoboost/hohatch/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/dracoboost/hohatch/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/dracoboost/hohatch/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.0

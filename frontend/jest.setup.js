@@ -1,10 +1,6 @@
-import { jest } from "@jest/globals";
+import {jest} from "@jest/globals";
 import "@testing-library/jest-dom";
-import { TextDecoder, TextEncoder } from "util";
-
-
-
-
+import {TextDecoder, TextEncoder} from "util";
 
 Object.assign(global, {TextDecoder, TextEncoder});
 
@@ -86,16 +82,45 @@ jest.mock("@/config/consts", () => ({
       dds_to_jpg_res_setting: "DDS to JPG Output Resolution",
       dds_to_jpg_height_label: "Image Height",
       dds_to_jpg_width_label: "Image Width (auto-calculated)",
-      invalid_resolution_input: "Invalid resolution input. Please enter a positive integer for height.",
+      invalid_resolution_input:
+        "Invalid resolution input. Please enter a positive integer for height.",
       settings_saved: "Settings saved.",
       error: "Error",
       processing: "Processing...",
       replace_conversion_complete: "Replacement complete!",
       delete_success: "Delete successful!",
       special_k_download_success: "Special K downloaded successfully.",
+      select_all_btn_tooltip: "Select All",
+      unselect_all_btn_tooltip: "Unselect All",
     },
     ja: {
-      // Add Japanese translations if needed for tests
+      settings_window_title: "設定",
+      back_btn: "戻る",
+      language_setting: "言語",
+      sk_folder_path_title: "Special Kフォルダパス",
+      select_sk_folder: "参照",
+      download_sk: "Special Kをダウンロード",
+      sk_folder_invalid: "無効: SKIF.exeが見つからないか、パスが存在しません。",
+      texconv_path_title: "Texconv実行可能ファイルパス",
+      select_texconv_file: "参照",
+      texconv_description:
+        "Texconvは、Microsoftが提供する画像形式変換用のコマンドラインツールで、特にDDSテクスチャに適しています。",
+      download_texconv: "Texconvをダウンロード",
+      texconv_download_success: "Texconvが正常にダウンロードされました。",
+      texconv_download_fail: "Texconvのダウンロードに失敗しました。",
+      texconv_path_invalid: "無効: ファイルが見つからないか、実行可能ではありません。",
+      dds_to_jpg_res_setting: "DDSからJPGへの出力解像度",
+      dds_to_jpg_height_label: "画像の高さ",
+      dds_to_jpg_width_label: "画像の幅 (自動計算)",
+      invalid_resolution_input: "無効な解像度入力です。高さには正の整数を入力してください。",
+      settings_saved: "設定が保存されました。",
+      error: "エラー",
+      processing: "処理中...",
+      replace_conversion_complete: "置換完了！",
+      delete_success: "削除成功！",
+      special_k_download_success: "Special Kが正常にダウンロードされました。",
+      select_all_btn_tooltip: "すべて選択",
+      unselect_all_btn_tooltip: "すべての選択を解除",
     },
   },
 }));

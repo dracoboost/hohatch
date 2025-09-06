@@ -21,7 +21,7 @@ The main screen is the central hub for viewing and managing DDS images. It's div
   - **Download Selected:** Converts all selected DDS images to JPG and saves them to a user-specified folder.
   - **Trash Selected:** Deletes all selected DDS files from their respective folders.
 - **Individual Image Actions:** Each `ImageCard` has buttons for:
-  - **Download as JPG:** Converts the single DDS image to a JPG file.
+  - **Convert to JPG:** Converts the single DDS image to a JPG file.
   - **Replace:** Opens a file dialog to select a new JPG image, which then replaces the existing DDS file.
   - **Trash:** Deletes the single DDS file.
 - **Dynamic API Integration:**

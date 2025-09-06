@@ -47,13 +47,13 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({ version }) => {
             />
             <span
               ref={textRef}
-              className="text-3xl font-balootamma2 font-bold tracking-tight text-hochan-red sm:text-5xl md:text-6xl leading-none"
+              className="text-5xl font-balootamma2 font-bold tracking-tight text-hochan-red md:text-6xl leading-none"
             >
               HoHatch
             </span>
           </h1>
           <a
-            className="absolute -bottom-4 right-0 hidden lg:block"
+            className="absolute -bottom-4 right-0 block"
             href="https://github.com/dracoboost/hohatch/releases"
             rel="noopener noreferrer"
             target="_blank"
@@ -67,14 +67,14 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({ version }) => {
           </a>
         </div>
       </div>
-      <p className="mt-3 max-w-md mx-auto text-base text-muted-foreground sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+      <p className="mt-5 max-w-md mx-auto text-base text-muted-foreground sm:text-lg md:text-xl md:max-w-3xl">
         A desktop tool for converting and managing JPG/DDS images to streamline modding for Shadowverse: Worlds Beyond with Special K.
       </p>
       <div className="mt-5 flex justify-center">
         <div className="rounded-md shadow">
-          <Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.0.1.zip" isExternal>
+          <Link href={`https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v${version}.zip`} isExternal>
             <Button className="flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-hochan-red hover:bg-hochan-red/80 md:py-4 md:text-lg md:px-10">
-              Download Latest HoHatch (v1.0.3)
+              Download Latest HoHatch (v{version})
             </Button>
           </Link>
         </div>

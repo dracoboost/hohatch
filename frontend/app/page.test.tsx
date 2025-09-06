@@ -110,8 +110,10 @@ const mockInjectedImages = [
 
 describe("MainScreen", () => {
   let mockedApi: any;
+  let consoleErrorSpy: jest.SpyInstance;
 
   beforeEach(() => {
+    consoleErrorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
     // Mock window.pywebview directly and assign to mockedApi
     mockedApi = {
       get_settings: jest.fn().mockResolvedValue(mockSettings),
@@ -141,6 +143,10 @@ describe("MainScreen", () => {
       replace_dds: jest.fn().mockResolvedValue({
         success: true,
         message: "Replacement complete!",
+      }),
+      convert_single_dds_to_jpg: jest.fn().mockResolvedValue({
+        success: true,
+        message: "Conversion complete!",
       }),
       batch_download_selected_dds_as_jpg: jest.fn().mockResolvedValue({success: true}),
       open_dump_folder: jest.fn().mockResolvedValue({success: true}),
@@ -179,6 +185,7 @@ describe("MainScreen", () => {
   afterEach(() => {
     jest.useRealTimers();
     jest.clearAllMocks();
+    consoleErrorSpy.mockRestore();
   });
 
   it("renders MainScreen component and loads data successfully", async () => {
@@ -217,7 +224,9 @@ describe("MainScreen", () => {
       const imageCardLabel = imageCardCheckbox.parentElement as HTMLElement;
 
       const replaceButton = within(imageCardLabel).getByRole("button", {name: "Replace DDS"});
-      fireEvent.click(replaceButton);
+      await act(async () => {
+        fireEvent.click(replaceButton);
+      });
 
       await waitFor(() => {
         expect(toast.info).toHaveBeenCalledWith(mockLangData.processing);
@@ -233,6 +242,54 @@ describe("MainScreen", () => {
           true,
         );
         expect(toast.success).toHaveBeenCalledWith(mockLangData.replace_conversion_complete);
+      });
+    });
+
+    it("should handle cancelled replacement image selection", async () => {
+      await act(async () => {
+        render(<MainScreen />);
+      });
+
+      const imageCardCheckbox = screen.getByRole("checkbox", {
+        name: "dumped_image_1.dds dumped_image_1",
+      });
+      const imageCardLabel = imageCardCheckbox.parentElement as HTMLElement;
+      const replaceButton = within(imageCardLabel).getByRole("button", {name: "Replace DDS"});
+
+      mockedApi.open_file_dialog.mockResolvedValueOnce({success: false});
+
+      await act(async () => {
+        fireEvent.click(replaceButton);
+      });
+
+      await waitFor(() => {
+        expect(toast.warning).toHaveBeenCalledWith("Replacement image selection cancelled.");
+      });
+    });
+
+    it("should handle failed DDS replacement", async () => {
+      await act(async () => {
+        render(<MainScreen />);
+      });
+
+      const imageCardCheckbox = screen.getByRole("checkbox", {
+        name: "dumped_image_1.dds dumped_image_1",
+      });
+      const imageCardLabel = imageCardCheckbox.parentElement as HTMLElement;
+      const replaceButton = within(imageCardLabel).getByRole("button", {name: "Replace DDS"});
+
+      mockedApi.open_file_dialog.mockResolvedValueOnce({
+        success: true,
+        files: ["/mock/selected/file.jpg"],
+      });
+      mockedApi.replace_dds.mockResolvedValueOnce({success: false, error: "Replacement failed!"});
+
+      await act(async () => {
+        fireEvent.click(replaceButton);
+      });
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith("Replacement failed!");
       });
     });
   });
@@ -259,7 +316,9 @@ describe("MainScreen", () => {
         message: "Delete successful!",
       });
 
-      fireEvent.click(trashButton);
+      await act(async () => {
+        fireEvent.click(trashButton);
+      });
 
       await waitFor(() => {
         expect(toast.info).toHaveBeenCalledWith(mockLangData.processing);
@@ -268,6 +327,28 @@ describe("MainScreen", () => {
       await waitFor(() => {
         expect(mockedApi.delete_dds_file).toHaveBeenCalledWith("/dump/dumped_image_1.dds");
         expect(toast.success).toHaveBeenCalledWith(mockLangData.delete_success);
+      });
+    });
+
+    it("should handle failed DDS deletion", async () => {
+      await act(async () => {
+        render(<MainScreen />);
+      });
+
+      const imageCardCheckbox = screen.getByRole("checkbox", {
+        name: "dumped_image_1.dds dumped_image_1",
+      });
+      const imageCardLabel = imageCardCheckbox.parentElement as HTMLElement;
+      const trashButton = within(imageCardLabel).getByRole("button", {name: "Trash"});
+
+      mockedApi.delete_dds_file.mockResolvedValueOnce({success: false, error: "Deletion failed!"});
+
+      await act(async () => {
+        fireEvent.click(trashButton);
+      });
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith("Deletion failed!");
       });
     });
   });
@@ -283,10 +364,10 @@ describe("MainScreen", () => {
         expect(screen.getByAltText("dumped_image_2.dds")).toBeInTheDocument();
       });
 
-      await waitFor(() => {
+      await act(async () => {
         fireEvent.click(screen.getByDisplayValue("/dump/dumped_image_1.dds"));
       });
-      await waitFor(() => {
+      await act(async () => {
         fireEvent.click(screen.getByDisplayValue("/dump/dumped_image_2.dds"));
       });
 
@@ -296,7 +377,9 @@ describe("MainScreen", () => {
       });
 
       const trashButton = screen.getByTestId("batch-trash-button");
-      fireEvent.click(trashButton);
+      await act(async () => {
+        fireEvent.click(trashButton);
+      });
 
       await waitFor(() => {
         expect(toast.info).toHaveBeenCalledWith(mockLangData.processing);
@@ -323,10 +406,10 @@ describe("MainScreen", () => {
         expect(screen.getByAltText("dumped_image_2.dds")).toBeInTheDocument();
       });
 
-      await waitFor(() => {
+      await act(async () => {
         fireEvent.click(screen.getByDisplayValue("/dump/dumped_image_1.dds"));
       });
-      await waitFor(() => {
+      await act(async () => {
         fireEvent.click(screen.getByDisplayValue("/dump/dumped_image_2.dds"));
       });
 
@@ -341,7 +424,9 @@ describe("MainScreen", () => {
       });
 
       const downloadButton = screen.getByTestId("batch-download-button");
-      fireEvent.click(downloadButton);
+      await act(async () => {
+        fireEvent.click(downloadButton);
+      });
 
       await waitFor(() => {
         expect(toast.info).toHaveBeenCalledWith(mockLangData.downloading_selected_images);
@@ -357,12 +442,63 @@ describe("MainScreen", () => {
       });
     });
 
+    it("should handle cancelled single DDS download", async () => {
+      await act(async () => {
+        render(<MainScreen />);
+      });
+
+      const imageCardCheckbox = screen.getByRole("checkbox", {
+        name: "dumped_image_1.dds dumped_image_1",
+      });
+      const imageCardLabel = imageCardCheckbox.parentElement as HTMLElement;
+      const downloadButton = within(imageCardLabel).getByRole("button", {name: "Convert to JPG"});
+
+      mockedApi.open_file_dialog.mockResolvedValueOnce({success: false});
+
+      await act(async () => {
+        fireEvent.click(downloadButton);
+      });
+
+      await waitFor(() => {
+        expect(toast.warning).not.toHaveBeenCalledWith("Replacement image selection cancelled.");
+      });
+    });
+
+    it("should handle failed single DDS conversion", async () => {
+      await act(async () => {
+        render(<MainScreen />);
+      });
+
+      const imageCardCheckbox = screen.getByRole("checkbox", {
+        name: "dumped_image_1.dds dumped_image_1",
+      });
+      const imageCardLabel = imageCardCheckbox.parentElement as HTMLElement;
+      const downloadButton = within(imageCardLabel).getByRole("button", {name: "Convert to JPG"});
+
+      mockedApi.open_file_dialog.mockResolvedValueOnce({
+        success: true,
+        files: ["/mock/output/folder"],
+      });
+      mockedApi.convert_single_dds_to_jpg.mockResolvedValueOnce({
+        success: false,
+        error: "Conversion failed!",
+      });
+
+      await act(async () => {
+        fireEvent.click(downloadButton);
+      });
+
+      await waitFor(() => {
+        expect(toast.error).toHaveBeenCalledWith("Conversion failed!");
+      });
+    });
+
     it("should handle failed batch download", async () => {
       await act(async () => {
         render(<MainScreen />);
       });
 
-      await waitFor(() => {
+      await act(async () => {
         fireEvent.click(screen.getByDisplayValue("/dump/dumped_image_1.dds"));
       });
 
@@ -376,7 +512,9 @@ describe("MainScreen", () => {
       });
 
       const downloadButton = screen.getByTestId("batch-download-button");
-      fireEvent.click(downloadButton);
+      await act(async () => {
+        fireEvent.click(downloadButton);
+      });
 
       await waitFor(() => {
         expect(mockedApi.batch_download_selected_dds_as_jpg).toHaveBeenCalled();
@@ -392,7 +530,9 @@ describe("MainScreen", () => {
       });
 
       const dumpFolderButton = screen.getByLabelText("Open Dump Folder");
-      fireEvent.click(dumpFolderButton);
+      await act(async () => {
+        fireEvent.click(dumpFolderButton);
+      });
 
       await waitFor(() => {
         expect(mockedApi.open_dump_folder).toHaveBeenCalled();
@@ -404,11 +544,21 @@ describe("MainScreen", () => {
         render(<MainScreen />);
       });
 
+      await waitFor(() => {
+        expect(screen.getByText(/Injected Images/i)).toBeInTheDocument();
+      });
+
       const injectViewButton = screen.getByText(/Injected Images/i);
-      fireEvent.click(injectViewButton);
+      await act(async () => {
+        fireEvent.click(injectViewButton);
+      });
 
       await waitFor(() => {
-        const injectFolderButton = screen.getByLabelText("Open Inject Folder");
+        expect(screen.getByLabelText("Open Inject Folder")).toBeInTheDocument();
+      });
+
+      const injectFolderButton = screen.getByLabelText("Open Inject Folder");
+      await act(async () => {
         fireEvent.click(injectFolderButton);
       });
 
@@ -432,11 +582,32 @@ describe("MainScreen", () => {
       mockedApi.get_image_list.mockClear();
 
       const reloadButton = screen.getByLabelText("Reload");
-      fireEvent.click(reloadButton);
+      await act(async () => {
+        fireEvent.click(reloadButton);
+      });
 
       await waitFor(() => {
         expect(mockedApi.get_image_list).toHaveBeenCalledWith("dump", true);
         expect(mockedApi.get_image_list).toHaveBeenCalledWith("inject", true);
+      });
+    });
+
+    it("should handle failed image list loading", async () => {
+      mockedApi.get_image_list.mockResolvedValueOnce({
+        success: false,
+        error: "Failed to load images",
+      });
+
+      await act(async () => {
+        render(<MainScreen />);
+      });
+
+      await waitFor(() => {
+        expect(mockedApi.get_image_list).toHaveBeenCalled();
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+          "Failed to load dump images:",
+          "Failed to load images",
+        );
       });
     });
   });

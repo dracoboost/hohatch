@@ -87,3 +87,19 @@ def test_open_file_dialog_cancelled(mock_api_instance):
     result = api_instance.open_file_dialog("file_open")
     assert result["success"] is False
     assert "Dialog cancelled or failed" in result["error"]
+
+def test_load_url_file_not_found(mock_api_instance):
+    api_instance, _, MockWebview, mock_active_window, mock_logging_info, mock_logging_error = mock_api_instance
+    
+    with patch.object(Path, 'is_file', return_value=False):
+        result = api_instance.load_url("/non_existent_page")
+        assert result["success"] is False
+        assert "HTML file not found" in result["error"]
+        mock_active_window.load_url.assert_not_called()
+        mock_logging_error.assert_called_once_with(f"HTML file not found at {Path(__file__).parent.parent.parent / 'frontend' / 'dist' / 'non_existent_page.html'}")
+
+def test_open_file_dialog_exception(mock_api_instance):
+    api_instance, _, MockWebview, mock_active_window, _, mock_logging_error = mock_api_instance
+    mock_active_window.create_file_dialog.side_effect = Exception("Mock dialog error")
+    with pytest.raises(Exception, match="Mock dialog error"):
+        api_instance.open_file_dialog("file_open")

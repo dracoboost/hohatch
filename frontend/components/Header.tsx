@@ -125,7 +125,10 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <header className="flex items-center justify-between px-4 py-2">
       <div className="flex items-center gap-3">
-        <Tooltip content="Visit Website">
+        <Tooltip
+          color={mounted && theme === "light" ? "foreground" : "default"}
+          content="Visit Website"
+        >
           <a href="https://hohatch.draco.moe" rel="noopener noreferrer" target="_blank">
             <div className="flex flex-row items-center gap-2">
               <Image alt="Ho-chan" className="rounded-lg" height={32} src={hoHatchJpg} width={32} />
@@ -135,7 +138,10 @@ export const Header: React.FC<HeaderProps> = ({
             </div>
           </a>
         </Tooltip>
-        <Tooltip content="View Latest Release">
+        <Tooltip
+          color={mounted && theme === "light" ? "foreground" : "default"}
+          content={i18n.view_latest_release_tooltip}
+        >
           <a
             className="hidden lg:block"
             href="https://github.com/dracoboost/hohatch/releases"

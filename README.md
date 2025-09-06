@@ -7,7 +7,7 @@
   </a>
 
   <p align="center">
-    <a href="https://github.com/dracoboost/hohatch/releases"><img alt="version" src="https://img.shields.io/badge/version-1.0.3-b7465a"</a>
+    <a href="https://github.com/dracoboost/hohatch/releases"><img alt="version" src="https://img.shields.io/badge/version-1.0.4-b7465a"</a>
     <a href="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml"><img alt="Preflight" src="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml/badge.svg"></a>
     <a href="https://github.com/dracoboost/hohatch/actions/workflows/release.yml"><img alt="Release Application" src="https://github.com/dracoboost/hohatch/actions/workflows/release.yml/badge.svg"></a>
     <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg"></a>
@@ -21,7 +21,7 @@
 
 HoHatch is a Windows-only application.
 
-To use HoHatch, download the latest HoHatch application directly: [HoHatch-v1.0.3](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.0.3.zip). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
+To use HoHatch, download the latest HoHatch application directly: [HoHatch-v1.0.4](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.0.4.zip). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
 
 ## 📄 Changelogs
 

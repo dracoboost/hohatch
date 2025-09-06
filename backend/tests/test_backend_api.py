@@ -17,7 +17,9 @@ def backend():
          patch("backend.backend_api.FileService") as MockFileService, \
          patch("backend.backend_api.ImageService") as MockImageService, \
          patch("backend.backend_api.TexconvService") as MockTexconvService, \
-         patch("backend.backend_api.HoHatchBackend._ensure_texconv_exists"):
+         patch("backend.backend_api.HoHatchBackend._ensure_texconv_exists") as mock_ensure_texconv_exists:
+
+        mock_ensure_texconv_exists.return_value = None
 
         # Setup mock instances for each service
         mock_config_service = MockConfigService.return_value
@@ -37,6 +39,7 @@ def backend():
         backend_instance.mock_texconv_service = mock_texconv_service
 
         yield backend_instance
+
 
 
 class TestHoHatchBackend:
@@ -81,3 +84,49 @@ class TestHoHatchBackend:
         output_folder = "/path/to/output"
         backend.convert_single_dds_to_jpg(dds_path, output_folder)
         backend.mock_texconv_service.convert_to_jpg.assert_called_once_with(dds_path, output_folder)
+
+    @patch("shutil.move")
+    @patch("os.rename")
+    def test_replace_dds(self, mock_rename, mock_move, backend):
+        old_dds_path = "/path/to/old.dds"
+        new_jpg_path = "/path/to/new.jpg"
+        is_dump_image = True
+        backend.replace_dds(old_dds_path, new_jpg_path, is_dump_image)
+        backend.mock_texconv_service.convert_to_dds.assert_called_once()
+        backend.mock_file_service.move_file.assert_called_once()
+
+    def test_validate_sk_folder(self, backend):
+        folder_path = "/path/to/sk_folder"
+        backend.validate_sk_folder(folder_path)
+        assert backend.validate_sk_folder(folder_path) == {"is_valid": False}
+
+    def test_validate_texconv_executable(self, backend):
+        executable_path = "/path/to/texconv.exe"
+        backend.validate_texconv_executable(executable_path)
+        assert backend.validate_texconv_executable(executable_path) == {"is_valid": False}
+
+    def test_get_current_settings(self, backend):
+        backend.mock_config_service.get_settings.reset_mock()
+        backend.get_current_settings()
+        backend.mock_config_service.get_settings.assert_called_once()
+
+    def test_check_for_updates(self, backend):
+        backend.check_for_updates()
+        backend.mock_download_service.check_for_updates.assert_called_once()
+
+    def test_notify_settings_changed(self, backend):
+        backend.notify_settings_changed()
+        pass
+
+    def test_get_default_sk_path(self, backend):
+        backend.get_default_sk_path()
+        backend.mock_config_service.get_default_sk_path.assert_called_once()
+
+    def test_open_dump_folder(self, backend):
+        backend.open_dump_folder()
+        backend.mock_file_service.open_folder.assert_called_once_with(backend.mock_image_service.get_dump_folder_path())
+
+    def test_open_inject_folder(self, backend):
+        backend.open_inject_folder()
+        backend.mock_file_service.open_folder.assert_called_once_with(backend.mock_image_service.get_inject_folder_path())
+

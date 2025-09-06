@@ -256,6 +256,7 @@ Better
 ### Documentation Policy
 
 When implementing new features or making significant changes to HoHatch ensure that [`GEMINI.md`](https://github.com/dracoboost/hohatch/blob/master/docs/GEMINI.md) and [`README.md`](https://github.com/dracoboost/hohatch/blob/master/docs/README.md) are updated to reflect these changes.
+- **Update Changelogs Before Push**: Always update `frontend/CHANGELOG.md` and `website/CHANGELOG.md` to reflect all changes since the last release before pushing to the remote repository. Ensure that all uncommitted changes are moved to the `[Unreleased]` section, and the previous `[Unreleased]` section is moved to the new version tag (e.g., `[1.0.4]`).
 
 ## Git Repository
 

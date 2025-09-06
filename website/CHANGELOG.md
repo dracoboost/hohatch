@@ -7,9 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.4] - 2025-09-06
+
+### Changed
+
+- Removed hardcoded version from `website/app/page.tsx` and made it dynamically fetched from `package.json`.
+- Dynamically updated download link and button text in `website/components/WebsiteHeader.tsx`.
+- Updated download link in `WebsiteHeader.tsx` via `update_project_versions.py`.
+
+## [1.0.3] - 2025-09-05
+
 ### Added
 
-- No unreleased content.
+- Implemented Lightbox feature for images in markdown content.
+- Created `Lightbox` component with Context API.
+- Created `MarkdownImage` component for rendering images in markdown.
+- Created `MarkdownRenderer` component for rendering markdown content.
+
+### Changed
+
+- Integrated `Lightbox` and `MarkdownRenderer` into `app/page.tsx`.
+- Refactored `app/page.tsx` to use `WebsiteHeader` component.
 
 ## [1.0.2] - 2025-09-04
 
@@ -38,7 +56,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit.
 
-[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.2...HEAD
+[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.4...HEAD
+[1.0.4]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.4
+[1.0.3]: https://github.com/dracoboost/hohatch/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/dracoboost/hohatch/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/dracoboost/hohatch/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.0

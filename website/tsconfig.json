@@ -28,7 +28,9 @@
     "strict": true,
     "target": "ESNext",
     "types": [
-      "node"
+      "node",
+      "jest",
+      "@testing-library/jest-dom"
     ],
     "allowImportingTsExtensions": true,
     "typeRoots": [

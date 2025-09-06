@@ -2,13 +2,19 @@ import { Button, Link, Tooltip } from "@heroui/react";
 import Image from "next/image";
 import React from "react";
 
-type SocialIconType = "discord" | "x" | "github";
+type SocialIconType = "reddit" | "discord" | "x" | "github";
 
 interface SocialIconButtonProps {
   type: SocialIconType;
 }
 
 const socialData = {
+  reddit: {
+    tooltip: "Join the Mod Community on Reddit",
+    href: "https://www.reddit.com/r/ShadowverseMods/",
+    src: "/images/icons/reddit-white.svg",
+    alt: "Reddit",
+  },
   discord: {
     tooltip: "Join the Mod Community",
     href: "https://discord.gg/fEUMrTGb23",

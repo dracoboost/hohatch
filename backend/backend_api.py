@@ -23,9 +23,7 @@ class HoHatchBackend:
         self.file_service = FileService(self.config_service)
         self.download_service = DownloadService(self.config_service)
         self.image_service = ImageService(self.config_service)
-        self.texconv_service = TexconvService(
-            self.config_service, self.file_service, self.image_service
-        )
+        self.texconv_service = TexconvService(self.config_service, self.file_service, self.image_service)
         self.last_image_dir = Path.home()
 
         settings = self.config_service.get_settings()
@@ -202,7 +200,7 @@ class HoHatchBackend:
                 raise FileSystemError("Could not determine inject folder path.")
 
             final_path = Path(inject_folder) / Path(final_dds).name
-            shutil.move(final_dds, final_path)
+            self.file_service.move_file(final_dds, final_path)
 
             if is_dump_image:
                 self.file_service.delete_file(target_dds_path)
@@ -218,3 +216,16 @@ class HoHatchBackend:
     def validate_texconv_executable(self, path: str) -> Dict[str, Any]:
         is_valid = Path(path).is_file() and os.access(path, os.X_OK)
         return {"is_valid": is_valid}
+
+    def check_for_updates(self):
+        try:
+            return self.download_service.check_for_updates()
+        except HoHatchError as e:
+            return self._handle_error(e, "Failed to check for updates")
+
+    def notify_settings_changed(self):
+        # This method is a placeholder for now.
+        return {"success": True}
+
+    def get_default_sk_path(self):
+        return self.config_service.get_default_sk_path()

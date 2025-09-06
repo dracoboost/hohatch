@@ -64,14 +64,35 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Cache Python dependencies
+        uses: actions/cache@v4
+        with:
+          path: venv
+          key: ${{ runner.os }}-python-${{ hashFiles('requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-python-
+
       - name: Install Python dependencies
         run: |
           python -m venv venv
-          .\venv\Scripts\pip install -r requirements.txt
+          python -m pip install -r requirements.txt
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v4
+        with:
+          path: frontend/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install Node.js dependencies
         working-directory: .\frontend
-        run: npm install
+        run: npm ci
 
       - name: Build frontend
         working-directory: .\frontend
@@ -135,8 +156,40 @@ jobs:
         with:
           tag_name: v${{ needs.check-version.outputs.package_version }}
           release_name: Release v${{ needs.check-version.outputs.package_version }}
-          draft: false
+          draft: true
           prerelease: false
+
+      - name: Generate release notes
+        uses: actions/github-script@v6
+        id: generate_release_notes
+        with:
+          script: |
+            const { readFileSync } = require('fs');
+            const changelog = readFileSync('./frontend/CHANGELOG.md', 'utf8');
+            const version = process.env.PACKAGE_VERSION;
+            const regex = new RegExp(`## [${version}] - (\d{4}-\d{2}-\d{2})
+([\s\S]*?)(?=## [\d+.\d+.\d+]|$)
+`);
+            const match = changelog.match(regex);
+            if (match) {
+              core.setOutput('release_notes', match[2].trim());
+            } else {
+              core.setOutput('release_notes', 'No release notes found for this version.');
+            }
+          env:
+            PACKAGE_VERSION: ${{ needs.check-version.outputs.package_version }}
+          result-encoding: string
+
+      - name: Update Release with Notes
+        uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: ${{ steps.create_release.outputs.id }},
+              body: `${{ steps.generate_release_notes.outputs.release_notes }}`
+            })
 
       - name: Upload Release Asset
         id: upload-release-asset

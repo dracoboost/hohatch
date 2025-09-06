@@ -44,7 +44,9 @@ export default function SettingsScreen() {
     setMounted(true);
   }, []);
 
-  const i18n = settings?.language ? I18N[settings.language] : I18N.en;
+  const i18n: typeof I18N.en | typeof I18N.ja = settings?.language
+    ? I18N[settings.language]
+    : I18N.en;
 
   const folderIcon = skFolderValidation.isValid ? (
     <FolderCheck className="text-green-500" size={18} />
@@ -167,7 +169,7 @@ export default function SettingsScreen() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen flex-col bg-gray-200 text-black dark:bg-gray-900 dark:text-white">
+      <div className="flex min-h-screen flex-col bg-gray-200 text-gray-900 dark:bg-gray-900 dark:text-white">
         <Toaster richColors position="bottom-right" />
         <Header mounted={mounted} page="settings" theme={theme} />
         <main className="flex flex-grow items-center justify-center">
@@ -178,18 +180,20 @@ export default function SettingsScreen() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-200 text-black dark:bg-gray-900 dark:text-white">
+    <div className="flex min-h-screen flex-col bg-gray-200 text-gray-900 dark:bg-gray-900 dark:text-white">
       <Toaster richColors position="bottom-right" />
       <Header mounted={mounted} page="settings" theme={theme} />
 
       <main className="flex flex-grow items-center justify-center">
-        <div className="flex w-full flex-col items-start gap-4 p-4 sm:p-2 lg:w-2/3">
-          <div className="gap-0">
-            <label className="mb-2 block text-sm font-medium text-gray-800 dark:text-gray-400">
+        <div className="mx-auto flex max-w-3xl flex-col items-start gap-6">
+          {/* Language */}
+          <div className="flex w-full flex-col items-start gap-2">
+            <label className="text-sm font-medium text-gray-800 dark:text-gray-400">
               {i18n.language_setting || "Language"}
             </label>
             <Tabs
               aria-label="Language"
+              classNames={{tabList: "border-gray-300 dark:border-gray-700"}}
               color="secondary"
               selectedKey={settings.language}
               variant="bordered"
@@ -200,94 +204,114 @@ export default function SettingsScreen() {
             </Tabs>
           </div>
 
-          <div className="flex w-full flex-col items-center gap-y-2 pb-4 sm:flex-row sm:gap-x-2 sm:px-0">
-            <div className="relative w-full flex-grow">
+          {/* Special K Folder Path */}
+          <div className="flex w-full flex-col items-start">
+            <label className="text-sm font-medium text-gray-800 dark:text-gray-400">
+              {i18n.sk_folder_path_title || "Special K Folder Path"}
+            </label>
+            <div className="flex w-full flex-row items-center gap-2">
               <FloatingUnderlineInput
-                readOnly
+                containerClassName="w-full md:w-[500px]"
                 errorMessage={
                   skFolderValidation.isValid === false
                     ? skFolderValidation.message || undefined
                     : undefined
                 }
-                label={i18n.sk_folder_path_title || "Special K Folder Path"}
+                label={i18n.sk_folder_path_label}
                 startContent={folderIcon}
                 value={settings.special_k_folder_path || ""}
+                onChange={(e) =>
+                  setSettings((prevSettings) => ({
+                    ...prevSettings,
+                    special_k_folder_path: e.target.value,
+                  }))
+                }
               />
-            </div>
-            <Button
-              isIconOnly
-              aria-label="Select Folder"
-              buttonSize="size-10"
-              onClick={handleSelectSpecialKFolder}
-            >
-              <Folder size={24} />
-            </Button>
-            <Tooltip
-              color={mounted && theme === "light" ? "foreground" : "default"}
-              content={i18n.download_special_k_btn}
-              placement="bottom"
-            >
-              <Button
-                isIconOnly
-                aria-label="Download Special K Installer"
-                buttonSize="size-10"
-                onClick={handleDownloadSpecialK}
-              >
-                <Download size={24} />
-              </Button>
-            </Tooltip>
-          </div>
-
-          <div className="flex w-full flex-row items-center gap-2">
-            <div className="flex w-full flex-col items-center gap-y-4 px-8 sm:flex-row sm:gap-x-4 sm:gap-y-0 sm:px-0">
-              <div className="relative w-full flex-grow">
-                <FloatingUnderlineInput
-                  label={i18n.dds_to_jpg_height_label || "Image Height"}
-                  min={0}
-                  startContent={<MoveVertical size={18} />}
-                  type="number"
-                  value={settings.output_height}
-                  onChange={(e) => {
-                    const value = parseInt(e.target.value, 10);
-                    setSettings((prevSettings: any) => ({
-                      ...prevSettings,
-                      output_height: isNaN(value) ? 0 : value,
-                    }));
-                  }}
-                />
-              </div>
-            </div>
-
-            <div className="flex w-full flex-col items-center gap-y-4 px-8 sm:flex-row sm:gap-x-4 sm:gap-y-0 sm:px-0">
-              <div className="relative w-full flex-grow">
-                <FloatingUnderlineInput
-                  readOnly
-                  label={i18n.dds_to_jpg_width_label || "Image Width (auto-calculated)"}
-                  startContent={<MoveHorizontal size={18} />}
-                  type="number"
-                  value={output_width?.toString() || ""}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="w-full items-start gap-y-2 sm:flex-row sm:gap-x-2 sm:px-0">
-            <label className="flex items-center text-sm font-medium text-gray-800 dark:text-gray-400">
-              {i18n.cache_settings || "Cache"}
               <Tooltip
                 color={mounted && theme === "light" ? "foreground" : "default"}
-                content={i18n.open_cache_folder_btn || "Open Cache Folder"}
+                content={i18n.select_folder_btn || "Select Folder"}
+                placement="top"
               >
                 <Button
                   isIconOnly
-                  aria-label={i18n.open_cache_folder_btn || "Open Cache Folder"}
-                  buttonSize="size-10"
-                  onClick={handleOpenCacheFolder}
+                  aria-label="Select Folder"
+                  buttonSize="size-8"
+                  className="w-10"
+                  onClick={handleSelectSpecialKFolder}
                 >
-                  <Folder size={18} />
+                  <Folder size={20} />
                 </Button>
               </Tooltip>
+              <Tooltip
+                color={mounted && theme === "light" ? "foreground" : "default"}
+                content={i18n.download_special_k_btn}
+                placement="top"
+              >
+                <Button
+                  isIconOnly
+                  aria-label="Download Special K Installer"
+                  buttonSize="size-8"
+                  className="w-10"
+                  onClick={handleDownloadSpecialK}
+                >
+                  <Download size={20} />
+                </Button>
+              </Tooltip>
+            </div>
+          </div>
+
+          {/* Download JPG Size */}
+          <div className="flex w-full flex-col items-start">
+            <label className="text-sm font-medium text-gray-800 dark:text-gray-400">
+              {i18n.download_jpg_size_label || "Download JPG Size"}
             </label>
+            <div className="flex w-full flex-row items-start gap-6">
+              <FloatingUnderlineInput
+                readOnly
+                aria-label={i18n.dds_to_jpg_width_label || "Width (auto-calculated)"}
+                containerClassName="w-full md:w-[150px]"
+                label={i18n.dds_to_jpg_width_label}
+                startContent={<MoveHorizontal size={18} />}
+                type="number"
+                value={output_width?.toString() || ""}
+              />
+              <FloatingUnderlineInput
+                aria-label={i18n.dds_to_jpg_height_label || "Height"}
+                containerClassName="w-full md:w-[150px]"
+                label={i18n.dds_to_jpg_height_label}
+                min={0}
+                startContent={<MoveVertical size={18} />}
+                type="number"
+                value={settings.output_height}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value, 10);
+                  setSettings((prevSettings: any) => ({
+                    ...prevSettings,
+                    output_height: isNaN(value) ? 0 : value,
+                  }));
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Cache */}
+          <div className="flex w-full flex-row items-center gap-1">
+            <label className="text-sm font-medium text-gray-800 dark:text-gray-400">
+              {i18n.cache_settings || "Cache"}
+            </label>
+            <Tooltip
+              color={mounted && theme === "light" ? "foreground" : "default"}
+              content={i18n.open_cache_folder_btn || "Open Cache Folder"}
+            >
+              <Button
+                isIconOnly
+                aria-label={i18n.open_cache_folder_btn || "Open Cache Folder"}
+                buttonSize="size-7"
+                onClick={handleOpenCacheFolder}
+              >
+                <Folder size={18} />
+              </Button>
+            </Tooltip>
           </div>
         </div>
       </main>

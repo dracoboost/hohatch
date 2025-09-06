@@ -17,7 +17,7 @@ interface ImageSectionProps {
   images: ImageInfo[];
   imagesPerPage: number;
   isProcessing: boolean;
-  languageData: typeof I18N.en;
+  languageData: typeof I18N.en | typeof I18N.ja;
   isLoading: boolean;
   noImagesMessage: string;
   selectedImages: Set<string>;
@@ -70,25 +70,35 @@ const ImageSection: React.FC<ImageSectionProps> = ({
       <div className="flex w-full flex-row items-center gap-1">
         <div className="flex h-8 w-8 items-center">
           {images.length > 0 && (
-            <Button
-              isIconOnly
-              aria-label="Select All"
-              buttonSize="size-8"
-              isDisabled={isProcessing}
-              onClick={onSelectAll}
+            <Tooltip
+              color={mounted && theme === "light" ? "foreground" : "default"}
+              content={
+                isAllSelected
+                  ? languageData.unselect_all_btn_tooltip
+                  : languageData.select_all_btn_tooltip
+              }
+              placement="bottom"
             >
-              <SelectAllIcon
-                className="text-gray-800 dark:text-white"
-                data-testid={
-                  isAllSelected
-                    ? "icon-square-check"
-                    : isPartiallySelected
-                      ? "icon-square-minus"
-                      : "icon-square"
-                }
-                size={20}
-              />
-            </Button>
+              <Button
+                isIconOnly
+                aria-label="Select All"
+                buttonSize="size-8"
+                isDisabled={isProcessing}
+                onClick={onSelectAll}
+              >
+                <SelectAllIcon
+                  className="text-gray-800 dark:text-white"
+                  data-testid={
+                    isAllSelected
+                      ? "icon-square-check"
+                      : isPartiallySelected
+                        ? "icon-square-minus"
+                        : "icon-square"
+                  }
+                  size={20}
+                />
+              </Button>
+            </Tooltip>
           )}
         </div>
         {images.length > 0 && (
@@ -162,8 +172,6 @@ const ImageSection: React.FC<ImageSectionProps> = ({
   );
 };
 
-type LangData = typeof I18N.en;
-
 export default function MainScreen() {
   const [injectImages, setInjectImages] = useState<ImageInfo[]>([]);
   const [dumpImages, setDumpImages] = useState<ImageInfo[]>([]);
@@ -173,7 +181,7 @@ export default function MainScreen() {
   const [isLoadingInject, setIsLoadingInject] = useState<boolean>(true);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [currentLangCode, setCurrentLangCode] = useState<"en" | "ja">("en");
-  const [i18n, setI18n] = useState<LangData>(I18N.en);
+  const [i18n, setI18n] = useState<typeof I18N.en | typeof I18N.ja>(I18N.en);
   const [selectedImages, setSelectedImages] = useState<Set<string>>(new Set());
 
   const [activeView, setActiveView] = useState<"dump" | "inject">("dump");
@@ -513,7 +521,7 @@ export default function MainScreen() {
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-200 text-black dark:bg-gray-900 dark:text-white">
+    <div className="flex min-h-screen flex-col bg-gray-200 text-gray-900 dark:bg-gray-900 dark:text-white">
       <Toaster richColors position="bottom-right" />
       <Header
         isProcessing={isProcessing}
@@ -541,7 +549,7 @@ export default function MainScreen() {
               tab: "max-w-fit px-0 h-12",
               tabContent: "group-data-[selected=true]:text-hochan-red",
             }}
-            color="primary"
+            color="secondary"
             selectedKey={activeView}
             variant="underlined"
             onSelectionChange={(key) => setActiveView(key as "dump" | "inject")}
@@ -549,7 +557,7 @@ export default function MainScreen() {
             <Tab
               key="dump"
               title={
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 px-1">
                   <span className={activeView === "dump" ? "text-hochan-red" : "text-gray-500"}>
                     {i18n.dumped_images}
                   </span>
@@ -581,7 +589,7 @@ export default function MainScreen() {
             <Tab
               key="inject"
               title={
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 px-1">
                   <span className={activeView === "inject" ? "text-hochan-red" : "text-gray-500"}>
                     {i18n.injected_images}
                   </span>
