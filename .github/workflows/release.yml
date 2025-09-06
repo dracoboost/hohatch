@@ -33,6 +33,7 @@ jobs:
         run: |
           $packageVersion = (node -p "require('./frontend/package.json').version")
           echo "package_version=$packageVersion" >> $env:GITHUB_OUTPUT
+        shell: powershell
 
       - name: Check if tag already exists
         id: check_tag
@@ -45,6 +46,7 @@ jobs:
             Write-Host "Tag $TAG_NAME does not exist. Proceeding with release."
             echo "tag_exists=false" >> $env:GITHUB_OUTPUT
           }
+        shell: powershell
 
   build-and-release:
     needs: check-version
@@ -75,7 +77,9 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m venv venv
-          python -m pip install -r requirements.txt
+          venv\Scripts\python -m pip install --upgrade pip
+          venv\Scripts\python -m pip install -r requirements.txt
+        shell: powershell
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -93,15 +97,17 @@ jobs:
       - name: Install Node.js dependencies
         working-directory: .\frontend
         run: npm ci
+        shell: powershell
 
       - name: Build frontend
         working-directory: .\frontend
         run: npm run frontend
+        shell: powershell
 
       - name: Build executable
         working-directory: .\frontend
         run: npm run backend:windows
-        shell: cmd
+        shell: powershell
 
       - name: Decode and import PFX certificate
         run: |
@@ -128,6 +134,7 @@ jobs:
 
       - name: List dist directory
         run: ls dist
+        shell: powershell
 
       - name: Create README for release
         run: |
