@@ -6,7 +6,8 @@
   "scripts": {
     "backend": "run-script-os",
     "backend:windows": "cd .. && venv\\Scripts\\python -m scripts.version_management.manager update_backend_version_entry_point && venv\\Scripts\\pyinstaller backend\\specs\\build-windows-release.spec",
-    "backend-test": "cd .. && set \"PYTHONPATH=%CD%\\backend\\;%PYTHONPATH%\" && venv\\Scripts\\pytest backend\\",
+    "backend-test": "cd .. && set \"PYTHONPATH=%CD%\\backend\\;%PYTHONPATH%\" && venv\\Scripts\\python -m pytest backend\\",
+
     "build": "npm run frontend && npm run backend",
     "clean": "jest --clearCache",
     "dev": "npm run update-readme-version && npm run frontend && run-script-os",
