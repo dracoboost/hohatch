@@ -165,15 +165,15 @@ jobs:
         with:
           script: |
             const { readFileSync } = require('fs');
-            const changelog = readFileSync('./frontend/CHANGELOG.md', 'utf8');
-            const version = process.env.PACKAGE_VERSION;
-            const regex = new RegExp('## [' + version + '] - (\d{4}-\d{2}-\d{2})\n([\s\S]*?)(?=## [\d+.\d+.\d+]|$)\n');
-            const match = changelog.match(regex);
-            if (match) {
-              core.setOutput('release_notes', match[2].trim());
-            } else {
-              core.setOutput('release_notes', 'No release notes found for this version.');
-            }
+              const changelog = readFileSync('./frontend/CHANGELOG.md', 'utf8');
+              const version = process.env.PACKAGE_VERSION;
+              const regex = new RegExp('## [' + version + '] - (\d{4}-\d{2}-\d{2})\n([\s\S]*?)(?=## [\d+.\d+.\d+]|$)\n');
+              const match = changelog.match(regex);
+              if (match) {
+                core.setOutput('release_notes', match[2].trim());
+              } else {
+                core.setOutput('release_notes', 'No release notes found for this version.');
+              }
           env:
             PACKAGE_VERSION: ${{ needs.check-version.outputs.package_version }}
           result-encoding: string
