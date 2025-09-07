@@ -112,7 +112,7 @@ jobs:
       - name: Decode and Import PFX Certificate
         run: |
           $pfx_base64 = "${{ secrets.CODE_SIGN_CERTIFICATE_PFX }}"
-          
+
           $pfx_bytes = [System.Convert]::FromBase64String($pfx_base64)
           [System.IO.File]::WriteAllBytes("certificate.pfx", $pfx_bytes)
           $password = "${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}"
@@ -161,8 +161,10 @@ jobs:
         run: |
           $packageVersion = "${{ needs.check-version.outputs.package_version }}"
           $releaseNotes = python .\scripts\generate_release_notes.py $packageVersion | Out-String
-          $encodedNotes = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($releaseNotes))
-          echo "release_notes_base64=$encodedNotes" >> $env:GITHUB_OUTPUT
+          $releaseNotes = $releaseNotes.Trim()
+          echo "release_notes<<EOF" >> $env:GITHUB_OUTPUT
+          echo "$releaseNotes" >> $env:GITHUB_OUTPUT
+          echo "EOF" >> $env:GITHUB_OUTPUT
         shell: powershell
 
       - name: Create Release
@@ -173,7 +175,7 @@ jobs:
         with:
           tag_name: v${{ needs.check-version.outputs.package_version }}
           release_name: Release v${{ needs.check-version.outputs.package_version }}
-          body: ${{ fromJson(steps.generate_release_notes.outputs.release_notes_base64) }}
+          body: ${{ steps.generate_release_notes.outputs.release_notes }}
           draft: false
           prerelease: false
 
