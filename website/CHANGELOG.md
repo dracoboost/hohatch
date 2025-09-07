@@ -50,7 +50,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated all download links to point to the `v1.0.1` release zip file on the GitHub releases page.
 - Refined the overall styling and user interface for better readability and user experience.
 
-## [1.0.0] - 2025-08-29
+## 1.0.0 - 2025-08-29
 
 ### Added
 
@@ -60,5 +60,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [1.0.4]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.4
 [1.0.3]: https://github.com/dracoboost/hohatch/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/dracoboost/hohatch/compare/v1.0.1...v1.0.2
-[1.0.1]: https://github.com/dracoboost/hohatch/compare/v1.0.0...v1.0.1
-[1.0.0]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.0
+[1.0.1]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.1
