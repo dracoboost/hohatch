@@ -198,13 +198,16 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const body = JSON.stringify(`${{ steps.generate_release_notes.outputs.release_notes }}`);
+            // Get the release notes string from the previous step's output.
+            const releaseNotes = `${{ steps.generate_release_notes.outputs.release_notes}}`;
+
+            // The string is already formatted, so we can use it directly.
             github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
               release_id: ${{ steps.create_release.outputs.id }},
-              body: body
-            })
+              body: releaseNotes
+            });
 
       - name: Upload Release Asset
         id: upload-release-asset
