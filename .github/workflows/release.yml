@@ -144,7 +144,7 @@ jobs:
         shell: powershell
 
       - name: Prepare Files for Packaging
-        run: Copy-Item -Path "dist/HoHatch.Hatch.exe" -Destination "release_package/"
+        run: Copy-Item -Path "dist/HoHatch.exe" -Destination "release_package/"
         shell: powershell
 
       - name: Create ZIP Archive
