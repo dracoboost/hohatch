@@ -26,7 +26,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x'
+          node-version: "24.x"
 
       - name: Get Package Version
         id: get_version
@@ -64,7 +64,7 @@ jobs:
       - name: Set Up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Cache Python Dependencies
         uses: actions/cache@v4
@@ -84,7 +84,7 @@ jobs:
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24.x'
+          node-version: "24.x"
 
       - name: Cache Node.js Modules
         uses: actions/cache@v4
@@ -165,9 +165,9 @@ jobs:
             const escapedVersion = version.replace(/[.*+?^${}()|[\\]/g, '\\$&');
             const regex = new RegExp('##\s*\[' + escapedVersion + '\s*\]\s*-\s*\d{4}-\d{2}-\d{2}\s*\n([\s\S]*?)(?=(?:\n##\s*\[|$))', 'u');
 
+            const match = changelog.match(regex);
             const releaseNotes = match ? match[1].trim() : 'No release notes found for this version.';
 
-            // Create a release
             const createResponse = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -180,7 +180,6 @@ jobs:
 
             core.setOutput('release_id', createResponse.data.id);
             core.setOutput('upload_url', createResponse.data.upload_url);
-
         env:
           PACKAGE_VERSION: ${{ needs.check-version.outputs.package_version }}
 
