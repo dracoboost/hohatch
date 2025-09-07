@@ -174,9 +174,18 @@ jobs:
             const { readFileSync } = require('fs');
             const changelog = readFileSync('./frontend/CHANGELOG.md', 'utf8');
             const version = process.env.PACKAGE_VERSION;
-            const escapedVersion = version.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const regex = new RegExp('## \\[' + escapedVersion + '\\] - \\d{4}-\\d{2}-\\d{2}\\n([\\s\\S]*?)(?=## \\[|$)', 'u');
+            const escapedVersion = version.replace(/[.*+?^${}()|[\\]/g, '\\$&');
+            const regex = new RegExp('## \[' + escapedVersion + '\] - \d{4}-\d{2}-\d{2}\n([\s\S]*?)(?=## \[|$)', 'u');
+
+            console.log('Changelog content:');
+            console.log(changelog);
+            console.log('Version:', version);
+            console.log('Escaped Version:', escapedVersion);
+            console.log('Regex:', regex);
+
             const match = changelog.match(regex);
+            console.log('Match result:', match);
+
             if (match) {
               core.setOutput('release_notes', match[1].trim());
             } else {
