@@ -4,14 +4,14 @@ import shutil
 from pathlib import Path
 from typing import Any, Dict, List
 
-from .services import (
+from backend.services import (
     ConfigService,
     DownloadService,
     FileService,
     ImageService,
     TexconvService,
 )
-from .exceptions import HoHatchError, FileSystemError
+from backend.exceptions import HoHatchError, FileSystemError
 
 
 class HoHatchBackend:

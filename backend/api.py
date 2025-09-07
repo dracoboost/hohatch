@@ -6,7 +6,7 @@ import webview
 import requests
 
 from backend.backend_api import HoHatchBackend
-from backend.services import get_special_k_dir
+
 
 
 class Api:
@@ -171,6 +171,7 @@ class Api:
         return self.backend.open_folder_in_explorer(inject_folder_path)
 
     def get_default_sk_path(self):
+        from backend.services import get_special_k_dir
         logging.debug("get_default_sk_path called")
         return str(get_special_k_dir())
 

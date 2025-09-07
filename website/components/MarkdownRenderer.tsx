@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import React from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { Link } from "@heroui/react";
-import { MarkdownImage } from "./MarkdownImage";
-import { useLightbox } from "./Lightbox";
+import React from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { MarkdownLink } from './MarkdownLink';
+import { MarkdownImage } from './MarkdownImage';
+import { useLightbox } from './Lightbox';
 
 interface MarkdownRendererProps {
   markdownContent: string;
@@ -17,14 +17,14 @@ interface AnchorProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 
 interface Components {
   a: React.FC<AnchorProps>;
-  blockquote: React.FC<React.QuoteHTMLAttributes<HTMLQuoteElement>>; 
-  h1: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
-  h2: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
-  h3: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
-  h4: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
-  h5: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
-  h6: React.FC<React.HTMLAttributes<HTMLHeadingElement>>; 
-  img: React.FC<React.ImgHTMLAttributes<HTMLImageElement>>; // Use React.ImgHTMLAttributes for img
+  blockquote: React.FC<React.QuoteHTMLAttributes<HTMLQuoteElement>>;
+  h1: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  h2: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  h3: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  h4: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  h5: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  h6: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  img: React.FC<React.ImgHTMLAttributes<HTMLImageElement>>;
 }
 
 export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
@@ -35,18 +35,15 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   const components: Components = {
     a: (props: AnchorProps) => {
       const isExternal =
-        props.href && (props.href.startsWith("http://") || props.href.startsWith("https://"));
+        props.href && (props.href.startsWith('http://') || props.href.startsWith('https://'));
       return (
-        <Link
-          className="text-link-color hover:opacity-60 active:opacity-40"
+        <MarkdownLink
           href={props.href}
-          isExternal={isExternal ? true : undefined}
-          rel={isExternal ? "noopener noreferrer" : undefined}
-          showAnchorIcon
-          target={isExternal ? "_blank" : undefined}
+          rel={isExternal ? 'noopener noreferrer' : undefined}
+          target={isExternal ? '_blank' : undefined}
         >
           {props.children}
-        </Link>
+        </MarkdownLink>
       );
     },
     blockquote: ({ children }) => {

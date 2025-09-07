@@ -14,16 +14,18 @@ from typing import Dict, Any, List
 import requests
 from PIL import Image
 
-from .dto import AppSettings, ImageInfo
-from .exceptions import ConfigError, DownloadError, FileSystemError, TexconvError
+from backend.dto import AppSettings, ImageInfo
+from backend.exceptions import ConfigError, DownloadError, FileSystemError, TexconvError
 
 
 # --- Path Helpers ---
 def get_special_k_dir() -> Path:
     return Path(appdirs.user_data_dir("Special K", "Programs"))
 
+
 def get_config_dir() -> Path:
     return Path(appdirs.user_data_dir("HoHatch", ""))
+
 
 def get_config_file() -> Path:
     config_dir = get_config_dir()
@@ -40,7 +42,10 @@ class ConfigService:
     def _load_settings(self) -> AppSettings:
         config_file = get_config_file()
         if not config_file.exists():
-            default = AppSettings(special_k_folder_path=str(get_special_k_dir()), texconv_executable_path=str(get_config_dir() / "texconv.exe"))
+            default = AppSettings(
+                special_k_folder_path=str(get_special_k_dir()),
+                texconv_executable_path=str(get_config_dir() / "texconv.exe"),
+            )
             self.save_settings(default)
             return default
         try:
@@ -69,6 +74,7 @@ class ConfigService:
         self.save_settings(updated)
         return updated
 
+
 class DownloadService:
     TEXCONV_URL = "https://github.com/Microsoft/DirectXTex/releases/latest/download/texconv.exe"
     SPECIAL_K_URL = "https://sk-data.special-k.info/SpecialK.exe"
@@ -80,11 +86,13 @@ class DownloadService:
         path = Path(self.config_service.get_settings().texconv_executable_path)
         path.parent.mkdir(parents=True, exist_ok=True)
         try:
-            if path.exists(): os.remove(path)
+            if path.exists():
+                os.remove(path)
             response = requests.get(self.TEXCONV_URL, stream=True, timeout=30)
             response.raise_for_status()
             with open(path, "wb") as f:
-                for chunk in response.iter_content(chunk_size=8192): f.write(chunk)
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
             return str(path)
         except requests.exceptions.RequestException as e:
             raise DownloadError(f"Failed to download Texconv: {e}")
@@ -95,7 +103,8 @@ class DownloadService:
             response = requests.get(self.SPECIAL_K_URL, stream=True, timeout=30)
             response.raise_for_status()
             with open(path, "wb") as f:
-                for chunk in response.iter_content(chunk_size=8192): f.write(chunk)
+                for chunk in response.iter_content(chunk_size=8192):
+                    f.write(chunk)
             return str(path)
         except requests.exceptions.RequestException as e:
             raise DownloadError(f"Failed to download Special K: {e}")
@@ -107,6 +116,7 @@ class DownloadService:
                 os.remove(path)
             except OSError as e:
                 raise FileSystemError(f"Failed to delete texconv.exe: {e}")
+
 
 class FileService:
     def __init__(self, config_service: ConfigService):
@@ -144,7 +154,7 @@ class FileService:
                 self.delete_file(path_str)
             except FileSystemError as e:
                 errors.append(e.message)
-        
+
         if errors:
             error_message = "Failed to delete one or more files: " + ", ".join(errors)
             logging.error(error_message)
@@ -159,6 +169,7 @@ class FileService:
         if dir_path.exists():
             shutil.rmtree(dir_path, onexc=lambda f, p, e: (os.chmod(p, 0o777), f(p)))
         dir_path.mkdir(parents=True, exist_ok=True)
+
 
 class ImageService:
     def __init__(self, config_service: ConfigService):
@@ -199,9 +210,11 @@ class ImageService:
 
     def _get_profile_dir(self, sk_path: Path) -> Path | None:
         profiles = sk_path / "Profiles"
-        if not profiles.is_dir(): return None
+        if not profiles.is_dir():
+            return None
         dirs = [d for d in profiles.iterdir() if d.is_dir()]
         return dirs[0] if len(dirs) == 1 else next((d for d in dirs if d.name == "Shadowverse Worlds Beyond"), None)
+
 
 class TexconvService:
     def __init__(self, config_service: ConfigService, file_service: FileService, image_service: ImageService):
@@ -222,7 +235,19 @@ class TexconvService:
         settings = self.config_service.get_settings()
         dds_p, out_p = Path(dds_path), Path(output_folder)
         out_file = out_p / f"{dds_p.stem}.jpg"
-        args = ["-o", str(out_p), str(dds_p), "-ft", "jpg", "-w", str(settings.output_width), "-h", str(settings.output_height), "-r", "-y"]
+        args = [
+            "-o",
+            str(out_p),
+            str(dds_p),
+            "-ft",
+            "jpg",
+            "-w",
+            str(settings.output_width),
+            "-h",
+            str(settings.output_height),
+            "-r",
+            "-y",
+        ]
         self._run_texconv(args)
         if out_file.is_file():
             with Image.open(out_file) as img:
@@ -232,7 +257,7 @@ class TexconvService:
 
     def convert_to_dds(self, jpg_path: str, out_dir: str, new_name: str) -> str:
         args = ["-f", "BC7_UNORM", "-o", out_dir, jpg_path, "-m", "11", "-y"]
-        result = self._run_texconv(args)
+        self._run_texconv(args)
         created_dds = Path(out_dir) / f"{Path(jpg_path).stem}.dds"
         final_dds = Path(out_dir) / new_name
         if created_dds.is_file():

@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Created a custom `MarkdownLink` component to ensure consistent link styling.
+
+### Changed
+
+- Improved image SEO by dynamically adding all guide images to the sitemap.
+
+### Fixed
+
+- Resolved a TypeScript error in the new `MarkdownLink` component by using the correct `LinkProps` type.
+- Updated `MarkdownRenderer` to use the new `MarkdownLink` component, fixing a style override issue.
+
 ## [1.0.4] - 2025-09-06
 
 ### Changed

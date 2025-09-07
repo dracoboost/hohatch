@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-09-07
+
+### Fixed
+
+- Resolved a critical `ImportError` for relative imports that occurred in the packaged executable by converting all backend imports to absolute paths.
+- Removed an unused variable assignment in `backend/services.py`.
+
+### Changed
+
+- Updated the release workflow to use `ncipollo/release-action@v1`, resolving `set-output` deprecation warnings.
+
 ## [1.0.4] - 2025-09-06
 
 ### Added
@@ -87,7 +98,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit.
 
-[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.4...HEAD
+[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/dracoboost/hohatch/compare/v1.0.4...v1.1.0
 [1.0.4]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.4
 [1.0.3]: https://github.com/dracoboost/hohatch/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/dracoboost/hohatch/compare/v1.0.1...v1.0.2

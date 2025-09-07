@@ -81,4 +81,4 @@ export const I18N = {
   },
 } as const;
 
-export const appVersion = "1.0.4";
+export const appVersion = "1.1.0";

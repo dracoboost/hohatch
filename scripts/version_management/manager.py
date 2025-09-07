@@ -31,7 +31,7 @@ class VersionManager:
 
             # Update backend/version.py
             with open(backend_version_file_path, "w", encoding="utf-8") as f:
-                f.write(f'APP_VERSION = "{frontend_version}"')
+                f.write(f'APP_VERSION = "{frontend_version}"\n')
             print(f"Updated backend version to: {frontend_version}")
 
             # Generate backend/version.rc from template

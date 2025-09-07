@@ -1,6 +1,6 @@
 {
   "name": "hohatch-frontend",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -21,7 +21,7 @@
     "lint:check": "npm exec eslint -- --ext .js,.jsx,.mjs,.ts,.tsx && tsc --noEmit",
     "lint:fix": "npm exec eslint -- --fix --ext .js,.jsx,.mjs,.ts,.tsx && npm exec prettier -- --write \"**/*.{ts,tsx}\" > NUL",
     "lint:fix:windows": "npm exec eslint -- --fix --ext .js,.jsx,.mjs,.ts,.tsx && npm exec prettier -- --write \"**/*.{ts,tsx}\" > NUL",
-    "preflight": "npm run frontend-test && npm run backend-test && npm run test:release-notes-test",
+    "preflight": "npm run update-readme-version && npm run frontend-test && npm run backend-test && npm run test:release-notes-test",
     "test:release-notes-test": "cd .. && venv\\Scripts\\python scripts\\generate_release_notes.py 1.0.4",
     "update-readme-version": "cd .. && venv\\Scripts\\python -m scripts.version_management.manager update_all_versions_entry_point"
   },
