@@ -6,7 +6,7 @@ import webview
 import requests
 
 from backend.backend_api import HoHatchBackend
-from .services import get_special_k_dir
+from backend.services import get_special_k_dir
 
 
 class Api:
@@ -200,14 +200,14 @@ class Api:
     def get_app_version(self):
         logging.debug("get_app_version called")
         # In a real application, this would be read from a version file generated during build
-        from .version import APP_VERSION
+        from backend.version import APP_VERSION
 
         return {"success": True, "version": APP_VERSION}
 
     def check_for_updates(self):
         logging.debug("check_for_updates called")
         try:
-            from .version import APP_VERSION
+            from backend.version import APP_VERSION
 
             response = requests.get("https://api.github.com/repos/dracoboost/hohatch/releases/latest")
             response.raise_for_status()  # Raise an exception for HTTP errors
