@@ -76,7 +76,6 @@ class VersionManager:
     def update_all_project_versions(self):
         try:
             frontend_version = self._read_version_from_package_json("frontend/package.json")
-            website_version = self._read_version_from_package_json("website/package.json")
 
             self.update_backend_app_version()
 
@@ -85,17 +84,17 @@ class VersionManager:
             page_tsx_patterns = [
                 (
                     r'(src="https://img.shields.io/badge/version-)[^"]+-b7465a(")',
-                    rf"\g<1>{website_version}-b7465a\g<2>",
+                    rf"\g<1>{frontend_version}-b7465a\g<2>",
                 ),
                 (
                     r'("downloadUrl":\s*"https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip")',
-                    rf"\g<1>{website_version}\g<2>",
+                    rf"\g<1>{frontend_version}\g<2>",
                 ),
                 (
                     r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(" isExternal>)',
-                    rf"\g<1>{website_version}\g<2>",
+                    rf"\g<1>{frontend_version}\g<2>",
                 ),
-                (r"(Download Latest HoHatch \(v)[0-9]+\.[0-9]+\.[0-9]+(\)\])", rf"\g<1>{website_version}\g<2>"),
+                (r"(Download Latest HoHatch \(v)[0-9]+\.[0-9]+\.[0-9]+(\)\])", rf"\g<1>{frontend_version}\g<2>"),
             ]
             self._update_file_content(page_tsx_path, page_tsx_patterns, "website/app/page.tsx")
 
@@ -104,19 +103,21 @@ class VersionManager:
             website_header_patterns = [
                 (
                     r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip" isExternal>)',
-                    rf"\g<1>{website_version}\g<2>",
+                    rf"\g<1>{frontend_version}\g<2>",
                 ),
-                (r"(Download Latest HoHatch \(v)[0-9]+\.[0-9]+\.[0-9]+(\)\])", rf"\g<1>{website_version}\g<2>"),
+                (r"(Download Latest HoHatch \(v)[0-9]+\.[0-9]+\.[0-9]+(\)\])", rf"\g<1>{frontend_version}\g<2>"),
             ]
-            self._update_file_content(website_header_path, website_header_patterns, "website/components/WebsiteHeader.tsx")
+            self._update_file_content(
+                website_header_path, website_header_patterns, "website/components/WebsiteHeader.tsx"
+            )
 
             # Update website/content/index.md
             index_md_path = self.project_root / "website" / "content" / "index.md"
             index_md_patterns = [
-                (r"(\[latest HoHatch \(v)[0-9.]+(\)\])", rf"\g<1>{website_version}\g<2>"),
+                (r"(\[latest HoHatch \(v)[0-9.]+(\)\])", rf"\g<1>{frontend_version}\g<2>"),
                 (
                     r"(\(https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9.]+(\.zip\))",
-                    rf"\g<1>{website_version}\g<2>",
+                    rf"\g<1>{frontend_version}\g<2>",
                 ),
             ]
             self._update_file_content(index_md_path, index_md_patterns, "website/content/index.md")
@@ -146,7 +147,7 @@ class VersionManager:
                 [
                     (
                         r"(!\[version\]\(https://img.shields.io/badge/version-)[0-9]+\.[0-9]+\.[0-9]+(-[^)]+\))",
-                        rf"\g<1>{website_version}\g<2>",
+                        rf"\g<1>{frontend_version}\g<2>",
                     )
                 ],
                 "Website README.md badge",

@@ -64,7 +64,7 @@ export const metadata: Metadata = {
   ]
 }
 
-import packageJson from "../package.json";
+import packageJson from "../../frontend/package.json";
 
 export default async function Home() {
   const markdownFilePath = path.join(process.cwd(), "content", "index.md");
