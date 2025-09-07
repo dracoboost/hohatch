@@ -166,7 +166,14 @@ jobs:
             const regex = new RegExp('##\s*\[' + escapedVersion + '\s*\]\s*-\s*\d{4}-\d{2}-\d{2}\s*\n([\s\S]*?)(?=(?:\n##\s*\[|$))', 'u');
 
             const match = changelog.match(regex);
-            const releaseNotes = match ? match[1].trim() : 'No release notes found for this version.';
+            let releaseNotes;
+            if (match && match[1]) {
+              releaseNotes = match[1].trim();
+              console.log('✅ Successfully extracted release notes for version: ' + version);
+            } else {
+              releaseNotes = 'No release notes found for this version.';
+              console.log('❌ Failed to find release notes for version: ' + version);
+            }
 
             const createResponse = await github.rest.repos.createRelease({
               owner: context.repo.owner,
@@ -180,6 +187,7 @@ jobs:
 
             core.setOutput('release_id', createResponse.data.id);
             core.setOutput('upload_url', createResponse.data.upload_url);
+            console.log('✨ Release created successfully.');
         env:
           PACKAGE_VERSION: ${{ needs.check-version.outputs.package_version }}
 
