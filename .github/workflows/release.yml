@@ -155,59 +155,34 @@ jobs:
           echo "ARCHIVE_NAME=$ARCHIVE_NAME" >> $env:GITHUB_OUTPUT
         shell: powershell
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ needs.check-version.outputs.package_version }}
-          release_name: Release v${{ needs.check-version.outputs.package_version }}
-          draft: false
-          prerelease: false
-
-      - name: Generate Release Notes
+      - name: Create Release and Update Notes
+        id: create_and_update_release
         uses: actions/github-script@v6
-        id: generate_release_notes
         with:
           script: |
-            const { readFileSync } = require('fs');
-            const changelog = readFileSync('./frontend/CHANGELOG.md', 'utf8');
             const version = process.env.PACKAGE_VERSION;
-            const escapedVersion = version.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const regex = new RegExp('##\\s*\\[\\s*' + escapedVersion + '\\s*\\]\\s*-\\s*\\d{4}-\\d{2}-\\d{2}\\s*\\n([\\s\\S]*?)(?=(?:\\n##\\s*\\[|$))', 'u');
+            const changelog = require('fs').readFileSync('./frontend/CHANGELOG.md', 'utf8');
+            const escapedVersion = version.replace(/[.*+?^${}()|[\\]/g, '\\$&');
+            const regex = new RegExp('##\s*\[' + escapedVersion + '\s*\]\s*-\s*\d{4}-\d{2}-\d{2}\s*\n([\s\S]*?)(?=(?:\n##\s*\[|$))', 'u');
 
-            console.log('Changelog content:');
-            console.log(changelog);
-            console.log('Version:', version);
-            console.log('Escaped Version:', escapedVersion);
-            console.log('Regex:', regex);
+            const releaseNotes = match ? match[1].trim() : 'No release notes found for this version.';
 
-            const match = changelog.match(regex);
-            console.log('Match result:', match);
-
-            if (match) {
-              core.setOutput('release_notes', match[1].trim());
-            } else {
-              core.setOutput('release_notes', 'No release notes found for this version.');
-            }
-        env:
-          PACKAGE_VERSION: ${{ needs.check-version.outputs.package_version }}
-
-      - name: Update Release with Notes
-        uses: actions/github-script@v6
-        with:
-          script: |
-            // Get the release notes string from the previous step's output.
-            const releaseNotes = `${{ steps.generate_release_notes.outputs.release_notes}}`;
-
-            // The string is already formatted, so we can use it directly.
-            github.rest.repos.updateRelease({
+            // Create a release
+            const createResponse = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: ${{ steps.create_release.outputs.id }},
-              body: releaseNotes
+              tag_name: `v${version}`,
+              name: `Release v${version}`,
+              body: releaseNotes,
+              draft: false,
+              prerelease: false,
             });
+
+            core.setOutput('release_id', createResponse.data.id);
+            core.setOutput('upload_url', createResponse.data.upload_url);
+
+        env:
+          PACKAGE_VERSION: ${{ needs.check-version.outputs.package_version }}
 
       - name: Upload Release Asset
         id: upload-release-asset
@@ -215,7 +190,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ steps.create_and_update_release.outputs.upload_url }}
           asset_path: ${{ steps.archive.outputs.ARCHIVE_NAME }}
           asset_name: ${{ steps.archive.outputs.ARCHIVE_NAME }}
           asset_content_type: application/zip
