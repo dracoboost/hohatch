@@ -14,28 +14,28 @@ jobs:
       tag_exists: ${{ steps.check_tag.outputs.tag_exists }}
       package_version: ${{ steps.get_version.outputs.package_version }}
     steps:
-      - name: Checkout master branch
+      - name: Checkout Master Branch
         uses: actions/checkout@v4
         with:
           ref: master
           fetch-depth: 0
 
-      - name: Fetch all tags
+      - name: Fetch All Tags
         run: git fetch --tags
 
-      - name: Set up Node.js
+      - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24.x'
 
-      - name: Get package version
+      - name: Get Package Version
         id: get_version
         run: |
           $packageVersion = node -p "require('./frontend/package.json').version"
           echo "package_version=$packageVersion" >> $env:GITHUB_OUTPUT
         shell: powershell
 
-      - name: Check if tag already exists
+      - name: Check If Tag Already Exists
         id: check_tag
         run: |
           $TAG_NAME = "v${{ steps.get_version.outputs.package_version }}"
@@ -55,18 +55,18 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout master branch
+      - name: Checkout Master Branch
         uses: actions/checkout@v4
         with:
           ref: master
           fetch-depth: 0
 
-      - name: Set up Python
+      - name: Set Up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Cache Python dependencies
+      - name: Cache Python Dependencies
         uses: actions/cache@v4
         with:
           path: venv
@@ -74,19 +74,19 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-python-
 
-      - name: Install Python dependencies
+      - name: Install Python Dependencies
         run: |
           python -m venv venv
           venv\Scripts\python -m pip install --upgrade pip
           venv\Scripts\python -m pip install -r requirements.txt
         shell: powershell
 
-      - name: Set up Node.js
+      - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24.x'
 
-      - name: Cache Node.js modules
+      - name: Cache Node.js Modules
         uses: actions/cache@v4
         with:
           path: frontend/node_modules
@@ -94,22 +94,22 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - name: Install Node.js dependencies
+      - name: Install Node.js Dependencies
         working-directory: .\frontend
         run: npm ci
         shell: powershell
 
-      - name: Build frontend
+      - name: Build Frontend
         working-directory: .\frontend
         run: npm run frontend
         shell: powershell
 
-      - name: Build executable
+      - name: Build Executable
         working-directory: .\frontend
         run: npm run backend:windows
         shell: powershell
 
-      - name: Decode and import PFX certificate
+      - name: Decode and Import PFX Certificate
         run: |
           $pfx_base64 = "${{ secrets.CODE_SIGN_CERTIFICATE_PFX }}"
           $pfx_bytes = [System.Convert]::FromBase64String($pfx_base64)
@@ -122,7 +122,7 @@ jobs:
           }
         shell: powershell
 
-      - name: Sign executable
+      - name: Sign Executable
         run: |
           $signtoolPath = (Get-ChildItem -Path "C:\Program Files (x86)\Windows Kits\10\bin" -Filter "signtool.exe" -Recurse | Select-Object -Last 1).FullName
           if (!$signtoolPath) {
@@ -132,22 +132,22 @@ jobs:
           & $signtoolPath sign /f certificate.pfx /p "${{ secrets.CODE_SIGN_CERTIFICATE_PASSWORD }}" /t http://timestamp.digicert.com /fd SHA256 /v "dist/HoHatch.exe"
         shell: powershell
 
-      - name: List dist directory
+      - name: List Dist Directory
         run: ls dist
         shell: powershell
 
-      - name: Create README for release
+      - name: Create README for Release
         run: |
           mkdir release_package
           $readmeContent = "HoHatch - JPG/DDS Image Converter for Shadowverse: Worlds Beyond`r`n`r`nThank you for downloading HoHatch!`r`n`r`nRun HoHatch.exe to start the application.`r`n`r`nFor more information, please visit the official website:`r`nhttps://hohatch.draco.moe"
           Set-Content -Path "release_package/README.txt" -Value $readmeContent
         shell: powershell
 
-      - name: Prepare files for packaging
-        run: Copy-Item -Path "dist/HoHatch.exe" -Destination "release_package/"
+      - name: Prepare Files for Packaging
+        run: Copy-Item -Path "dist/HoHatch.Hatch.exe" -Destination "release_package/"
         shell: powershell
 
-      - name: Create ZIP archive
+      - name: Create ZIP Archive
         id: archive
         run: |
           $ARCHIVE_NAME = "HoHatch-v${{ needs.check-version.outputs.package_version }}.zip"
@@ -166,7 +166,7 @@ jobs:
           draft: true
           prerelease: false
 
-      - name: Generate release notes
+      - name: Generate Release Notes
         uses: actions/github-script@v6
         id: generate_release_notes
         with:
@@ -174,10 +174,11 @@ jobs:
             const { readFileSync } = require('fs');
             const changelog = readFileSync('./frontend/CHANGELOG.md', 'utf8');
             const version = process.env.PACKAGE_VERSION;
-            const regex = new RegExp('## \[' + version + '\] - (\d{4}-\d{2}-\d{2})\n([\s\S]*?)(?=## [\d+.\d+.\d+]|$)\n');
+            const escapedVersion = version.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const regex = new RegExp('## \\[' + escapedVersion + '\\] - \\d{4}-\\d{2}-\\d{2}\\n([\\s\\S]*?)(?=## \\[|$)', 'u');
             const match = changelog.match(regex);
             if (match) {
-              core.setOutput('release_notes', match[2].trim());
+              core.setOutput('release_notes', match[1].trim());
             } else {
               core.setOutput('release_notes', 'No release notes found for this version.');
             }
@@ -191,8 +192,8 @@ jobs:
             github.rest.repos.updateRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              release_id: ${{ steps.create_release.outputs.release_id }},
-              body: `${{ steps.generate_release_notes.outputs.release_notes }}`
+              release_id: ${{ steps.create_release.outputs.id }},
+              body: `${{ steps.generate_release_notes.outputs.release_notes}}`
             })
 
       - name: Upload Release Asset

@@ -21,7 +21,8 @@
     "lint:check": "npm exec eslint -- --ext .js,.jsx,.mjs,.ts,.tsx && tsc --noEmit",
     "lint:fix": "npm exec eslint -- --fix --ext .js,.jsx,.mjs,.ts,.tsx && npm exec prettier -- --write \"**/*.{ts,tsx}\" > NUL",
     "lint:fix:windows": "npm exec eslint -- --fix --ext .js,.jsx,.mjs,.ts,.tsx && npm exec prettier -- --write \"**/*.{ts,tsx}\" > NUL",
-    "preflight": "npm run frontend-test && npm run backend-test",
+    "preflight": "npm run frontend-test && npm run backend-test && npm run test:release-notes-regex",
+    "test:release-notes-regex": "node ../scripts/test/releaseNotesRegex.js",
     "update-readme-version": "cd .. && venv\\Scripts\\python -m scripts.version_management.manager update_all_versions_entry_point"
   },
   "dependencies": {
