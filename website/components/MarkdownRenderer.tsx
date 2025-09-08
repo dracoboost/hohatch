@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import React from 'react';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { MarkdownLink } from './MarkdownLink';
-import { MarkdownImage } from './MarkdownImage';
-import { useLightbox } from './Lightbox';
+import React from "react";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
+import {useLightbox} from "./Lightbox";
+import {MarkdownImage} from "./MarkdownImage";
+import {MarkdownLink} from "./MarkdownLink";
 
 interface MarkdownRendererProps {
   markdownContent: string;
@@ -27,40 +28,59 @@ interface Components {
   img: React.FC<React.ImgHTMLAttributes<HTMLImageElement>>;
 }
 
-export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
-  markdownContent,
-}) => {
-  const { openLightbox } = useLightbox();
+export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({markdownContent}) => {
+  const {openLightbox} = useLightbox();
 
   const components: Components = {
     a: (props: AnchorProps) => {
       const isExternal =
-        props.href && (props.href.startsWith('http://') || props.href.startsWith('https://'));
+        props.href && (props.href.startsWith("http://") || props.href.startsWith("https://"));
       return (
         <MarkdownLink
           href={props.href}
-          rel={isExternal ? 'noopener noreferrer' : undefined}
-          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? "noopener noreferrer" : undefined}
+          target={isExternal ? "_blank" : undefined}
         >
           {props.children}
         </MarkdownLink>
       );
     },
-    blockquote: ({ children }) => {
+    blockquote: ({children}) => {
       return (
-        <div className="mt-2 bg-slate-700 text-base text-white rounded-lg px-4 py-0.5" role="alert">
+        <div className="mt-2 rounded-lg bg-slate-700 px-4 py-0.5 text-base text-white" role="alert">
           {children}
         </div>
       );
     },
-    h1: ({children}) => <h1 className="text-h1 sm:text-sm-h1 md:text-md-h1 lg:text-lg-h1" id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h1>,
-    h2: ({children}) => <h2 className="text-h2 sm:text-sm-h2 md:text-md-h2 lg:text-lg-h2 scroll-mt-2" id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h2>,
-    h3: ({children}) => <h3 className="text-h3 sm:text-sm-h3 md:text-md-h3 lg:text-lg-h3 scroll-mt-2" id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h3>,
+    h1: ({children}) => (
+      <h1
+        className="text-h1 sm:text-sm-h1 md:text-md-h1 lg:text-lg-h1"
+        id={String(children).toLowerCase().replace(/\s/g, "-")}
+      >
+        {children}
+      </h1>
+    ),
+    h2: ({children}) => (
+      <h2
+        className="text-h2 sm:text-sm-h2 md:text-md-h2 lg:text-lg-h2 scroll-mt-2"
+        id={String(children).toLowerCase().replace(/\s/g, "-")}
+      >
+        {children}
+      </h2>
+    ),
+    h3: ({children}) => (
+      <h3
+        className="text-h3 sm:text-sm-h3 md:text-md-h3 lg:text-lg-h3 scroll-mt-2"
+        id={String(children).toLowerCase().replace(/\s/g, "-")}
+      >
+        {children}
+      </h3>
+    ),
     h4: ({children}) => <h4 id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h4>,
     h5: ({children}) => <h5 id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h5>,
     h6: ({children}) => <h6 id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h6>,
-    img: ({ alt, src }) => {
-      return <MarkdownImage alt={alt} src={src} openLightbox={openLightbox} />;
+    img: ({alt, src}) => {
+      return <MarkdownImage alt={alt} openLightbox={openLightbox} src={src} />;
     },
   };
 

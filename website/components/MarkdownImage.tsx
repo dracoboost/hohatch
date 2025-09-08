@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 
 interface MarkdownImageProps {
   alt?: string;
@@ -9,11 +9,7 @@ interface MarkdownImageProps {
   openLightbox: (src: string) => void;
 }
 
-export const MarkdownImage: React.FC<MarkdownImageProps> = ({
-  alt,
-  src,
-  openLightbox,
-}) => {
+export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src, openLightbox}) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -32,11 +28,11 @@ export const MarkdownImage: React.FC<MarkdownImageProps> = ({
 
   return (
     <Image
-      src={imageUrl}
       alt={alt || ""}
-      width={800} // Placeholder, actual size will be determined by object-contain
-      height={600} // Placeholder
       className="cursor-zoom-in rounded-lg shadow-md"
+      height={600} // Placeholder
+      src={imageUrl}
+      width={800} // Placeholder, actual size will be determined by object-contain
       onClick={() => openLightbox(imageUrl)}
     />
   );

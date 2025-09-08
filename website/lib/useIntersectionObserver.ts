@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from "react";
 
 export const useIntersectionObserver = (
   setActiveId: React.Dispatch<React.SetStateAction<string | undefined>>,
@@ -7,7 +7,7 @@ export const useIntersectionObserver = (
   const headingElementsRef = useRef<Record<string, IntersectionObserverEntry>>({});
 
   useEffect(() => {
-    const headingElements = Array.from(document.querySelectorAll('h2, h3'));
+    const headingElements = Array.from(document.querySelectorAll("h2, h3"));
 
     const callback = (headings: IntersectionObserverEntry[]) => {
       headingElementsRef.current = headings.reduce((map, headingElement) => {
@@ -45,7 +45,7 @@ export const useIntersectionObserver = (
     };
 
     const observer = new IntersectionObserver(callback, {
-      rootMargin: '0px 0px -70% 0px',
+      rootMargin: "0px 0px -70% 0px",
     });
 
     headingElements.forEach((element) => observer.observe(element));

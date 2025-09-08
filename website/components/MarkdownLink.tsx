@@ -1,8 +1,8 @@
-import { forwardRef } from "react";
-import { useLink, type LinkProps } from "@heroui/react";
+import {type LinkProps, useLink} from "@heroui/react";
+import {forwardRef} from "react";
 
 const MarkdownLink = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
-  const { Component, getLinkProps, children } = useLink({ ...props, ref });
+  const {Component, getLinkProps, children} = useLink({...props, ref});
 
   return (
     <Component
@@ -18,4 +18,4 @@ const MarkdownLink = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
 
 MarkdownLink.displayName = "MarkdownLink";
 
-export { MarkdownLink };
+export {MarkdownLink};

@@ -1,3 +1,3 @@
-import { heroui } from "@heroui/react";
+import {heroui} from "@heroui/react";
 
 module.exports = heroui();

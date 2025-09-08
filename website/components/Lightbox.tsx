@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import React, { useState, useEffect, useCallback, createContext, useContext } from "react";
+import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
 
 interface LightboxContextType {
   openLightbox: (src: string) => void;
@@ -13,7 +13,7 @@ interface LightboxProviderProps {
   children: React.ReactNode;
 }
 
-export const Lightbox: React.FC<LightboxProviderProps> = ({ children }) => {
+export const Lightbox: React.FC<LightboxProviderProps> = ({children}) => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [currentImage, setCurrentImage] = useState("");
   const [isZoomed, setIsZoomed] = useState(false);
@@ -58,42 +58,45 @@ export const Lightbox: React.FC<LightboxProviderProps> = ({ children }) => {
   }, [isZoomed, closeLightbox]);
 
   return (
-    <LightboxContext.Provider value={{ openLightbox }}>
+    <LightboxContext.Provider value={{openLightbox}}>
       {children}
 
       {isLightboxOpen && (
         <div
-          className={`fixed inset-0 bg-black bg-opacity-80 z-50 p-4 transition-all duration-300 ${
+          className={`bg-opacity-80 fixed inset-0 z-50 bg-black p-4 transition-all duration-300 ${
             isZoomed ? "overflow-auto" : "flex items-center justify-center"
           }`}
+          role="button"
+          tabIndex={0}
           onClick={handleBackgroundClick}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              handleBackgroundClick();
+            }
+          }}
         >
           <button
-            className="fixed top-4 right-4 text-white text-3xl font-bold p-2 z-[51] cursor-pointer"
+            aria-label="Close Lightbox"
+            className="fixed top-4 right-4 z-[51] cursor-pointer p-2 text-3xl font-bold text-white"
             onClick={(e) => {
               e.stopPropagation();
               closeLightbox();
             }}
-            aria-label="Close Lightbox"
           >
             &times;
           </button>
-          <div
-            className={`relative ${
-              isZoomed ? "m-auto" : "w-full max-w-4xl"
-            }`}
-          >
+          <div className={`relative ${isZoomed ? "m-auto" : "w-full max-w-4xl"}`}>
             <Image
-              src={currentImage}
               alt="Lightbox view"
               className={
                 isZoomed
-                  ? "max-w-none max-h-none w-auto h-auto cursor-zoom-out"
-                  : "w-full h-auto max-h-[90vh] object-contain rounded-lg shadow-xl cursor-zoom-in"
+                  ? "h-auto max-h-none w-auto max-w-none cursor-zoom-out"
+                  : "h-auto max-h-[90vh] w-full cursor-zoom-in rounded-lg object-contain shadow-xl"
               }
-              onClick={toggleZoom}
-              width={1920}
               height={1080}
+              src={currentImage}
+              width={1920}
+              onClick={toggleZoom}
             />
           </div>
         </div>
@@ -109,4 +112,3 @@ export const useLightbox = () => {
   }
   return context;
 };
-

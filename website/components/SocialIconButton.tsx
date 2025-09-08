@@ -1,4 +1,4 @@
-import { Button, Link, Tooltip } from "@heroui/react";
+import {Button, Link, Tooltip} from "@heroui/react";
 import Image from "next/image";
 import React from "react";
 
@@ -35,14 +35,14 @@ const socialData = {
   },
 };
 
-export const SocialIconButton: React.FC<SocialIconButtonProps> = ({ type }) => {
-  const { tooltip, href, src, alt } = socialData[type];
+export const SocialIconButton: React.FC<SocialIconButtonProps> = ({type}) => {
+  const {tooltip, href, src, alt} = socialData[type];
 
   return (
     <Tooltip content={tooltip}>
-      <Link href={href} isExternal>
-        <Button isIconOnly variant="light" className="rounded-full">
-          <Image src={src} alt={alt} width={32} height={32} />
+      <Link isExternal href={href}>
+        <Button isIconOnly className="rounded-full" variant="light">
+          <Image alt={alt} height={32} src={src} width={32} />
         </Button>
       </Link>
     </Tooltip>

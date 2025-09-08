@@ -1,8 +1,9 @@
-import { render, screen, fireEvent } from "@testing-library/react";
-import { Lightbox, useLightbox } from "./Lightbox";
+import {fireEvent, render, screen} from "@testing-library/react";
+
+import {Lightbox, useLightbox} from "./Lightbox";
 
 const TestComponent = () => {
-  const { openLightbox } = useLightbox();
+  const {openLightbox} = useLightbox();
   return <button onClick={() => openLightbox("/test-image.jpg")}>Open Lightbox</button>;
 };
 
@@ -11,7 +12,7 @@ describe("Lightbox", () => {
     render(
       <Lightbox>
         <div>Test Child</div>
-      </Lightbox>
+      </Lightbox>,
     );
     expect(screen.getByText("Test Child")).toBeInTheDocument();
   });
@@ -20,18 +21,21 @@ describe("Lightbox", () => {
     render(
       <Lightbox>
         <TestComponent />
-      </Lightbox>
+      </Lightbox>,
     );
     fireEvent.click(screen.getByText("Open Lightbox"));
     expect(screen.getByAltText("Lightbox view")).toBeInTheDocument();
-    expect(screen.getByAltText("Lightbox view")).toHaveAttribute("src", expect.stringContaining("/test-image.jpg"));
+    expect(screen.getByAltText("Lightbox view")).toHaveAttribute(
+      "src",
+      expect.stringContaining("/test-image.jpg"),
+    );
   });
 
   it("closes when close button is clicked", () => {
     render(
       <Lightbox>
         <TestComponent />
-      </Lightbox>
+      </Lightbox>,
     );
     fireEvent.click(screen.getByText("Open Lightbox"));
     expect(screen.getByAltText("Lightbox view")).toBeInTheDocument();
@@ -44,7 +48,7 @@ describe("Lightbox", () => {
     render(
       <Lightbox>
         <TestComponent />
-      </Lightbox>
+      </Lightbox>,
     );
     fireEvent.click(screen.getByText("Open Lightbox"));
     expect(screen.getByAltText("Lightbox view")).toBeInTheDocument();
@@ -57,7 +61,7 @@ describe("Lightbox", () => {
     render(
       <Lightbox>
         <TestComponent />
-      </Lightbox>
+      </Lightbox>,
     );
     fireEvent.click(screen.getByText("Open Lightbox"));
     const image = screen.getByAltText("Lightbox view");
@@ -75,12 +79,12 @@ describe("Lightbox", () => {
     render(
       <Lightbox>
         <TestComponent />
-      </Lightbox>
+      </Lightbox>,
     );
     fireEvent.click(screen.getByText("Open Lightbox"));
     expect(screen.getByAltText("Lightbox view")).toBeInTheDocument();
 
-    fireEvent.keyDown(document, { key: "Escape" });
+    fireEvent.keyDown(document, {key: "Escape"});
     expect(screen.queryByAltText("Lightbox view")).not.toBeInTheDocument();
   });
 });
