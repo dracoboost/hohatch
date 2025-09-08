@@ -134,7 +134,7 @@ class VersionManager:
                 self.project_root / "README.md",
                 [
                     (
-                        r'(<img alt="version" src="https://img.shields.io/badge/version-)[0-9]+\.([0-9]+\.){0,2}[0-9]+(-.*?")></a>',
+                        r'(<img alt="version" src="https://img.shields.io/badge/version-)[0-9]+\.[0-9]+\.[0-9]+(-[^"]*"></a>)',
                         rf"\g<1>{frontend_version}\g<2>",
                     )
                 ],

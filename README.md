@@ -7,11 +7,11 @@
   </a>
 
   <p align="center">
-    <a href="https://github.com/dracoboost/hohatch/releases"><img alt="version" src="https://img.shields.io/badge/version-1.0.4-b7465a"</a>
+    <a href="https://github.com/dracoboost/hohatch/releases"><img alt="version" src="https://img.shields.io/badge/version-1.1.0-b7465a"></a>
     <a href="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml"><img alt="Preflight" src="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml/badge.svg"></a>
     <a href="https://github.com/dracoboost/hohatch/actions/workflows/release.yml"><img alt="Release Application" src="https://github.com/dracoboost/hohatch/actions/workflows/release.yml/badge.svg"></a>
     <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg"></a>
-    <a href="https://discord.gg/fEUMrTGb23" target="_blank"><img alt="Discord" src="https://img.shields.io/discord/1408725175532519448"></a>
+    <a href="https://discord.gg/fEUMrTGb23" target="_blank"><img alt="Discord" src="https://img.shields.io/discord/1408725175532519448?logo=discord&logoColor=white&color=5662f6"></a>
   </p>
 </p>
 
