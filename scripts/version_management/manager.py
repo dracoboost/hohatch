@@ -1,5 +1,6 @@
 import json
 import re
+import urllib.request
 from pathlib import Path
 
 
@@ -20,6 +21,66 @@ class VersionManager:
             raise FileNotFoundError(f"Package.json not found at {package_json_path}")
         except json.JSONDecodeError:
             raise ValueError(f"Invalid JSON in {package_json_path}")
+
+    def _get_remote_version(self, url: str) -> str:
+        try:
+            with urllib.request.urlopen(url) as response:
+                if response.status == 200:
+                    content = response.read().decode("utf-8")
+                    package_json = json.loads(content)
+                    version = package_json.get("version")
+                    if not version:
+                        raise ValueError(f"'version' not found in remote file at {url}")
+                    return version
+                else:
+                    # Don't raise an exception for non-critical checks, just print a warning
+                    print(f"Warning: Failed to fetch {url}, status code: {response.status}")
+                    return "0.0.0"  # Return a base version to avoid breaking comparison
+        except Exception as e:
+            print(f"Warning: Error fetching remote version from {url}: {e}")
+            return "0.0.0"
+
+    def _is_newer(self, local_version: str, remote_version: str) -> bool:
+        try:
+            local_parts = [int(p) for p in local_version.split(".")]
+            remote_parts = [int(p) for p in remote_version.split(".")]
+
+            # Pad shorter version with zeros for safe comparison
+            while len(local_parts) < len(remote_parts):
+                local_parts.append(0)
+            while len(remote_parts) < len(local_parts):
+                remote_parts.append(0)
+
+            for i in range(len(local_parts)):
+                if local_parts[i] > remote_parts[i]:
+                    return True
+                if local_parts[i] < remote_parts[i]:
+                    return False
+            return False  # versions are equal
+        except (ValueError, IndexError):
+            # Handle cases like "1.0.0-beta" or invalid formats
+            print(f"Warning: Could not compare versions '{local_version}' and '{remote_version}'. Assuming not newer.")
+            return False
+
+    def check_changelog_updates(self):
+        urls = {
+            "frontend": "https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/frontend/package.json",
+            "website": "https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/website/package.json",
+        }
+
+        print("\nChecking for version changes against master branch...")
+
+        # Frontend check
+        local_frontend_version = self._read_version_from_package_json("frontend/package.json")
+        remote_frontend_version = self._get_remote_version(urls["frontend"])
+        if self._is_newer(local_frontend_version, remote_frontend_version):
+            print("Warning: frontend version is newer than master. Please update the changelog at frontend/CHANGELOG.md.")
+
+        # Website check
+        local_website_version = self._read_version_from_package_json("website/package.json")
+        remote_website_version = self._get_remote_version(urls["website"])
+        if self._is_newer(local_website_version, remote_website_version):
+            print("Warning: website version is newer than master. Please update the changelog at website/CHANGELOG.md.")
 
     def update_backend_app_version(self):
         try:
@@ -75,6 +136,8 @@ class VersionManager:
 
     def update_all_project_versions(self):
         try:
+            self.check_changelog_updates()
+
             frontend_version = self._read_version_from_package_json("frontend/package.json")
 
             self.update_backend_app_version()
@@ -91,7 +154,7 @@ class VersionManager:
                     rf"\g<1>{frontend_version}\g<2>",
                 ),
                 (
-                    r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(" isExternal>)',
+                    r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(" isExternal>)"',
                     rf"\g<1>{frontend_version}\g<2>",
                 ),
                 (r"(Download Latest HoHatch \(v)[0-9]+\.[0-9]+\.[0-9]+(\)\])", rf"\g<1>{frontend_version}\g<2>"),
@@ -102,7 +165,7 @@ class VersionManager:
             website_header_path = self.project_root / "website" / "components" / "WebsiteHeader.tsx"
             website_header_patterns = [
                 (
-                    r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip" isExternal>)',
+                    r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip" isExternal>)"',
                     rf"\g<1>{frontend_version}\g<2>",
                 ),
                 (r"(Download Latest HoHatch \(v)[0-9]+\.[0-9]+\.[0-9]+(\)\])", rf"\g<1>{frontend_version}\g<2>"),
@@ -114,7 +177,7 @@ class VersionManager:
             # Update website/content/index.md
             index_md_path = self.project_root / "website" / "content" / "index.md"
             index_md_patterns = [
-                (r"(\[latest HoHatch \(v)[0-9.]+(\)\])", rf"\g<1>{frontend_version}\g<2>"),
+                (r"(\［latest HoHatch \(v)[0-9.]+(\)\])", rf"\g<1>{frontend_version}\g<2>"),
                 (
                     r"(\(https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9.]+(\.zip\))",
                     rf"\g<1>{frontend_version}\g<2>",
@@ -134,7 +197,7 @@ class VersionManager:
                 self.project_root / "README.md",
                 [
                     (
-                        r'(<img alt="version" src="https://img.shields.io/badge/version-)[0-9]+\.[0-9]+\.[0-9]+(-[^"]*"></a>)',
+                        r'(<img alt="version" src="https://img.shields.io/badge/version-)[0-9]+\.[0-9]+\.[0-9]+(-[^\"]*"></a>)',
                         rf"\g<1>{frontend_version}\g<2>",
                     )
                 ],

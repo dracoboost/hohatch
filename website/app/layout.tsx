@@ -22,8 +22,6 @@ export default function RootLayout({
       <body className="bg-slate-900 text-white antialiased">
         <HeroUIProvider navigate={navigateTo}>
           <NextThemesProvider attribute="class" defaultTheme="dark">
-            <link href="/favicon.ico" rel="icon" type="image/x-icon" />
-            <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
             {children}
             <Analytics />
           </NextThemesProvider>

@@ -35,10 +35,7 @@ export default defineConfig([
   {
     extends: fixupConfigRules(
       compat.extends(
-        // 'next',
-        // "next/core-web-vitals",
-        // "next/typescript",
-        "plugin:@next/next/recommended",
+        "next/core-web-vitals",
         "plugin:react/recommended",
         "prettier",
         "plugin:react-hooks/recommended",
@@ -92,6 +89,7 @@ export default defineConfig([
       "no-unused-vars": "off",
       "unused-imports/no-unused-vars": "off",
       "unused-imports/no-unused-imports": "warn",
+      
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {

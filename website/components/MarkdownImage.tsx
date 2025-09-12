@@ -6,10 +6,10 @@ import React, {useEffect, useState} from "react";
 interface MarkdownImageProps {
   alt?: string;
   src?: string | Blob;
-  openLightbox: (src: string) => void;
 }
 
-export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src, openLightbox}) => {
+export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src}) => {
+  // Removed openLightbox
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -29,11 +29,11 @@ export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src, openLight
   return (
     <Image
       alt={alt || ""}
-      className="cursor-zoom-in rounded-lg shadow-md"
+      className="rounded-lg shadow-md" // Removed cursor-zoom-in
       height={600} // Placeholder
       src={imageUrl}
       width={800} // Placeholder, actual size will be determined by object-contain
-      onClick={() => openLightbox(imageUrl)}
+      // onClick={() => openLightbox(imageUrl)} // Removed
     />
   );
 };

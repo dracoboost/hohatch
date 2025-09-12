@@ -1,114 +1,171 @@
 "use client";
 
-import Image from "next/image";
-import React, {createContext, useCallback, useContext, useEffect, useState} from "react";
+// Added Image import
+import {ChevronLeft, ChevronRight, X} from "lucide-react";
+import {useEffect, useState} from "react";
 
-interface LightboxContextType {
-  openLightbox: (src: string) => void;
+import {cn} from "@/lib/utils";
+
+interface LightboxProps {
+  images: string[];
+  isOpen: boolean;
+  onClose: () => void;
+  initialIndex?: number;
 }
 
-const LightboxContext = createContext<LightboxContextType | undefined>(undefined);
+export function Lightbox({images, isOpen, onClose, initialIndex = 0}: LightboxProps) {
+  const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
-interface LightboxProviderProps {
-  children: React.ReactNode;
-}
+  useEffect(() => {
+    setCurrentIndex(initialIndex);
+  }, [initialIndex]);
 
-export const Lightbox: React.FC<LightboxProviderProps> = ({children}) => {
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [currentImage, setCurrentImage] = useState("");
-  const [isZoomed, setIsZoomed] = useState(false);
-
-  const openLightbox = useCallback((src: string) => {
-    setCurrentImage(src);
-    setIsLightboxOpen(true);
-    setIsZoomed(false);
-  }, []);
-
-  const closeLightbox = useCallback(() => {
-    setIsLightboxOpen(false);
-    setCurrentImage("");
-  }, []);
-
-  const toggleZoom = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    setIsZoomed((prev) => !prev);
-  }, []);
-
-  // Close lightbox on Escape key press
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeLightbox();
+      if (!isOpen) return;
+
+      switch (event.key) {
+        case "Escape":
+          onClose();
+          break;
+        case "ArrowLeft":
+          goToPrevious();
+          break;
+        case "ArrowRight":
+          goToNext();
+          break;
       }
     };
-    if (isLightboxOpen) {
-      window.addEventListener("keydown", handleKeyDown);
-    }
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [isLightboxOpen, closeLightbox]);
 
-  const handleBackgroundClick = useCallback(() => {
-    if (isZoomed) {
-      setIsZoomed(false);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, currentIndex]);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
     } else {
-      closeLightbox();
+      document.body.style.overflow = "unset";
     }
-  }, [isZoomed, closeLightbox]);
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen]);
+
+  const goToNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  };
+
+  const goToPrevious = () => {
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  if (!isOpen) return null;
 
   return (
-    <LightboxContext.Provider value={{openLightbox}}>
-      {children}
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+      role="button"
+      tabIndex={0}
+      onClick={onClose}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          onClose();
+        }
+      }}
+    >
+      {/* Close button */}
+      <button
+        aria-label="Close lightbox"
+        className="absolute top-4 right-4 z-10 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+        onClick={onClose}
+      >
+        <X className="h-6 w-6" />
+      </button>
 
-      {isLightboxOpen && (
-        <div
-          className={`bg-opacity-80 fixed inset-0 z-50 bg-black p-4 transition-all duration-300 ${
-            isZoomed ? "overflow-auto" : "flex items-center justify-center"
-          }`}
-          role="button"
-          tabIndex={0}
-          onClick={handleBackgroundClick}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              handleBackgroundClick();
-            }
-          }}
-        >
+      {/* Navigation buttons */}
+      {images.length > 1 && (
+        <>
           <button
-            aria-label="Close Lightbox"
-            className="fixed top-4 right-4 z-[51] cursor-pointer p-2 text-3xl font-bold text-white"
+            aria-label="Previous image"
+            className="absolute left-4 z-10 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
             onClick={(e) => {
               e.stopPropagation();
-              closeLightbox();
+              goToPrevious();
             }}
           >
-            &times;
+            <ChevronLeft className="h-6 w-6" />
           </button>
-          <div className={`relative ${isZoomed ? "m-auto" : "w-full max-w-4xl"}`}>
-            <Image
-              alt="Lightbox view"
-              className={
-                isZoomed
-                  ? "h-auto max-h-none w-auto max-w-none cursor-zoom-out"
-                  : "h-auto max-h-[90vh] w-full cursor-zoom-in rounded-lg object-contain shadow-xl"
-              }
-              height={1080}
-              src={currentImage}
-              width={1920}
-              onClick={toggleZoom}
-            />
-          </div>
+          <button
+            aria-label="Next image"
+            className="absolute right-4 z-10 rounded-full bg-black/50 p-2 text-white transition-colors hover:bg-black/70"
+            onClick={(e) => {
+              e.stopPropagation();
+              goToNext();
+            }}
+          >
+            <ChevronRight className="h-6 w-6" />
+          </button>
+        </>
+      )}
+
+      {/* Image container */}
+      <div
+        className="relative flex items-center justify-center"
+        role="button"
+        tabIndex={0}
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.stopPropagation();
+          }
+        }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          alt={`Slide ${currentIndex + 1} of ${images.length}`}
+          className="max-h-[90vh] max-w-[90vw] object-contain"
+          crossOrigin="anonymous"
+          src={images[currentIndex] || "/images/placeholder.svg"}
+        />
+      </div>
+
+      {/* Image counter */}
+      {images.length > 1 && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 transform rounded-full bg-black/50 px-3 py-1 text-sm text-white">
+          {currentIndex + 1} / {images.length}
         </div>
       )}
-    </LightboxContext.Provider>
-  );
-};
 
-export const useLightbox = () => {
-  const context = useContext(LightboxContext);
-  if (context === undefined) {
-    throw new Error("useLightbox must be used within a LightboxProvider");
-  }
-  return context;
-};
+      {/* Thumbnail navigation */}
+      {images.length > 1 && images.length <= 10 && (
+        <div className="absolute bottom-16 left-1/2 flex -translate-x-1/2 transform gap-2">
+          {images.map((image, index) => (
+            <button
+              key={index}
+              className={cn(
+                "flex h-12 w-12 items-center justify-center overflow-hidden rounded border-2 transition-all",
+                index === currentIndex
+                  ? "scale-110 border-white"
+                  : "border-white/50 hover:border-white/80",
+              )}
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentIndex(index);
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                alt={`Thumbnail ${index + 1}`}
+                className="h-full w-full object-cover"
+                crossOrigin="anonymous"
+                src={image || "/images/placeholder.svg"}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

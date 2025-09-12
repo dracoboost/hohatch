@@ -24,7 +24,7 @@ const mockSettings = {
   special_k_folder_path: "/mock/sk_path",
   texconv_executable_path: "/mock/texconv.exe",
   output_height: 1024,
-  output_width: 848, // Corrected from 874
+  output_width: 848,
 };
 
 const mockLangData = {

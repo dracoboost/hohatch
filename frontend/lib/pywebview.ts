@@ -26,7 +26,7 @@ declare global {
           dds_path_list: string[],
           output_folder: string,
         ) => Promise<any>;
-        convert_dds_for_display: (dds_path: string) => Promise<any>; // Added
+        convert_dds_for_display: (dds_path: string) => Promise<any>;
         frontend_ready: () => Promise<void>;
         load_url: (url: string) => Promise<any>;
         open_dump_folder: () => Promise<any>;

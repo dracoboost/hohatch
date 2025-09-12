@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added `robots.ts` to generate a `robots.txt` file and improve search engine indexing.
+- Implemented programmatic sitemap generation (`sitemap.xml/route.ts`) to include detailed image metadata (titles and captions) for enhanced SEO.
+- Centralized website metadata and added JSON-LD structured data in `config/consts.ts` for richer search results.
+- Added thumbnail navigation to the `Lightbox` component for improved usability.
 - Created a custom `MarkdownLink` component to ensure consistent link styling.
 
 ### Changed

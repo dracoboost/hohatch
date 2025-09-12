@@ -4,12 +4,13 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-import {useLightbox} from "./Lightbox";
+// import {useLightbox} from "./Lightbox"; // Removed
 import {MarkdownImage} from "./MarkdownImage";
 import {MarkdownLink} from "./MarkdownLink";
 
 interface MarkdownRendererProps {
   markdownContent: string;
+  components?: Components;
 }
 
 interface AnchorProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
@@ -17,21 +18,24 @@ interface AnchorProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 
 interface Components {
-  a: React.FC<AnchorProps>;
-  blockquote: React.FC<React.QuoteHTMLAttributes<HTMLQuoteElement>>;
-  h1: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-  h2: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-  h3: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-  h4: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-  h5: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-  h6: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
-  img: React.FC<React.ImgHTMLAttributes<HTMLImageElement>>;
+  a?: React.FC<AnchorProps>;
+  blockquote?: React.FC<React.QuoteHTMLAttributes<HTMLQuoteElement>>;
+  h1?: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  h2?: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  h3?: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  h4?: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  h5?: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  h6?: React.FC<React.HTMLAttributes<HTMLHeadingElement>>;
+  img?: React.FC<React.ImgHTMLAttributes<HTMLImageElement>>;
 }
 
-export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({markdownContent}) => {
-  const {openLightbox} = useLightbox();
+export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
+  markdownContent,
+  components: overrideComponents,
+}) => {
+  // const {openLightbox} = useLightbox(); // Removed
 
-  const components: Components = {
+  const defaultComponents: Components = {
     a: (props: AnchorProps) => {
       const isExternal =
         props.href && (props.href.startsWith("http://") || props.href.startsWith("https://"));
@@ -80,9 +84,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({markdownConte
     h5: ({children}) => <h5 id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h5>,
     h6: ({children}) => <h6 id={String(children).toLowerCase().replace(/\s/g, "-")}>{children}</h6>,
     img: ({alt, src}) => {
-      return <MarkdownImage alt={alt} openLightbox={openLightbox} src={src} />;
+      // This will not be called because page.tsx overrides img to return null
+      return <MarkdownImage alt={alt} src={src} />;
     },
   };
+
+  const components = {...defaultComponents, ...overrideComponents};
 
   return (
     <ReactMarkdown components={components} remarkPlugins={[remarkGfm]}>

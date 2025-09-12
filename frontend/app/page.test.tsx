@@ -83,14 +83,14 @@ const mockSettings = {
 
 const mockDumpedImages = [
   {
-    src: "", // Changed to empty string
+    src: "",
     alt: "dumped_image_1.dds",
     path: "/dump/dumped_image_1.dds",
     width: 100,
     height: 100,
   },
   {
-    src: "", // Changed to empty string
+    src: "",
     alt: "dumped_image_2.dds",
     path: "/dump/dumped_image_2.dds",
     width: 100,
@@ -100,7 +100,7 @@ const mockDumpedImages = [
 
 const mockInjectedImages = [
   {
-    src: "", // Changed to empty string
+    src: "",
     alt: "injected_image_1.dds",
     path: "/inject/injected_image_1.dds",
     width: 100,

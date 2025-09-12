@@ -1,6 +1,6 @@
 {
   "name": "hohatch-website",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "private": true,
   "type": "module",
   "scripts": {
@@ -42,6 +42,8 @@
     "eslint-plugin-unused-imports": "^4.1.4",
     "prettier-plugin-tailwindcss": "^0.6.14",
     "tailwindcss": "^4.1.11",
+    "@testing-library/react": "^16.0.0",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "tw-animate-css": "^1.3.7",
     "typescript": "^5.9.2"
   }
