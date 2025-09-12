@@ -7,7 +7,6 @@ import {ThemeProvider as NextThemesProvider} from "next-themes";
 import {useRouter} from "next/navigation";
 
 import "@/styles/globals.css";
-import "@/styles/tailwind.css";
 
 export default function RootLayout({
   children,
@@ -19,10 +18,10 @@ export default function RootLayout({
 
   return (
     <html suppressHydrationWarning lang="en">
-      <body className="bg-slate-900 text-white antialiased">
+      <body className="bg-background text-white antialiased">
         <HeroUIProvider navigate={navigateTo}>
           <NextThemesProvider attribute="class" defaultTheme="dark">
-            {children}
+            <main role="main">{children}</main>
             <Analytics />
           </NextThemesProvider>
         </HeroUIProvider>

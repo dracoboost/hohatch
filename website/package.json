@@ -12,6 +12,12 @@
     "start": "next start",
     "update-readme-version": "cd .. && venv\\Scripts\\python -m scripts.version_management.manager update_all_versions_entry_point"
   },
+  "browserslist": [
+    ">0.5%",
+    "last 2 versions",
+    "Firefox ESR",
+    "not dead"
+  ],
   "dependencies": {
     "@heroui/react": "^2.8.1",
     "@heroui/system": "^2.4.20",

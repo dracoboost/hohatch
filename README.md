@@ -1,9 +1,6 @@
 <p align="center">
   <a href="https://hohatch.draco.moe" target="_blank">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo-dark.png">
-      <img alt="HoHatch" src="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo-light.png" height="60">
-    </picture>
+    <img alt="HoHatch" src="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo.png" height="60">
   </a>
 
   <p align="center">

@@ -1,11 +1,4 @@
 /* Font */
-@font-face {
-  font-family: 'balootamma2';
-  src: url('/fonts/BalooTamma2-Regular.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
 
 /* Tailwind extensions */
 @import "tailwindcss";

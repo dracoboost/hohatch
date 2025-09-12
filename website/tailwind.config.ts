@@ -1,5 +1,6 @@
 import {heroui} from "@heroui/theme";
 import typography from "@tailwindcss/typography";
+import {Config} from "tailwindcss";
 
 /** @type {import('tailwindcss').Config} */
 const config = {
@@ -15,16 +16,15 @@ const config = {
     extend: {
       colors: {
         "hochan-red": "#B7465A",
-        "hochan-navy-blue": "#1d253c",
+        "hochan-navy-blue": "#121826",
         "hochan-white": "#d9cad1",
-        background: "#1d253c",
+        background: "#121826",
         foreground: "#d9cad1",
-        "link-color": "#B7465A",
+        "link-color": "#D86C7F",
       },
       fontFamily: {
         sans: ["var(--font-sans)"],
         mono: ["var(--font-mono)"],
-        balootamma2: ["balootamma2", "cursive"],
       },
       fontSize: {
         h1: ["3.5rem", {lineHeight: "1.2"}],
@@ -43,14 +43,25 @@ const config = {
         "lg-h2": ["2.5rem", {lineHeight: "1.2"}],
         "lg-h3": ["2rem", {lineHeight: "1.2"}],
       },
-      typography: {
+      typography: ({theme}: {theme: Config["theme"]}) => ({
         DEFAULT: {
           css: {
+            a: {
+              color: theme?.colors
+                ? (theme.colors as Record<string, string>)["link-color"]
+                : undefined,
+              "&:hover": {
+                opacity: "0.75",
+              },
+              "&:active": {
+                opacity: "0.50",
+              },
+            },
             ul: {},
             ol: {},
           },
         },
-      },
+      }),
     },
   },
   plugins: [heroui(), typography],

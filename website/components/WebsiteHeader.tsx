@@ -13,7 +13,7 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({version}) => {
     <header className="py-8 text-center">
       <div className="flex items-center justify-center">
         <div className="relative">
-          <Image alt="HoHatch Logo" height={72} src="/images/logos/hohatch-logo.png" width={420} />
+          <Image alt="HoHatch Logo" height={80} src="/images/logos/hohatch-logo.png" width={468} />
           <a
             className="absolute right-0 -bottom-7 block"
             href="https://github.com/dracoboost/hohatch/releases"
@@ -24,7 +24,7 @@ export const WebsiteHeader: React.FC<WebsiteHeaderProps> = ({version}) => {
               alt="version"
               height={20}
               src={`https://img.shields.io/badge/version-${version}-b7465a`}
-              width={102}
+              width={90}
             />
           </a>
         </div>
