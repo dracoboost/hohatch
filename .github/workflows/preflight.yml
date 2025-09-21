@@ -18,14 +18,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: venv
-          key: ${{ runner.os }}-python-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-python-${{ hashFiles('backend/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-python-
 
       - name: Install Python Dependencies
         run: |
           python -m venv venv
-          python -m pip install -r requirements.txt
+          python -m pip install -r backend/requirements.txt
 
       - name: Set up Node.js
         uses: actions/setup-node@v4

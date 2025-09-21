@@ -12,5 +12,6 @@ venv/
 *.lnk
 
 COMMIT_EDITMSG
+commit_message.txt
 input.md
 tsconfig.tsbuildinfo
