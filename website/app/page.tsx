@@ -1,6 +1,5 @@
 import {Link} from "@heroui/react";
 import {promises as fs} from "fs";
-// eslint-disable-next-line import/no-named-as-default
 import imageSize from "image-size";
 import path from "path";
 import React from "react";
