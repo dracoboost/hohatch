@@ -1,6 +1,27 @@
-# HoHatch Frontend Features
+<p align="center">
+  <a href="https://hohatch.draco.moe" target="_blank">
+    <img alt="HoHatch" src="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo.png" height="60">
+  </a>
+  <span>Application ✨FEATURES</span>
 
-This document outlines the features of the HoHatch frontend, a React application built with Next.js and served via PyWebView. It provides a modern, interactive UI for managing DDS image conversions.
+  <p align="center">
+    <a href="https://github.com/dracoboost/hohatch/releases">
+      <img alt="version" src="https://img.shields.io/badge/version-1.1.0-b7465a">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml">
+      <img alt="Preflight" src="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml/badge.svg">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/actions/workflows/release.yml">
+      <img alt="Release Application" src="https://github.com/dracoboost/hohatch/actions/workflows/release.yml/badge.svg">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
+      <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
+    </a>
+  </p>
+</p>
+
+> [!TIP]
+> This document outlines the features of the HoHatch frontend, a React application built with Next.js and served via PyWebView. It provides a modern, interactive UI for managing DDS image conversions.
 
 ## Main Screen (`app/page.tsx`)
 

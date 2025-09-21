@@ -1,85 +1,49 @@
-# HoHatch
+<p align="center">
+  <a href="https://hohatch.draco.moe" target="_blank">
+    <img alt="HoHatch" src="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo.png" height="60">
+  </a>
+  <span>Application 🐤README</span>
 
-**HoHatch** is a desktop application for converting image formats between JPG and DDS, specifically designed for use with the Special K tool.
+  <p align="center">
+    <a href="https://github.com/dracoboost/hohatch/releases">
+      <img alt="version" src="https://img.shields.io/badge/version-1.1.0-b7465a">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml">
+      <img alt="Preflight" src="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml/badge.svg">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/actions/workflows/release.yml">
+      <img alt="Release Application" src="https://github.com/dracoboost/hohatch/actions/workflows/release.yml/badge.svg">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
+      <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
+    </a>
+  </p>
+</p>
 
-This application provides a user-friendly interface to manage and convert images for game modding purposes. The frontend is built with Next.js, React, and Tailwind CSS, while the backend logic is handled by a Python server using PyWebView.
+> [!TIP]
+> This README provides a user-focused overview of the HoHatch application. For developer-focused information, including setup and contribution guidelines, please see [`GEMINI.md`](GEMINI.md).
 
-## Features
+**HoHatch** is a Windows-only desktop application for converting image formats between JPG and DDS, specifically designed for use with [Special K](https://www.special-k.info) for modding *Shadowverse: Worlds Beyond*.
 
-A detailed list of features can be found in [`docs/FEATURES.md`](../docs/FEATURES.md).
+## ✨ Features
 
-### Core Functionality
+A detailed list of features can be found in [`docs/FEATURES.md`](docs/FEATURES.md).
 
-- **JPG to DDS Conversion**: Convert JPG images to DDS format for injection.
-- **DDS to JPG Conversion**: Convert DDS images (dumped by Special K) to JPG format.
-- **Image Management**: View, manage, and delete images in the inject and dump folders.
-- **Batch Operations**: Convert or delete multiple images at once.
+- **JPG/DDS Conversion**: Seamlessly convert images between JPG and DDS formats.
+- **Image Management**: View, manage, and delete images in both the game's dump folder and the mod injection folder.
+- **Batch Operations**: Select and process multiple images at once for conversion or deletion.
+- **Settings**: Customize the Special K folder path and image output dimensions.
 
-## Getting Started
+## 🚀 Getting Started
 
-### Prerequisites
+1. Go to the [Releases](https://github.com/dracoboost/hohatch/releases) page.
+2. Download the latest `HoHatch-vX.X.X.zip` file.
+3. Unzip the file and run `HoHatch.exe`.
 
-- Python 3.x
-- Node.js and npm
+## 🤝 Contributing
 
-### Installation & Running
+Contributions are welcome! Please see the [**Development Guidelines**](GEMINI.md) for information on how to set up the development environment and contribute to the project.
 
-1. **Clone the repository:**
+## 📜 License
 
-    ```bash
-    git clone https://github.com/dracoboost/hohatch.git
-    cd hohatch
-    ```
-
-2. **Set up the Python environment:**
-
-    ```bash
-    python -m venv venv
-    venv\Scripts\activate
-    pip install -r requirements.txt
-    ```
-
-3. **Set up the frontend:**
-
-    ```bash
-    cd frontend
-    npm install
-    ```
-
-4. **Run the application:**
-    ```bash
-    npm run dev
-    ```
-
-    To run comprehensive checks before committing, use:
-    ```bash
-    npm run preflight
-    ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-## Building the Executable
-
-To build a standalone executable for Windows, run the following command from the `frontend` directory:
-
-```bash
-npm run backend
-```
-
-This will create a distributable executable in the `frontend/dist` directory.
-
-## Development
-
-This project uses a combination of Python for the backend and React/Next.js for the frontend.
-
-- **Backend**: The core logic resides in `app.py` (or similar, in the root directory). It uses `pywebview` to create a webview window and expose Python functions to the JavaScript frontend.
-- **Frontend**: The UI is located in the `frontend` directory. See the [`frontend/README.md`](README.md) for more details on the frontend architecture and development process.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a pull request.
-velopment process.
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a pull request.
+This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.

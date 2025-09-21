@@ -1,14 +1,31 @@
-# 📄 HoHatch Website Changelog
+<p align="center">
+  <a href="https://hohatch.draco.moe" target="_blank">
+    <img alt="HoHatch" src="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo.png" height="60">
+  </a>
+  <span align="center">Website 📝CHANGELOG</span>
 
-All notable changes to this project will be documented in this file.
+  <p align="center">
+    <a href="https://github.com/dracoboost/hohatch/releases">
+      <img alt="website version" src="https://img.shields.io/badge/website%20version-1.0.5-lightgrey">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
+      <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
+    </a>
+  </p>
+</p>
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+> [!TIP]
+> All notable changes to this project will be documented in this file.
+> The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [1.0.5] - 2025-09-21
+
 ### Added
 
+- **Image Optimization**: Automatically detect and embed `width` and `height` for local images in Markdown content to improve performance and prevent layout shift.
+- Added tooltips to social media icons for better usability.
 - Added `robots.ts` to generate a `robots.txt` file and improve search engine indexing.
 - Implemented programmatic sitemap generation (`sitemap.xml/route.ts`) to include detailed image metadata (titles and captions) for enhanced SEO.
 - Centralized website metadata and added JSON-LD structured data in `config/consts.ts` for richer search results.
@@ -17,10 +34,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **Project Structure**:
+  - Consolidated documentation into a new `GEMINI.md` system, removing the old `docs` folder.
+  - Updated and standardized all `README.md` and `CHANGELOG.md` headers.
+  - Unified `npm` scripts for versioning (`update-versions`).
 - Improved image SEO by dynamically adding all guide images to the sitemap.
+- Replaced PNG images in the guide with JPGs for better consistency with the application's focus.
 
 ### Fixed
 
+- Fixed a server-side crash during image processing by reading images into a buffer before passing them to the `image-size` library.
 - Resolved a TypeScript error in the new `MarkdownLink` component by using the correct `LinkProps` type.
 - Updated `MarkdownRenderer` to use the new `MarkdownLink` component, fixing a style override issue.
 
@@ -73,7 +96,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commit.
 
-[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.4...HEAD
+[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.5...HEAD
+[1.0.5]: https://github.com/dracoboost/hohatch/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.4
 [1.0.3]: https://github.com/dracoboost/hohatch/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/dracoboost/hohatch/compare/v1.0.1...v1.0.2

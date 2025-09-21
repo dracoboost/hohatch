@@ -12,11 +12,10 @@ const config = {
   theme: {
     extend: {
       colors: {
+        background: "#0d1117",
+        foreground: "#f0f6fc",
         "hochan-red": "#B7465A",
-        "hochan-navy-blue": "#1d253c",
         "hochan-white": "#d9cad1",
-        background: "#1d253c",
-        foreground: "#d9cad1",
         "link-color": "#B7465A",
       },
       fontFamily: {

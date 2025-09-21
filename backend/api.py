@@ -191,6 +191,10 @@ class Api:
         logging.debug("open_cache_folder called")
         return self.backend.open_cache_folder()
 
+    def open_log_folder(self):
+        logging.debug("open_log_folder called")
+        return self.backend.open_log_folder()
+
     def notify_settings_changed(self):
         logging.debug("notify_settings_changed called")
         if self.window:

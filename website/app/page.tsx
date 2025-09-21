@@ -10,6 +10,10 @@ import {TableOfContents} from "../components/TableOfContents";
 import {WebsiteHeader} from "../components/WebsiteHeader";
 import {metadata} from "../config/consts";
 
+import imageSize from "image-size";
+
+import {type ImageProps} from "../lib/types";
+
 export {metadata};
 
 export default async function Home() {
@@ -18,12 +22,33 @@ export default async function Home() {
 
   const appVersion = packageJson.version;
 
-  const imageUrls: string[] = [];
-  const imageRegex = /!\[.*?\]\((.*?)\)/g;
+  const imageRegex = /!\[(.*?)\]\((.*?)\)/g;
+  const imagePromises: Promise<ImageProps>[] = [];
   let match;
+
   while ((match = imageRegex.exec(markdownContent)) !== null) {
-    imageUrls.push(match[1]);
+    const alt = match[1];
+    const src = match[2];
+
+    const promise = new Promise<ImageProps>(async (resolve) => {
+      if (src.startsWith("http")) {
+        resolve({src, alt, width: undefined, height: undefined});
+        return;
+      }
+      try {
+        const imagePath = path.join(process.cwd(), "public", src);
+        const buffer = await fs.readFile(imagePath);
+        const {width, height} = imageSize(buffer);
+        resolve({src, alt, width, height});
+      } catch (error) {
+        console.error(`Failed to get dimensions for image: ${src}`, error);
+        resolve({src, alt, width: undefined, height: undefined});
+      }
+    });
+    imagePromises.push(promise);
   }
+
+  const images = await Promise.all(imagePromises);
 
   return (
     <div className="container mx-auto px-4 font-sans sm:px-6 lg:px-8">
@@ -43,12 +68,12 @@ export default async function Home() {
           {/* Main Content Area */}
           <article className="flex-1 p-8">
             <div className="prose dark:prose-invert prose-lg prose-p:mb-4 prose-ol:pl-5 max-w-none">
-              <ContentRenderer imageUrls={imageUrls} markdownContent={markdownContent} />
+              <ContentRenderer images={images} markdownContent={markdownContent} />
             </div>
           </article>
 
           {/* Table of Contents - Right (lg only) */}
-          <nav className="bg-muted/30 sticky top-0 h-screen w-[200px] overflow-y-auto border-l border-slate-700 px-6">
+          <nav className="sticky top-0 h-screen w-[200px] overflow-y-auto border-l border-slate-700 px-6">
             <div className="sticky top-6">
               <TableOfContents />
             </div>
@@ -59,16 +84,16 @@ export default async function Home() {
           <div className="flex min-h-screen">
             <article className="flex-1 p-6">
               <div className="prose dark:prose-invert prose-lg prose-p:mb-4 prose-ol:pl-5 max-w-none">
-                <ContentRenderer imageUrls={imageUrls} markdownContent={markdownContent} />
+                <ContentRenderer images={images} markdownContent={markdownContent} />
               </div>
             </article>
-            <nav className="bg-muted/30 w-[200px] border-l border-slate-700 p-6">
+            <nav className="w-[200px] border-l border-slate-700 p-6">
               <div className="sticky top-4">
                 <TableOfContents />
               </div>
             </nav>
           </div>
-          <div className="bg-muted/10 flex w-20 items-center justify-center gap-4 border-t border-slate-700 p-4">
+          <div className="flex w-20 items-center justify-center gap-4 border-t border-slate-700 p-4">
             <SocialIconButton type="reddit" />
             <SocialIconButton type="discord" />
             <SocialIconButton type="x" />
@@ -79,10 +104,10 @@ export default async function Home() {
         <div className="block md:hidden">
           <article className="p-1">
             <div className="prose dark:prose-invert prose-lg prose-p:mb-4 prose-ol:pl-5 max-w-none">
-              <ContentRenderer imageUrls={imageUrls} markdownContent={markdownContent} />
+              <ContentRenderer images={images} markdownContent={markdownContent} />
             </div>
           </article>
-          <div className="bg-muted/10 flex items-center justify-center gap-4 border-t border-slate-700 p-4">
+          <div className="flex items-center justify-center gap-4 border-t border-slate-700 p-4">
             <SocialIconButton type="reddit" />
             <SocialIconButton type="discord" />
             <SocialIconButton type="x" />

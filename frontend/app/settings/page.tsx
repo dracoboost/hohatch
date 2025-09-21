@@ -6,6 +6,7 @@ import {useTheme} from "next-themes";
 import React, {useEffect, useState} from "react";
 import {Toaster, toast} from "sonner";
 
+import {AspectRatioSelector} from "@/components/AspectRatioSelector";
 import {Button} from "@/components/Button";
 import {FloatingUnderlineInput} from "@/components/FloatingUnderlineInput";
 import {Header} from "@/components/Header";
@@ -17,8 +18,10 @@ interface SettingsData {
   special_k_folder_path: string;
   texconv_executable_path: string;
   output_height: number;
-  output_width?: number;
+  output_width: number;
+  aspect_ratio: "none" | "53x64";
   last_active_view: "dump" | "inject";
+  theme: "dark" | "light";
 }
 
 export default function SettingsScreen() {
@@ -28,7 +31,10 @@ export default function SettingsScreen() {
     special_k_folder_path: "",
     texconv_executable_path: "",
     output_height: 0,
+    output_width: 0,
+    aspect_ratio: "53x64",
     last_active_view: "dump",
+    theme: "light",
   });
   const [loading, setLoading] = useState<boolean>(true);
   const [, setIsSaving] = useState<boolean>(false);
@@ -62,7 +68,7 @@ export default function SettingsScreen() {
     try {
       setLoading(true);
       const currentSettings = await window.pywebview.api.get_settings();
-      setSettings(currentSettings);
+      setSettings((prev) => ({...prev, ...currentSettings}));
     } catch (e: any) {
       toast.error((i18n.error || "Error") + ": " + e.message);
     } finally {
@@ -87,9 +93,7 @@ export default function SettingsScreen() {
     const saveChanges = async () => {
       setIsSaving(true);
       try {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const {output_width: _, ...settingsToSend} = settings;
-        const result = await window.pywebview.api.save_settings(settingsToSend);
+        const result = await window.pywebview.api.save_settings(settings);
         if (result.success) {
           toast.success("Settings saved automatically.");
           await window.pywebview.api.notify_settings_changed();
@@ -130,7 +134,21 @@ export default function SettingsScreen() {
     validateSkFolder();
   }, [settings.special_k_folder_path]);
 
-  const output_width = settings.output_height ? Math.round(settings.output_height * (53 / 64)) : 0;
+  const output_width =
+    settings.aspect_ratio === "53x64" && settings.output_height
+      ? Math.round(settings.output_height * (53 / 64))
+      : settings.output_width;
+
+  const handleAspectRatioChange = (ratio: "none" | "53x64") => {
+    setSettings((prevSettings) => ({
+      ...prevSettings,
+      aspect_ratio: ratio,
+      output_width:
+        ratio === "53x64" && prevSettings.output_height
+          ? Math.round(prevSettings.output_height * (53 / 64))
+          : prevSettings.output_width,
+    }));
+  };
 
   const handleSelectSpecialKFolder = async () => {
     try {
@@ -167,9 +185,20 @@ export default function SettingsScreen() {
     }
   };
 
+  const handleOpenLogFolder = async () => {
+    try {
+      const result = await window.pywebview.api.open_log_folder();
+      if (!result.success) {
+        toast.error(result.error || "Failed to open log folder.");
+      }
+    } catch (e: any) {
+      toast.error("Failed to open log folder: " + e.message);
+    }
+  };
+
   if (loading) {
     return (
-      <div className="flex min-h-screen flex-col bg-gray-200 text-gray-900 dark:bg-gray-900 dark:text-white">
+      <div className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
         <Toaster richColors position="bottom-right" />
         <Header mounted={mounted} page="settings" theme={theme} />
         <main className="flex flex-grow items-center justify-center">
@@ -180,7 +209,7 @@ export default function SettingsScreen() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-200 text-gray-900 dark:bg-gray-900 dark:text-white">
+    <div className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
       <Toaster richColors position="bottom-right" />
       <Header mounted={mounted} page="settings" theme={theme} />
 
@@ -261,19 +290,32 @@ export default function SettingsScreen() {
           </div>
 
           {/* Download JPG Size */}
-          <div className="flex w-full flex-col items-start">
+          <div className="flex w-full flex-col items-start gap-2">
             <label className="text-sm font-medium text-gray-800 dark:text-gray-400">
               {i18n.download_jpg_size_label || "Download JPG Size"}
             </label>
+            <AspectRatioSelector
+              languageData={i18n}
+              selectedRatio={settings.aspect_ratio}
+              onRatioChange={handleAspectRatioChange}
+            />
             <div className="flex w-full flex-row items-start gap-6">
               <FloatingUnderlineInput
-                readOnly
                 aria-label={i18n.dds_to_jpg_width_label || "Width (auto-calculated)"}
                 containerClassName="w-full md:w-[150px]"
                 label={i18n.dds_to_jpg_width_label}
+                min={0}
+                readOnly={settings.aspect_ratio === "53x64"}
                 startContent={<MoveHorizontal size={18} />}
                 type="number"
                 value={output_width?.toString() || ""}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value, 10);
+                  setSettings((prevSettings: any) => ({
+                    ...prevSettings,
+                    output_width: isNaN(value) ? 0 : value,
+                  }));
+                }}
               />
               <FloatingUnderlineInput
                 aria-label={i18n.dds_to_jpg_height_label || "Height"}
@@ -294,24 +336,31 @@ export default function SettingsScreen() {
             </div>
           </div>
 
-          {/* Cache */}
-          <div className="flex w-full flex-row items-center gap-1">
+          {/* Application Folders */}
+          <div className="flex w-full flex-col items-start gap-2">
             <label className="text-sm font-medium text-gray-800 dark:text-gray-400">
-              {i18n.cache_settings || "Cache"}
+              {i18n.folder_settings || "Application Folders"}
             </label>
-            <Tooltip
-              color={mounted && theme === "light" ? "foreground" : "default"}
-              content={i18n.open_cache_folder_btn || "Open Cache Folder"}
-            >
+            <div className="flex flex-row gap-4">
               <Button
-                isIconOnly
-                aria-label={i18n.open_cache_folder_btn || "Open Cache Folder"}
-                buttonSize="size-7"
+                className="flex items-center gap-2"
+                color="secondary"
+                variant="solid"
                 onClick={handleOpenCacheFolder}
               >
                 <Folder size={18} />
+                {i18n.open_cache_folder_btn || "Open Cache Folder"}
               </Button>
-            </Tooltip>
+              <Button
+                className="flex items-center gap-2"
+                color="secondary"
+                variant="solid"
+                onClick={handleOpenLogFolder}
+              >
+                <Folder size={18} />
+                {i18n.open_log_folder_btn || "Open Log Folder"}
+              </Button>
+            </div>
           </div>
         </div>
       </main>

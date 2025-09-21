@@ -1,7 +1,8 @@
 ## 📥 Download
 
-To use HoHatch, download the [latest HoHatch (v1.1.0)](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.1.0.zip).  
-(For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).)
+To use HoHatch, download the [latest HoHatch (v1.1.0)](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.1.0.zip).
+
+> For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
 
 ## 🛠️ Usage Guide
 
@@ -11,7 +12,7 @@ This guide explains how to use HoHatch for modding Shadowverse: Worlds Beyond.
 
 This section explains how to convert a JPG image to DDS and inject it into the game.
 
-![Inject JPG into ShadowverseWB](/images/guide/inject-jpg-into-shadowversewb.png)
+![Inject JPG into ShadowverseWB](/images/guide/inject-jpg-into-shadowversewb.jpg)
 
 1. Prepare the JPG for injection
 2. Launch ShadowverseWB with [Special K](https://www.special-k.info/), then extract the DDS*
@@ -20,19 +21,19 @@ This section explains how to convert a JPG image to DDS and inject it into the g
 
 #### \*Extract DDS with Special K
 
-![Extract DDS with Special K](/images/guide/extract-dds-with-special-k-1.png)
+![Extract DDS with Special K](/images/guide/extract-dds-with-special-k-1.jpg)
 
 1. Launch ShadowverseWB with Special K, then press `Ctrl+Shift+Backspace` to open the "Special K Control Panel"
 2. Click "Render Mod Tools" to open the "D3D11 Render Mod Toolkit" (DDS extractor)
 
-![Extract DDS with Special K](/images/guide/extract-dds-with-special-k-2.png)
+![Extract DDS with Special K](/images/guide/extract-dds-with-special-k-2.jpg)
 
 3. Click "Refresh Textures" to load ShadowverseWB DDS images
 4. Click "Dump Texture to Disk" to extract DDS — done!
 
 #### \*\*Inject JPG with HoHatch
 
-![Inject JPG with HoHatch](/images/guide/inject-jpg-with-hohatch.png)
+![Inject JPG with HoHatch](/images/guide/inject-jpg-with-hohatch.jpg)
 
 Just click the "Replace" button
 (If images don't load, click the "Reload" button)
@@ -41,7 +42,7 @@ Just click the "Replace" button
 
 This section explains how to extract in-game images as JPG files.
 
-![Extract JPG from ShadowverseWB](/images/guide/extract-jpg-from-shadowversewb.png)
+![Extract JPG from ShadowverseWB](/images/guide/extract-jpg-from-shadowversewb.jpg)
 
 1. Launch ShadowverseWB with Special K
 2. Extract the DDS* for modding
@@ -49,7 +50,7 @@ This section explains how to extract in-game images as JPG files.
 
 #### \*\*\*Convert to JPG with HoHatch
 
-![Convert to JPG with HoHatch](/images/guide/convert-to-jpg-with-hohatch.png)
+![Convert to JPG with HoHatch](/images/guide/convert-to-jpg-with-hohatch.jpg)
 
 Just click the "Convert to JPG" button
 (If images don't load, click the "Reload" button)
@@ -77,10 +78,10 @@ On the settings screen, you can configure various settings for the application.
 | Special K Folder Path | Specify the installation directory of Special K. Includes a "Download" button to easily download the Special K setup application. |
 | DDS to JPG Output Resolution | Set the desired height for JPG output when converting DDS files. The corresponding width is automatically calculated (53/64 of the height) and displayed. |
 
-## 🐤 Join Modding Community Server!
+## 🐤 Join Mod Community Server!
 
 > A community for modding Shadowverse: World Beyond.
-> Join us to share mods, get mod installation support, and discuss advanced customization!
+> Join us to share mods, get mod installation support!
 
 **Join:** <https://discord.gg/fEUMrTGb23>
 

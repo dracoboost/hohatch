@@ -35,6 +35,7 @@ declare global {
         batch_delete_selected_dds_files: (dds_path_list: string[]) => Promise<any>;
         get_default_sk_path: () => Promise<string>;
         open_cache_folder: () => Promise<any>;
+        open_log_folder: () => Promise<{success: boolean; error?: string}>;
         notify_settings_changed: () => Promise<any>;
         get_app_version: () => Promise<{success: boolean; version?: string; error?: string}>;
         check_for_updates: () => Promise<{

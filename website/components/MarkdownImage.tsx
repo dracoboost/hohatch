@@ -1,39 +1,39 @@
 "use client";
 
 import Image from "next/image";
-import React, {useEffect, useState} from "react";
+import React from "react";
 
-interface MarkdownImageProps {
-  alt?: string;
-  src?: string | Blob;
+import {type ImageProps} from "../lib/types";
+
+interface MarkdownImageProps extends ImageProps {
+  onClick?: () => void;
 }
 
-export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src}) => {
-  // Removed openLightbox
-  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src, width, height, onClick}) => {
+  if (!src) return null;
 
-  useEffect(() => {
-    if (src instanceof Blob) {
-      const objectUrl = URL.createObjectURL(src);
-      setImageUrl(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl);
-    } else if (typeof src === "string") {
-      setImageUrl(src);
-    } else {
-      setImageUrl(undefined);
-    }
-  }, [src]);
-
-  if (!imageUrl) return null;
-
-  return (
+  const image = (
     <Image
       alt={alt || ""}
-      className="rounded-lg shadow-md" // Removed cursor-zoom-in
-      height={600} // Placeholder
-      src={imageUrl}
-      width={800} // Placeholder, actual size will be determined by object-contain
-      // onClick={() => openLightbox(imageUrl)} // Removed
+      className="h-auto w-full rounded-lg shadow-md"
+      height={height || 0}
+      sizes="100vw"
+      src={src}
+      width={width || 0}
     />
   );
+
+  if (onClick) {
+    return (
+      <button
+        className="mt-2 w-full transform transition-transform duration-300 hover:scale-105"
+        type="button"
+        onClick={onClick}
+      >
+        {image}
+      </button>
+    );
+  }
+
+  return image;
 };

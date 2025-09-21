@@ -6,7 +6,10 @@ interface LangData {
   [key: string]: string;
   special_k_download_success: string;
   jpg_conversion_failed: string;
-  processing: string;
+  replacing_image: string;
+  converting_to_jpg: string;
+  deleting_image: string;
+  batch_deleting_images: string;
   replace_conversion_complete: string;
   replace_conversion_failed: string;
   error: string;
@@ -18,7 +21,10 @@ const AppRouter: React.FC = () => {
   const [, setLang] = useState<LangData>({
     special_k_download_success: "",
     jpg_conversion_failed: "",
-    processing: "",
+    replacing_image: "",
+    converting_to_jpg: "",
+    deleting_image: "",
+    batch_deleting_images: "",
     replace_conversion_complete: "",
     replace_conversion_failed: "",
     error: "",
@@ -33,7 +39,10 @@ const AppRouter: React.FC = () => {
       let fetchedLangData: LangData = {
         special_k_download_success: "",
         jpg_conversion_failed: "",
-        processing: "",
+        replacing_image: "",
+        converting_to_jpg: "",
+        deleting_image: "",
+        batch_deleting_images: "",
         replace_conversion_complete: "",
         replace_conversion_failed: "",
         error: "",

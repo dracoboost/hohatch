@@ -4,39 +4,60 @@
   </a>
 
   <p align="center">
-    <a href="https://github.com/dracoboost/hohatch/releases"><img alt="version" src="https://img.shields.io/badge/version-1.1.0-b7465a"></a>
-    <a href="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml"><img alt="Preflight" src="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml/badge.svg"></a>
-    <a href="https://github.com/dracoboost/hohatch/actions/workflows/release.yml"><img alt="Release Application" src="https://github.com/dracoboost/hohatch/actions/workflows/release.yml/badge.svg"></a>
-    <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg"></a>
-    <a href="https://discord.gg/fEUMrTGb23" target="_blank"><img alt="Discord" src="https://img.shields.io/discord/1408725175532519448?logo=discord&logoColor=white&color=5662f6"></a>
+    <a href="https://github.com/dracoboost/hohatch/releases">
+      <img alt="version" src="https://img.shields.io/badge/version-1.1.0-b7465a">
+    </a>
+    <a href="https://discord.gg/fEUMrTGb23" target="_blank">
+      <img alt="Discord" src="https://img.shields.io/discord/1408725175532519448?logo=discord&logoColor=white&color=5662f6">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml">
+      <img alt="Preflight" src="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml/badge.svg">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/actions/workflows/release.yml">
+      <img alt="Release Application" src="https://github.com/dracoboost/hohatch/actions/workflows/release.yml/badge.svg">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
+      <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
+    </a>
   </p>
 </p>
 
-**HoHatch** is a desktop application that supports the management and conversion of image files (JPG/DDS) for [**Shadowverse: Worlds Beyond**](https://shadowverse-wb.com/). It provides functions to convert modded JPG files to DDS files, to convert DDS files dumped from the game to JPG files for mod creation, and to delete DDS files.
+> [!TIP]
+> **HoHatch** is a Windows-only desktop application that supports the management and conversion of image files (JPG/DDS) for [Shadowverse: Worlds Beyond](https://shadowverse-wb.com/). It provides functions to convert
+> modded JPG files to DDS files, to convert DDS files dumped from the game to JPG files for mod creation.
 
-## 📥 Installation
+<p align="center">
+  <img alt="HoHatch Application Screenshot" src="images/hohatch-application-screenshot.jpg">
+</p>
 
-HoHatch is a Windows-only application.
+## 📦 Installation
 
-To use HoHatch, download the latest HoHatch application directly: [HoHatch-v1.1.0](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.1.0.zip). For older versions, visit the [releases page](https://github.com/dracoboost/hohatch/releases).
+To use HoHatch, download the latest HoHatch application directly: [HoHatch-v1.1.0.zip](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.1.0.zip).
+> [!NOTE]
+> For older versions, go to the [Releases](https://github.com/dracoboost/hohatch/releases) page.
 
-## 📄 Changelogs
+## 🔤 Logo Typeface
 
-For a detailed history of changes and updates, please refer to the specific changelogs:
-
-- HoHatch Application Changelog: [`frontend/CHANGELOG.md`](frontend/CHANGELOG.md)
-- HoHatch Website Changelog: [`website/CHANGELOG.md`](website/CHANGELOG.md)
-
-We maintain these logs to ensure transparency and effective communication with our users and contributors.
-
-## 🎨 Logo Typeface
-
-The HoHatch logo uses [Baloo Tamma 2](https://fonts.google.com/specimen/Baloo+Tamma+2?preview.text=HoHatch&query=Baloo+Tamma+2), a playful, rounded display sans-serif typeface from Google Fonts, chosen for its approachable aesthetic.
+The HoHatch logo uses [Baloo Tamma 2](https://fonts.google.com/specimen/Baloo+Tamma+2?preview.text=HoHatch&query=Baloo+Tamma+2), a playful, rounded display sans-serif typeface from Google Fonts.
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please refer to [`GEMINI.md`](GEMINI.md) for development guidelines and testing strategies.
-For detailed development guidelines and setup instructions for HoHatch and its website, please refer to [`docs/DEVELOPMENT.md`](docs/DEVELOPMENT.md).
+Contributions are welcome!
+
+### Documentation
+
+- Features
+  - HoHatch Application: ✨[`frontend/docs/FEATURES.md`](frontend/docs/FEATURES.md)
+  - HoHatch Website: ✨[`website/docs/FEATURES.md`](website/docs/FEATURES.md)
+
+- Development Guidelines and Testing Strategies
+  - General: ✦[`GEMINI.md`](GEMINI.md)
+  - HoHatch Application: ✦[`frontend/GEMINI.md`](frontend/GEMINI.md)
+  - HoHatch Website: ✦[`website/GEMINI.md`](website/GEMINI.md)
+
+- Changelogs
+  - HoHatch Application: 📝[`frontend/CHANGELOG.md`](frontend/CHANGELOG.md)
+  - HoHatch Website: 📝[`website/CHANGELOG.md`](website/CHANGELOG.md)
 
 ## 📜 License
 

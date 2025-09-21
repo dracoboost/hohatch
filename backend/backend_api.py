@@ -129,6 +129,13 @@ class HoHatchBackend:
         except HoHatchError as e:
             return self._handle_error(e, "Failed to open cache folder")
 
+    def open_log_folder(self):
+        try:
+            self.file_service.open_log_folder()
+            return {"success": True}
+        except HoHatchError as e:
+            return self._handle_error(e, "Failed to open log folder")
+
     def clean_temp_directories(self):
         try:
             self.file_service.clean_directory(self.temp_base_dir)
@@ -183,30 +190,41 @@ class HoHatchBackend:
             return self._handle_error(e, "Failed during batch conversion")
 
     def replace_dds(self, target_dds_path: str, replacement_image_path: str, is_dump_image: bool):
+        logging.info(f"Starting DDS replacement process for target: {target_dds_path}")
+        logging.info(f"Replacement image: {replacement_image_path}")
+        logging.info(f"Is dump image: {is_dump_image}")
         try:
             # This is a simplified orchestration. A real implementation might have more complex temp dir handling.
             temp_dir = self.temp_base_dir / f"replace_{Path(target_dds_path).stem}"
+            logging.info(f"Using temporary directory: {temp_dir}")
             self.file_service.clean_directory(temp_dir)
 
             # In a real scenario, you might process the replacement image first (e.g., resize)
             # For now, we assume it's ready for conversion.
 
+            logging.info("Converting replacement image to DDS...")
             final_dds = self.texconv_service.convert_to_dds(
                 replacement_image_path, str(temp_dir), Path(target_dds_path).name
             )
+            logging.info(f"Successfully converted to DDS: {final_dds}")
 
             inject_folder = self.image_service.get_inject_folder_path()
             if not inject_folder:
+                logging.error("Could not determine inject folder path.")
                 raise FileSystemError("Could not determine inject folder path.")
+            logging.info(f"Target inject folder: {inject_folder}")
 
             final_path = Path(inject_folder) / Path(final_dds).name
-            self.file_service.move_file(final_dds, final_path)
+            self.file_service.move_file(final_dds, str(final_path))
 
             if is_dump_image:
+                logging.info(f"Deleting original dump image: {target_dds_path}")
                 self.file_service.delete_file(target_dds_path)
 
+            logging.info(f"DDS replacement successful. Final path: {final_path}")
             return {"success": True, "output_path": str(final_path)}
         except HoHatchError as e:
+            logging.error(f"Failed to replace DDS file: {e.message}")
             return self._handle_error(e, "Failed to replace DDS file")
 
     def validate_sk_folder(self, path: str) -> Dict[str, Any]:

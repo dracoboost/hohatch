@@ -165,10 +165,27 @@ class FileService:
             raise FileSystemError(f"Folder not found: {folder_path}")
         os.startfile(folder_path)
 
+    def move_file(self, src: str, dest: str):
+        try:
+            logging.info(f"Moving file from {src} to {dest}")
+            shutil.move(src, dest)
+            logging.info(f"Successfully moved file to {dest}")
+        except (shutil.Error, OSError) as e:
+            logging.error(f"Failed to move file from {src} to {dest}: {e}")
+            raise FileSystemError(f"Failed to move file: {e}")
+
     def clean_directory(self, dir_path: Path):
         if dir_path.exists():
             shutil.rmtree(dir_path, onexc=lambda f, p, e: (os.chmod(p, 0o777), f(p)))
         dir_path.mkdir(parents=True, exist_ok=True)
+
+    def get_log_folder_path(self) -> str:
+        return str(Path(appdirs.user_data_dir("HoHatch", "")) / "logs")
+
+    def open_log_folder(self):
+        log_dir = self.get_log_folder_path()
+        logging.info(f"Opening log folder: {log_dir}")
+        self.open_folder(log_dir)
 
 
 class ImageService:
@@ -225,11 +242,24 @@ class TexconvService:
     def _run_texconv(self, args: List[str]):
         settings = self.config_service.get_settings()
         cmd = [str(settings.texconv_executable_path)] + args
+        logging.info(f"Running texconv command: {' '.join(cmd)}")
         try:
-            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True, encoding='utf-8')
+            logging.info(f"Texconv stdout: {result.stdout}")
+            if result.stderr:
+                logging.warning(f"Texconv stderr: {result.stderr}")
             return result
-        except (subprocess.CalledProcessError, FileNotFoundError) as e:
-            raise TexconvError(f"Texconv execution failed: {e}")
+        except subprocess.CalledProcessError as e:
+            logging.error(f"Texconv execution failed for command: {' '.join(cmd)}")
+            logging.error(f"Texconv stdout: {e.stdout}")
+            logging.error(f"Texconv stderr: {e.stderr}")
+            raise TexconvError(f"Texconv execution failed: {e.stderr}")
+        except FileNotFoundError as e:
+            logging.error(f"Texconv executable not found at {settings.texconv_executable_path}")
+            raise TexconvError(f"Texconv executable not found: {e}")
+        except Exception as e:
+            logging.error(f"An unexpected error occurred during texconv execution: {e}")
+            raise TexconvError(f"An unexpected error occurred during texconv execution: {e}")
 
     def convert_to_jpg(self, dds_path: str, output_folder: str) -> str:
         settings = self.config_service.get_settings()
@@ -267,8 +297,28 @@ class TexconvService:
 
     def get_displayable_image(self, dds_path: str) -> str:
         cache_dir = self.image_service.cache_dir
-        cache_file = cache_dir / f"{Path(dds_path).stem}.jpg"
-        if not cache_file.exists():
+        dds_p = Path(dds_path)
+        if not dds_p.exists():
+            raise FileSystemError(f"DDS file not found: {dds_path}")
+
+        cache_file = cache_dir / f"{dds_p.stem}.jpg"
+
+        should_recache = True
+        if cache_file.exists():
+            try:
+                dds_mtime = dds_p.stat().st_mtime
+                cache_mtime = cache_file.stat().st_mtime
+                if dds_mtime <= cache_mtime:
+                    should_recache = False
+            except FileNotFoundError:
+                # This can happen in a race condition, proceed to recache.
+                pass
+
+        if should_recache:
+            logging.info(f"Recaching display image for {dds_path}")
             self.convert_to_jpg(dds_path, str(cache_dir))
+        else:
+            logging.debug(f"Using existing cache for {dds_path}")
+
         with open(cache_file, "rb") as f:
             return f"data:image/jpeg;base64,{base64.b64encode(f.read()).decode('utf-8')}"

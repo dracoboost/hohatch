@@ -21,7 +21,7 @@ interface ImageCardProps {
   onReplaceDDS: (path: string, isDumpImage: boolean) => void;
   onTrash: (path: string) => void;
   languageData: {[key: string]: string};
-  isProcessing: boolean;
+  isOperationInProgress: boolean;
   isSelected: boolean;
   onSelectionChange: (path: string) => void;
   mounted: boolean;
@@ -31,7 +31,7 @@ interface ImageCardProps {
 export const ImageCard: React.FC<ImageCardProps> = ({
   image,
   languageData,
-  isProcessing,
+  isOperationInProgress,
   isSelected,
   mounted,
   theme,
@@ -106,7 +106,7 @@ export const ImageCard: React.FC<ImageCardProps> = ({
                 isIconOnly
                 aria-label="Convert to JPG"
                 buttonSize="size-5"
-                isDisabled={isProcessing}
+                isDisabled={isOperationInProgress}
                 onClick={() => onDownloadJPG(image.path)}
               >
                 <Download color={mounted && theme === "light" ? "black" : "white"} size={16} />
@@ -121,7 +121,7 @@ export const ImageCard: React.FC<ImageCardProps> = ({
                 isIconOnly
                 aria-label="Replace DDS"
                 buttonSize="size-5"
-                isDisabled={isProcessing}
+                isDisabled={isOperationInProgress}
                 onClick={() => onReplaceDDS(image.path, image.isDumpImage ?? false)}
               >
                 <PencilLine color={mounted && theme === "light" ? "black" : "white"} size={16} />
@@ -137,7 +137,7 @@ export const ImageCard: React.FC<ImageCardProps> = ({
                 aria-label="Trash"
                 buttonSize="size-5"
                 data-testid="trash-button"
-                isDisabled={isProcessing}
+                isDisabled={isOperationInProgress}
                 onClick={() => onTrash(image.path)}
               >
                 <Trash2 color="red" size={16} />

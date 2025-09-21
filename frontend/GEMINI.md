@@ -2,11 +2,11 @@
   <a href="https://hohatch.draco.moe" target="_blank">
     <img alt="HoHatch" src="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo.png" height="60">
   </a>
-  <span>Website ✦GEMINI</span>
+  <span>Application ✦GEMINI</span>
 
   <p align="center">
     <a href="https://github.com/dracoboost/hohatch/releases">
-      <img alt="website version" src="https://img.shields.io/badge/website%20version-1.0.5-lightgrey">
+      <img alt="version" src="https://img.shields.io/badge/version-1.1.0-b7465a">
     </a>
     <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
       <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
@@ -15,13 +15,23 @@
 </p>
 
 > [!TIP]
-> This document serves as the primary source of truth and context for the Gemini AI assistant regarding the HoHatch support website.
+> This document serves as the primary source of truth and context for the Gemini AI assistant regarding the HoHatch application.
 
 ## 🚀 Development Guidelines
 
-This document provides detailed instructions for developing the HoHatch website.
+This document provides detailed instructions for developing HoHatch.
 
-### Setup of Website
+### Technology Stack Overview
+
+This application provides a user-friendly interface to manage and convert images for game modding purposes. The frontend is built with [Next.js](https://nextjs.org), [React](https://react.dev), and [Tailwind CSS](https://tailwindcss.com), while the backend logic is handled by a Python server using [PyWebView](https://pywebview.flowrl.com).
+
+### Prerequisites
+
+- Node.js & npm (Recommend [nvm](https://github.com/nvm-sh/nvm))
+- [Python 3.x](https://www.python.org/downloads/)
+- [Git](https://git-scm.com/downloads)
+
+### Setup of HoHatch
 
 1. Clone the repository
 
@@ -33,32 +43,37 @@ This document provides detailed instructions for developing the HoHatch website.
   # > cd (ghq get https://github.com/dracoboost/hohatch | ghq list -p -e)
   ```
 
-2. Install website dependencies
+2. Install frontend dependencies
 
   ```ps1
-  > cd website
+  > cd frontend
   > npm install
   ```
 
-### Building and Running
-
-1. Launch the development server
+3. Install Python (backend) dependencies (preferably in a virtual environment)
 
   ```ps1
-  > npm run dev
+  > npm run init
   ```
 
-2. Build the website for production
+### Available Commands
 
-  ```ps1
-  > npm run build
-  ```
+Commands run within the `frontend` directory:
 
-3. Run preflight checks
+- `npm init`
+  Install the frontend and backend requirements.
 
-  ```ps1
-  > npm run preflight
-  ```
+- `npm run dev`
+  Starts the frontend development server and the Python backend for local development.
+
+- `npm run backend`
+  Creates a standalone executable for production. This command bundles the frontend and backend into a single file located in the project's root `dist/` directory.
+
+- `npm run freeze`
+  Generates or updates `backend/requirements.txt` with the currently installed Python dependencies. This is useful for managing exact versions of dependencies.
+
+- `npm run preflight`
+  Runs a comprehensive check that builds and tests both the frontend and backend. This is recommended before committing changes.
 
 ### 🧹 ESLint Strategy
 
@@ -158,6 +173,7 @@ Bad sorting with warning: Callbacks (such as `onChange`, `onClick`, `onPress`) m
 
 ```js
 <Button
+  color="primary"
   isDisabled={isProcessing || images.length === 0}
   onPress={onSelectAll}
   size="sm"
@@ -168,6 +184,7 @@ Better
 
 ```js
 <Button
+  color="primary"
   isDisabled={isProcessing || images.length === 0}
   size="sm"
   onPress={onSelectAll}

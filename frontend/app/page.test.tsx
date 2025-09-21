@@ -55,7 +55,10 @@ const mockLangData = {
   invalid_resolution_input: "Invalid resolution input. Please enter a positive integer for height.",
   settings_saved: "Settings saved.",
   error: "Error",
-  processing: "Processing...",
+  replacing_image: "Replacing image...",
+  converting_to_jpg: "Converting to JPG...",
+  deleting_image: "Deleting image...",
+  batch_deleting_images: "Deleting selected images...",
   replace_conversion_complete: "Replacement complete!",
   delete_success: "Delete successful!",
   special_k_download_success: "Special K downloaded successfully.",
@@ -229,7 +232,7 @@ describe("MainScreen", () => {
       });
 
       await waitFor(() => {
-        expect(toast.info).toHaveBeenCalledWith(mockLangData.processing);
+        expect(toast.info).toHaveBeenCalledWith(mockLangData.replacing_image);
       });
 
       await waitFor(() => {
@@ -321,7 +324,7 @@ describe("MainScreen", () => {
       });
 
       await waitFor(() => {
-        expect(toast.info).toHaveBeenCalledWith(mockLangData.processing);
+        expect(toast.info).toHaveBeenCalledWith(mockLangData.deleting_image);
       });
 
       await waitFor(() => {
@@ -382,7 +385,7 @@ describe("MainScreen", () => {
       });
 
       await waitFor(() => {
-        expect(toast.info).toHaveBeenCalledWith(mockLangData.processing);
+        expect(toast.info).toHaveBeenCalledWith(mockLangData.batch_deleting_images);
       });
 
       await waitFor(() => {

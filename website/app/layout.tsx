@@ -6,7 +6,7 @@ import {SpeedInsights} from "@vercel/speed-insights/next";
 import {ThemeProvider as NextThemesProvider} from "next-themes";
 import {useRouter} from "next/navigation";
 
-import "@/styles/globals.css";
+import "./globals.css";
 
 export default function RootLayout({
   children,
