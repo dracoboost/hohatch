@@ -1,16 +1,31 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, {useEffect, useState} from "react";
 
 import {type ImageProps} from "../lib/types";
 
-interface MarkdownImageProps extends ImageProps {
+interface MarkdownImageProps extends Omit<ImageProps, "src"> {
+  src?: string | Blob;
   onClick?: () => void;
 }
 
 export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src, width, height, onClick}) => {
-  if (!src) return null;
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    if (src instanceof Blob) {
+      const objectUrl = URL.createObjectURL(src);
+      setImageUrl(objectUrl);
+      return () => URL.revokeObjectURL(objectUrl);
+    } else if (typeof src === "string") {
+      setImageUrl(src);
+    } else {
+      setImageUrl(undefined);
+    }
+  }, [src]);
+
+  if (!imageUrl) return null;
 
   const image = (
     <Image
@@ -18,7 +33,7 @@ export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src, width, he
       className="h-auto w-full rounded-lg shadow-md"
       height={height || 0}
       sizes="100vw"
-      src={src}
+      src={imageUrl}
       width={width || 0}
     />
   );

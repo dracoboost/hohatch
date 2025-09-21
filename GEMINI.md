@@ -78,7 +78,21 @@ This section outlines the main components and technologies used in the HoHatch p
 - **Support Website**
   - The support website is built with React on Vercel.
 
-## 🚀 Development Guidelines
+## Development Guidelines
+
+> [!IMPORTANT]
+> **Pre-Commit Preflight Checks**
+> Before every `git commit`, you must run the preflight checks in both the `frontend` and `website` directories to ensure stability and catch errors early. This is a mandatory step to prevent CI/CD pipeline failures.
+>
+> ```sh
+> # From the frontend directory
+> cd frontend
+> npm run preflight
+>
+> # From the website directory
+> cd ../website
+> npm run preflight
+> ```
 
 This section provides essential guidelines for contributing to the HoHatch project, covering building, testing, and coding standards.
 

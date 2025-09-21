@@ -25,18 +25,26 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({markdownContent
   };
 
   const components = {
-    img: ({src, alt}: {src?: string; alt?: string}) => {
+    img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
+      const {src, alt} = props;
       if (!src) {
         return null;
       }
       const image = images.find((img) => img.src === src);
+
+      const handleClick = () => {
+        if (typeof src === "string") {
+          openLightbox(src);
+        }
+      };
+
       return (
         <MarkdownImage
           alt={alt}
           height={image?.height}
           src={src}
           width={image?.width}
-          onClick={() => openLightbox(src)}
+          onClick={handleClick}
         />
       );
     },

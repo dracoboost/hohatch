@@ -1,5 +1,7 @@
 import {Link} from "@heroui/react";
 import {promises as fs} from "fs";
+// eslint-disable-next-line import/no-named-as-default
+import imageSize from "image-size";
 import path from "path";
 import React from "react";
 
@@ -9,9 +11,6 @@ import {SocialIconButton} from "../components/SocialIconButton";
 import {TableOfContents} from "../components/TableOfContents";
 import {WebsiteHeader} from "../components/WebsiteHeader";
 import {metadata} from "../config/consts";
-
-import imageSize from "image-size";
-
 import {type ImageProps} from "../lib/types";
 
 export {metadata};

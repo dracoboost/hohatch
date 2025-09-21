@@ -175,10 +175,10 @@ const ImageSection: React.FC<ImageSectionProps> = ({
 export default function MainScreen() {
   const [injectImages, setInjectImages] = useState<ImageInfo[]>([]);
   const [dumpImages, setDumpImages] = useState<ImageInfo[]>([]);
-  const [currentPageDump] = useState(1);
-  const [, setCurrentPageInject] = useState(1);
+  const [currentPageDump, setCurrentPageDump] = useState(1);
+  const [currentPageInject, setCurrentPageInject] = useState(1);
   const [isLoadingDump, setIsLoadingDump] = useState<boolean>(true);
-  const [, setIsLoadingInject] = useState<boolean>(true);
+  const [isLoadingInject, setIsLoadingInject] = useState<boolean>(true);
   const [isOperationInProgress, setIsOperationInProgress] = useState<boolean>(false);
   const [currentLangCode, setCurrentLangCode] = useState<"en" | "ja">("en");
   const [i18n, setI18n] = useState<typeof I18N.en | typeof I18N.ja>(I18N.en);
@@ -633,27 +633,27 @@ export default function MainScreen() {
             isOperationInProgress={isOperationInProgress}
             isPartiallySelected={
               selectedImages.size > 0 &&
-              injectImages.some((img) => selectedImages.has(img.path)) &&
-              !injectImages.every((img) => selectedImages.has(img.path))
+              dumpImages.some((img) => selectedImages.has(img.path)) &&
+              !dumpImages.every((img) => selectedImages.has(img.path))
             }
             languageData={i18n}
             mounted={mounted}
-            noImagesMessage={i18n.no_inject_images}
+            noImagesMessage={i18n.no_dump_images}
             selectedImages={selectedImages}
             theme={theme}
             onDownloadJPG={handleDownloadSingle}
             onImageSelectionChange={handleImageSelectionChange}
-            onPageChange={setCurrentPageInject}
-            onReplaceDDS={(imagePath) => handleReplace(imagePath, false)}
+            onPageChange={setCurrentPageDump}
+            onReplaceDDS={(imagePath) => handleReplace(imagePath, true)}
             onSelectAll={() => {
-              const allInjectPaths = injectImages.map((img) => img.path);
-              const areAllSelected = allInjectPaths.every((path) => selectedImages.has(path));
+              const allDumpPaths = dumpImages.map((img) => img.path);
+              const areAllSelected = allDumpPaths.every((path) => selectedImages.has(path));
               if (areAllSelected) {
                 setSelectedImages(
-                  (prev) => new Set([...prev].filter((path) => !allInjectPaths.includes(path))),
+                  (prev) => new Set([...prev].filter((path) => !allDumpPaths.includes(path))),
                 );
               } else {
-                setSelectedImages((prev) => new Set([...prev, ...allInjectPaths]));
+                setSelectedImages((prev) => new Set([...prev, ...allDumpPaths]));
               }
             }}
             onTrash={handleTrash}
