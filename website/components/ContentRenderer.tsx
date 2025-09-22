@@ -1,22 +1,23 @@
 "use client";
 
-import Image from "next/image";
-import React, {ImgHTMLAttributes, useState} from "react";
+import React, {useState} from "react";
 
+import {type ImageProps} from "../lib/types";
 import {Lightbox} from "./Lightbox";
+import {MarkdownImage} from "./MarkdownImage";
 import {MarkdownRenderer} from "./MarkdownRenderer";
 
 interface ContentRendererProps {
   markdownContent: string;
-  imageUrls: string[];
+  images: ImageProps[];
 }
 
-export const ContentRenderer: React.FC<ContentRendererProps> = ({markdownContent, imageUrls}) => {
+export const ContentRenderer: React.FC<ContentRendererProps> = ({markdownContent, images}) => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const openLightbox = (imageSrc: string) => {
-    const index = imageUrls.findIndex((url) => url === imageSrc);
+    const index = images.findIndex(({src}) => src === imageSrc);
     if (index !== -1) {
       setSelectedImageIndex(index);
       setIsLightboxOpen(true);
@@ -24,27 +25,27 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({markdownContent
   };
 
   const components = {
-    img: (props: ImgHTMLAttributes<HTMLImageElement>) => {
+    img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => {
       const {src, alt} = props;
-
-      if (!src || typeof src !== "string") {
+      if (!src) {
         return null;
       }
+      const image = images.find((img) => img.src === src);
+
+      const handleClick = () => {
+        if (typeof src === "string") {
+          openLightbox(src);
+        }
+      };
 
       return (
-        <button
-          className="mt-2 w-full transform transition-transform duration-300 hover:scale-105"
-          onClick={() => openLightbox(src)}
-        >
-          <Image
-            alt={alt || ""}
-            className="h-auto w-full rounded-lg"
-            height={0}
-            sizes="100vw"
-            src={src}
-            width={0}
-          />
-        </button>
+        <MarkdownImage
+          alt={alt}
+          height={image?.height}
+          src={src}
+          width={image?.width}
+          onClick={handleClick}
+        />
       );
     },
   };
@@ -52,9 +53,9 @@ export const ContentRenderer: React.FC<ContentRendererProps> = ({markdownContent
   return (
     <>
       <MarkdownRenderer components={components} markdownContent={markdownContent} />
-      {imageUrls.length > 0 && (
+      {images.length > 0 && (
         <Lightbox
-          images={imageUrls}
+          images={images.map(({src}) => src)}
           initialIndex={selectedImageIndex}
           isOpen={isLightboxOpen}
           onClose={() => setIsLightboxOpen(false)}

@@ -122,7 +122,7 @@ class VersionManager:
             original_content = content
 
             for pattern, replacement in patterns:
-                content = re.sub(pattern, replacement, content)
+                content = re.sub(pattern, replacement, content, flags=re.DOTALL)
 
             if original_content == content:
                 print(f"{description} is already up to date.")
@@ -139,6 +139,7 @@ class VersionManager:
             self.check_changelog_updates()
 
             frontend_version = self._read_version_from_package_json("frontend/package.json")
+            website_version = self._read_version_from_package_json("website/package.json")
 
             self.update_backend_app_version()
 
@@ -146,18 +147,17 @@ class VersionManager:
             page_tsx_path = self.project_root / "website" / "app" / "page.tsx"
             page_tsx_patterns = [
                 (
-                    r'(src="https://img.shields.io/badge/version-)[^"]+-b7465a(")',
-                    rf"\g<1>{frontend_version}-b7465a\g<2>",
+                    r'(src="https://img.shields.io/badge/version-)[^"-]+-b7465a(")', 
+                    r'\g<1>' + frontend_version + r'-b7465a\g<2>',
                 ),
                 (
-                    r'("downloadUrl":\s*"https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip")',
-                    rf"\g<1>{frontend_version}\g<2>",
+                    r'("downloadUrl":\s*"https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip")', 
+                    r'\g<1>' + frontend_version + r'\g<2>',
                 ),
                 (
-                    r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(" isExternal>)"',
-                    rf"\g<1>{frontend_version}\g<2>",
+                    r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(" isExternal>)"', 
+                    r'\g<1>' + frontend_version + r'\g<2>',
                 ),
-                (r"(Download Latest HoHatch \(v)[0-9]+\.[0-9]+\.[0-9]+(\)\])", rf"\g<1>{frontend_version}\g<2>"),
             ]
             self._update_file_content(page_tsx_path, page_tsx_patterns, "website/app/page.tsx")
 
@@ -165,10 +165,9 @@ class VersionManager:
             website_header_path = self.project_root / "website" / "components" / "WebsiteHeader.tsx"
             website_header_patterns = [
                 (
-                    r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip" isExternal>)"',
-                    rf"\g<1>{frontend_version}\g<2>",
+                    r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip" isExternal>)"', 
+                    r'\g<1>' + frontend_version + r'\g<2>',
                 ),
-                (r"(Download Latest HoHatch \(v)[0-9]+\.[0-9]+\.[0-9]+(\)\])", rf"\g<1>{frontend_version}\g<2>"),
             ]
             self._update_file_content(
                 website_header_path, website_header_patterns, "website/components/WebsiteHeader.tsx"
@@ -177,10 +176,10 @@ class VersionManager:
             # Update website/content/index.md
             index_md_path = self.project_root / "website" / "content" / "index.md"
             index_md_patterns = [
-                (r"(\［latest HoHatch \(v)[0-9.]+(\)\])", rf"\g<1>{frontend_version}\g<2>"),
+                (r"(\[Download Latest HoHatch \(v)([0-9.]+\))", r'\g<1>' + frontend_version + r'\g<2>'),
                 (
                     r"(\(https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9.]+(\.zip\))",
-                    rf"\g<1>{frontend_version}\g<2>",
+                    r'\g<1>' + frontend_version + r'\g<2>',
                 ),
             ]
             self._update_file_content(index_md_path, index_md_patterns, "website/content/index.md")
@@ -188,32 +187,86 @@ class VersionManager:
             # Update frontend/config/consts.ts
             self._update_file_content(
                 self.project_root / "frontend" / "config" / "consts.ts",
-                [(r'(export const appVersion = ")([0-9]+\.[0-9]+\.[0-9]+)(")', rf"\g<1>{frontend_version}\g<3>")],
+                [(r'(export const appVersion = ")([0-9]+\.[0-9]+\.[0-9]+)(")', r'\g<1>' + frontend_version + r'\g<3>')],
                 "Frontend consts.ts version",
             )
+
+            # Regex for frontend badges
+            frontend_badge_pattern = r'(<a href="https://github.com/dracoboost/hohatch/releases">.*?<img alt="version" src="https://img.shields.io/badge/version-)[0-9\.]+(-b7465a">.*?</a>)'
+            frontend_badge_replacement = r'\g<1>' + frontend_version + r'\g<2>'
+
+            # Regex for website badges
+            website_badge_pattern = r'(<a href="https://github.com/dracoboost/hohatch/releases">.*?<img alt="website version" src="https://img.shields.io/badge/website%20version-)[0-9\.]+(-lightgrey">.*?</a>)'
+            website_badge_replacement = r'\g<1>' + website_version + r'\g<2>'
 
             # Update main README.md badge
             self._update_file_content(
                 self.project_root / "README.md",
-                [
-                    (
-                        r'(<img alt="version" src="https://img.shields.io/badge/version-)[0-9]+\.[0-9]+\.[0-9]+(-[^\"]*"></a>)',
-                        rf"\g<1>{frontend_version}\g<2>",
-                    )
-                ],
+                [(frontend_badge_pattern, frontend_badge_replacement)],
                 "Main README.md badge",
+            )
+
+            # Update frontend/README.md badge
+            self._update_file_content(
+                self.project_root / "frontend" / "README.md",
+                [(frontend_badge_pattern, frontend_badge_replacement)],
+                "Frontend README.md badge",
+            )
+
+            # Update frontend/CHANGELOG.md badge
+            self._update_file_content(
+                self.project_root / "frontend" / "CHANGELOG.md",
+                [(frontend_badge_pattern, frontend_badge_replacement)],
+                "Frontend CHANGELOG.md badge",
+            )
+
+            # Update frontend/GEMINI.md badge
+            self._update_file_content(
+                self.project_root / "frontend" / "GEMINI.md",
+                [(frontend_badge_pattern, frontend_badge_replacement)],
+                "Frontend GEMINI.md badge",
             )
 
             # Update website/README.md badge
             self._update_file_content(
                 self.project_root / "website" / "README.md",
-                [
-                    (
-                        r"(!\[version\]\(https://img.shields.io/badge/version-)[0-9]+\.[0-9]+\.[0-9]+(-[^)]+\))",
-                        rf"\g<1>{frontend_version}\g<2>",
-                    )
-                ],
+                [(website_badge_pattern, website_badge_replacement)],
                 "Website README.md badge",
+            )
+
+            # Update website/CHANGELOG.md badge
+            self._update_file_content(
+                self.project_root / "website" / "CHANGELOG.md",
+                [(website_badge_pattern, website_badge_replacement)],
+                "Website CHANGELOG.md badge",
+            )
+
+            # Update website/GEMINI.md badge
+            self._update_file_content(
+                self.project_root / "website" / "GEMINI.md",
+                [(website_badge_pattern, website_badge_replacement)],
+                "Website GEMINI.md badge",
+            )
+
+            # Update website/docs/FEATURES.md badge
+            self._update_file_content(
+                self.project_root / "website" / "docs" / "FEATURES.md",
+                [(website_badge_pattern, website_badge_replacement)],
+                "Website FEATURES.md badge",
+            )
+
+            # Update GEMINI.md badge
+            self._update_file_content(
+                self.project_root / "GEMINI.md",
+                [(frontend_badge_pattern, frontend_badge_replacement)],
+                "Main GEMINI.md badge",
+            )
+
+            # Update website/GEMINI.md badge
+            self._update_file_content(
+                self.project_root / "website" / "GEMINI.md",
+                [(website_badge_pattern, website_badge_replacement)],
+                "Website GEMINI.md badge",
             )
 
             # Update README.md download link
@@ -221,8 +274,8 @@ class VersionManager:
                 self.project_root / "README.md",
                 [
                     (
-                        r"(\[HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\]\(https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9.]+(\.zip\))",
-                        rf"\g<1>{frontend_version}\g<2>{frontend_version}\g<3>",
+                        r"(\[HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip\](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9.]+(\.zip))",
+                        r'\g<1>' + frontend_version + r'\g<2>' + frontend_version + r'\g<3>',
                     )
                 ],
                 "Main README.md download link",

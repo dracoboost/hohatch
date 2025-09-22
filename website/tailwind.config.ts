@@ -15,12 +15,11 @@ const config = {
   theme: {
     extend: {
       colors: {
+        background: "#0d1117",
+        foreground: "#f0f6fc",
         "hochan-red": "#B7465A",
-        "hochan-navy-blue": "#121826",
         "hochan-white": "#d9cad1",
-        background: "#121826",
-        foreground: "#d9cad1",
-        "link-color": "#D86C7F",
+        "link-color": "#B7465A",
       },
       fontFamily: {
         sans: ["var(--font-sans)"],

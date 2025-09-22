@@ -1,7 +1,9 @@
 import webview
 import os
 import sys
+import logging
 from pathlib import Path
+import appdirs
 
 # Add the project root to sys.path to allow for absolute imports from the 'backend' package.
 if getattr(sys, "frozen", False):
@@ -18,7 +20,25 @@ else:
 # especially when bundled with PyInstaller.
 from backend.api import Api
 
+def setup_logging():
+    log_dir = Path(appdirs.user_data_dir("HoHatch", "")) / "logs"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_file = log_dir / "hohatch.log"
+
+    # Configure root logger
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+        handlers=[
+            logging.StreamHandler(sys.stdout),
+            logging.FileHandler(log_file, encoding="utf-8"),
+        ],
+    )
+    logging.info("Logging initialized.")
+    logging.info(f"Log file path: {log_file}")
+
 if __name__ == "__main__":
+    setup_logging()
     # Determine the path to the frontend build directory using pathlib for robustness
     if getattr(sys, "frozen", False):
 

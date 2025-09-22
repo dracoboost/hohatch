@@ -16,7 +16,7 @@ interface ImageSectionProps {
   currentPage: number;
   images: ImageInfo[];
   imagesPerPage: number;
-  isProcessing: boolean;
+  isOperationInProgress: boolean;
   languageData: typeof I18N.en | typeof I18N.ja;
   isLoading: boolean;
   noImagesMessage: string;
@@ -38,7 +38,7 @@ const ImageSection: React.FC<ImageSectionProps> = ({
   currentPage,
   images,
   imagesPerPage,
-  isProcessing,
+  isOperationInProgress,
   isLoading,
   mounted,
   languageData,
@@ -64,7 +64,7 @@ const ImageSection: React.FC<ImageSectionProps> = ({
 
   return (
     <div
-      className="flex flex-grow flex-col rounded-lg bg-gray-300 p-1 dark:bg-gray-800"
+      className="flex flex-grow flex-col rounded-lg bg-gray-100 p-1 dark:bg-gray-800"
       data-testid={`image-section-${folderType}`}
     >
       <div className="flex w-full flex-row items-center gap-1">
@@ -83,7 +83,7 @@ const ImageSection: React.FC<ImageSectionProps> = ({
                 isIconOnly
                 aria-label="Select All"
                 buttonSize="size-8"
-                isDisabled={isProcessing}
+                isDisabled={isOperationInProgress}
                 onClick={onSelectAll}
               >
                 <SelectAllIcon
@@ -126,7 +126,7 @@ const ImageSection: React.FC<ImageSectionProps> = ({
                 key={index}
                 className="group relative overflow-hidden rounded-lg border border-gray-700 shadow-md transition-shadow duration-300"
               >
-                <div className="aspect-[53/64] w-full bg-gray-200 dark:bg-gray-900">
+                <div className="aspect-[53/64] w-full bg-white dark:bg-gray-900">
                   <Skeleton className="h-full w-full" />
                 </div>
               </div>
@@ -139,7 +139,7 @@ const ImageSection: React.FC<ImageSectionProps> = ({
                 <ImageCard
                   key={image.path}
                   image={image}
-                  isProcessing={isProcessing}
+                  isOperationInProgress={isOperationInProgress}
                   isSelected={selectedImages.has(image.path)}
                   languageData={languageData}
                   mounted={mounted}
@@ -154,7 +154,7 @@ const ImageSection: React.FC<ImageSectionProps> = ({
                   key={image.path}
                   className="group relative overflow-hidden rounded-lg border border-gray-700 shadow-md transition-shadow duration-300"
                 >
-                  <div className="aspect-[53/64] w-full bg-gray-200 dark:bg-gray-900">
+                  <div className="aspect-[53/64] w-full bg-white dark:bg-gray-900">
                     <Skeleton className="h-full w-full" />
                   </div>
                 </div>
@@ -179,7 +179,7 @@ export default function MainScreen() {
   const [currentPageInject, setCurrentPageInject] = useState(1);
   const [isLoadingDump, setIsLoadingDump] = useState<boolean>(true);
   const [isLoadingInject, setIsLoadingInject] = useState<boolean>(true);
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [isOperationInProgress, setIsOperationInProgress] = useState<boolean>(false);
   const [currentLangCode, setCurrentLangCode] = useState<"en" | "ja">("en");
   const [i18n, setI18n] = useState<typeof I18N.en | typeof I18N.ja>(I18N.en);
   const [selectedImages, setSelectedImages] = useState<Set<string>>(new Set());
@@ -368,8 +368,8 @@ export default function MainScreen() {
   };
 
   const handleReplace = async (imagePath: string, isDumpImage: boolean) => {
-    if (isProcessing) return;
-    setIsProcessing(true);
+    if (isOperationInProgress) return;
+    setIsOperationInProgress(true);
 
     try {
       const replacementImageResult = await window.pywebview.api.open_file_dialog("file_open", {
@@ -385,7 +385,7 @@ export default function MainScreen() {
         return;
       }
 
-      toast.info(i18n.processing || "Replacing DDS image...");
+      toast.info(i18n.replacing_image);
 
       const setImages = isDumpImage ? setDumpImages : setInjectImages;
       setImages((prev) => prev.map((img) => (img.path === imagePath ? {...img, src: ""} : img)));
@@ -414,14 +414,14 @@ export default function MainScreen() {
         }
       }
     } finally {
-      setIsProcessing(false);
+      setIsOperationInProgress(false);
     }
   };
 
   const handleDownloadSingle = async (imagePath: string) => {
-    if (isProcessing) return;
-    setIsProcessing(true);
-    toast.info(i18n.processing || "Converting single DDS to JPG...");
+    if (isOperationInProgress) return;
+    setIsOperationInProgress(true);
+    toast.info(i18n.converting_to_jpg);
     try {
       const outputFolderResult = await window.pywebview.api.open_file_dialog("folder");
 
@@ -445,14 +445,14 @@ export default function MainScreen() {
         }
       }
     } finally {
-      setIsProcessing(false);
+      setIsOperationInProgress(false);
     }
   };
 
   const handleTrash = async (imagePath: string) => {
-    if (isProcessing) return;
-    setIsProcessing(true);
-    toast.info(i18n.processing || "Deleting image...");
+    if (isOperationInProgress) return;
+    setIsOperationInProgress(true);
+    toast.info(i18n.deleting_image);
     try {
       const result = await window.pywebview.api.delete_dds_file(imagePath);
       if (result.success) {
@@ -467,13 +467,13 @@ export default function MainScreen() {
         toast.error(result.error || i18n.delete_failed);
       }
     } finally {
-      setIsProcessing(false);
+      setIsOperationInProgress(false);
     }
   };
 
   const handleBatchDownload = async () => {
-    if (isProcessing || selectedImages.size === 0) return;
-    setIsProcessing(true);
+    if (isOperationInProgress || selectedImages.size === 0) return;
+    setIsOperationInProgress(true);
     toast.info(i18n.batch_download_processing || "Downloading selected images...");
     try {
       const outputFolderResult = await window.pywebview.api.open_file_dialog("folder");
@@ -495,14 +495,14 @@ export default function MainScreen() {
         }
       }
     } finally {
-      setIsProcessing(false);
+      setIsOperationInProgress(false);
     }
   };
 
   const handleBatchTrash = async () => {
-    if (isProcessing || selectedImages.size === 0) return;
-    setIsProcessing(true);
-    toast.info(i18n.processing || "Deleting selected images...");
+    if (isOperationInProgress || selectedImages.size === 0) return;
+    setIsOperationInProgress(true);
+    toast.info(i18n.batch_deleting_images);
     try {
       const result = await window.pywebview.api.batch_delete_selected_dds_files(
         Array.from(selectedImages),
@@ -516,15 +516,15 @@ export default function MainScreen() {
         toast.error(result.error || i18n.batch_delete_failed);
       }
     } finally {
-      setIsProcessing(false);
+      setIsOperationInProgress(false);
     }
   };
 
   return (
-    <div className="flex min-h-screen flex-col bg-gray-200 text-gray-900 dark:bg-gray-900 dark:text-white">
+    <div className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-gray-900 dark:text-white">
       <Toaster richColors position="bottom-right" />
       <Header
-        isProcessing={isProcessing}
+        isOperationInProgress={isOperationInProgress}
         lang={currentLangCode}
         mounted={mounted}
         page="index"
@@ -630,12 +630,12 @@ export default function MainScreen() {
               selectedImages.size > 0 && dumpImages.every((img) => selectedImages.has(img.path))
             }
             isLoading={isLoadingDump}
+            isOperationInProgress={isOperationInProgress}
             isPartiallySelected={
               selectedImages.size > 0 &&
               dumpImages.some((img) => selectedImages.has(img.path)) &&
               !dumpImages.every((img) => selectedImages.has(img.path))
             }
-            isProcessing={isProcessing}
             languageData={i18n}
             mounted={mounted}
             noImagesMessage={i18n.no_dump_images}
@@ -654,45 +654,6 @@ export default function MainScreen() {
                 );
               } else {
                 setSelectedImages((prev) => new Set([...prev, ...allDumpPaths]));
-              }
-            }}
-            onTrash={handleTrash}
-          />
-        </div>
-        <div className={`flex flex-grow flex-col gap-2 ${activeView === "inject" ? "" : "hidden"}`}>
-          <ImageSection
-            currentPage={currentPageInject}
-            folderType="inject"
-            images={injectImages}
-            imagesPerPage={imagesPerPage}
-            isAllSelected={
-              selectedImages.size > 0 && injectImages.every((img) => selectedImages.has(img.path))
-            }
-            isLoading={isLoadingInject}
-            isPartiallySelected={
-              selectedImages.size > 0 &&
-              injectImages.some((img) => selectedImages.has(img.path)) &&
-              !injectImages.every((img) => selectedImages.has(img.path))
-            }
-            isProcessing={isProcessing}
-            languageData={i18n}
-            mounted={mounted}
-            noImagesMessage={i18n.no_inject_images}
-            selectedImages={selectedImages}
-            theme={theme}
-            onDownloadJPG={handleDownloadSingle}
-            onImageSelectionChange={handleImageSelectionChange}
-            onPageChange={setCurrentPageInject}
-            onReplaceDDS={(imagePath) => handleReplace(imagePath, false)}
-            onSelectAll={() => {
-              const allInjectPaths = injectImages.map((img) => img.path);
-              const areAllSelected = allInjectPaths.every((path) => selectedImages.has(path));
-              if (areAllSelected) {
-                setSelectedImages(
-                  (prev) => new Set([...prev].filter((path) => !allInjectPaths.includes(path))),
-                );
-              } else {
-                setSelectedImages((prev) => new Set([...prev, ...allInjectPaths]));
               }
             }}
             onTrash={handleTrash}

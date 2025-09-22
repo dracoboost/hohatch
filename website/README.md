@@ -1,25 +1,40 @@
-[![version](https://img.shields.io/badge/version-1.1.0-1d253c)](https://github.com/dracoboost/hohatch/blob/master/website/package.json)
+<p align="center">
+  <a href="https://hohatch.draco.moe" target="_blank">
+    <img alt="HoHatch" src="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo.png" height="60">
+  </a>
+  <span>Website 🐤README</span>
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+  <p align="center">
+    <a href="https://github.com/dracoboost/hohatch/releases">
+      <img alt="website version" src="https://img.shields.io/badge/website%20version-1.0.5-lightgrey">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
+      <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
+    </a>
+  </p>
+</p>
 
-## Getting Started
+> [!TIP]
+> This README provides an overview of the HoHatch support website. For developer-focused information, including setup and contribution guidelines, please see [`GEMINI.md`](GEMINI.md).
 
-First, run the development server:
+This repository contains the source code for the official HoHatch support website, available at <https://hohatch.draco.moe>.
 
-```bash
-npm run dev
-```
+## 🎯 Purpose
 
-To build the website for production:
+The website serves as the central hub for HoHatch users, providing:
 
-```bash
-npm run build
-```
+- Detailed guides on how to use the application.
+- Download links for the latest version.
+- Links to community forums and the project's source code.
 
-To run comprehensive checks (linting, type checking, and building):
+## ✨ Features
 
-```bash
-npm run preflight
-```
+A detailed list of features can be found in [`website/docs/FEATURES.md`](docs/FEATURES.md).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Development
+
+For instructions on how to set up the development environment and contribute to the website, please refer to [`GEMINI.md`](GEMINI.md).
+
+## 📜 License
+
+This project is licensed under the MIT License. See the [LICENSE](../LICENSE) file for details.

@@ -70,7 +70,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: venv
-          key: ${{ runner.os }}-python-${{ hashFiles('requirements.txt') }}
+          key: ${{ runner.os }}-python-${{ hashFiles('backend/requirements.txt') }}
           restore-keys: |
             ${{ runner.os }}-python-
 
@@ -78,7 +78,7 @@ jobs:
         run: |
           python -m venv venv
           venv\Scripts\python -m pip install --upgrade pip
-          venv\Scripts\python -m pip install -r requirements.txt
+          venv\Scripts\python -m pip install -r backend/requirements.txt
         shell: powershell
 
       - name: Set Up Node.js

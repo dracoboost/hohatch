@@ -3,14 +3,16 @@
 import Image from "next/image";
 import React, {useEffect, useState} from "react";
 
-interface MarkdownImageProps {
-  alt?: string;
+import {type ImageProps} from "../lib/types";
+
+interface MarkdownImageProps extends Omit<ImageProps, "src"> {
   src?: string | Blob;
-  width?: number; // Add width
-  height?: number; // Add height
+  width?: number;
+  height?: number;
+  onClick?: () => void;
 }
 
-export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src, width, height}) => {
+export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src, width, height, onClick}) => {
   const [imageUrl, setImageUrl] = useState<string | undefined>(undefined);
 
   useEffect(() => {
@@ -27,32 +29,37 @@ export const MarkdownImage: React.FC<MarkdownImageProps> = ({alt, src, width, he
 
   if (!imageUrl) return null;
 
-  // next/image requires width and height. If not provided by rehype-img-size (e.g., external images),
-  // we can provide a fallback or handle it. For now, let's assume they are always provided for local images.
-  // If width or height are undefined, next/image will throw an error.
-  // We should ensure that for local images, these are always provided by rehype-img-size.
-  // For external images, we might need to fetch dimensions or use layout="fill" with a parent container.
-  // For simplicity, let's assume width and height are always numbers here, as rehype-img-size will provide them.
-  // If they are not provided, next/image will error, which is a good indicator something is wrong.
-  // next/image requires width and height. If not provided by rehype-img-size (e.g., external images),
-  // it will throw an error. For local images, these should always be provided by rehype-img-size.
-  // If width or height are missing, it indicates a problem with rehype-img-size or the image source.
-  // We will not provide a fallback <img> tag to ensure all images are optimized by next/image.
-  // If dimensions are truly unknown for external images, consider using layout="fill" with a parent container.
+  // next/image requires width and height. If not provided by rehype-img-size, it will throw an error.
+  // This check ensures that we don't try to render an image without dimensions, which is crucial for CLS.
   if (!width || !height) {
+    // For external images, dimensions might be missing. We can either use layout="fill"
+    // or simply fall back to a standard <img> tag if we want to display them without fixed sizes.
+    // However, for this project, we'll enforce dimensions to maintain layout stability.
     console.error("Image dimensions (width, height) not provided for next/image:", imageUrl);
-    // In a production environment, you might want to return null or a placeholder here,
-    // but for development, an error is more informative.
-    return null; // Or throw new Error("Missing image dimensions");
+    return null; // Don't render the image if dimensions are missing.
   }
 
-  return (
+  const image = (
     <Image
       alt={alt || ""}
-      className="rounded-lg shadow-md"
-      height={height} // Use dynamic height
+      className="rounded-lg shadow-md" // Keep simple styling, let width/height control size
+      height={height}
       src={imageUrl}
-      width={width} // Use dynamic width
+      width={width}
     />
   );
+
+  if (onClick) {
+    return (
+      <button
+        className="mt-2 w-full transform transition-transform duration-300 hover:scale-105"
+        type="button"
+        onClick={onClick}
+      >
+        {image}
+      </button>
+    );
+  }
+
+  return image;
 };

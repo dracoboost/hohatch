@@ -32,8 +32,6 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   markdownContent,
   components: overrideComponents,
 }) => {
-  // const {openLightbox} = useLightbox(); // Removed
-
   const defaultComponents: Components = {
     a: (props: AnchorProps) => {
       const isExternal =
@@ -50,7 +48,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     },
     blockquote: ({children}) => {
       return (
-        <div className="mt-2 rounded-lg bg-slate-700 px-4 py-0.5 text-base text-white" role="alert">
+        <div className="mt-2 rounded-lg bg-slate-800 px-4 py-0.5 text-base text-white" role="alert">
           {children}
         </div>
       );

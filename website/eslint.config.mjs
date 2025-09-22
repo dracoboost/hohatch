@@ -16,7 +16,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
   baseDirectory: __dirname,
-  recommendedConfig: {},
 });
 
 export default defineConfig([
@@ -35,7 +34,7 @@ export default defineConfig([
   {
     extends: fixupConfigRules(
       compat.extends(
-        "next/core-web-vitals",
+        "plugin:@next/next/recommended",
         "plugin:react/recommended",
         "prettier",
         "plugin:react-hooks/recommended",
@@ -89,7 +88,6 @@ export default defineConfig([
       "no-unused-vars": "off",
       "unused-imports/no-unused-vars": "off",
       "unused-imports/no-unused-imports": "warn",
-      
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
@@ -109,6 +107,12 @@ export default defineConfig([
         },
       ],
       "padding-line-between-statements": "off",
+    },
+  },
+  {
+    files: ["**/*.test.ts", "**/*.test.tsx"],
+    rules: {
+      "@next/next/no-img-element": "off",
     },
   },
 ]);

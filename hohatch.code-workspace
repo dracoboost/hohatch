@@ -1,24 +1,36 @@
 {
   "folders": [
     {
+      "path": "."
+    },
+    {
       "path": "frontend"
     },
     {
       "path": "website"
-    },
-    {
-      "path": "."
     }
   ],
+  // Explicitly enforce LF for TypeScript and TSX
+  "[typescript]": {
+    "files.eol": "\n"
+  },
+  "[typescriptreact]": {
+    "files.eol": "\n"
+  },
   "settings": {
     "cSpell.words": [
       "autouse",
       "Baloo",
       "balootamma",
+      "EJSONPARSE",
+      "esque",
+      "functionalize",
       "hohatch",
       "LANCZOS",
+      "Lightbox",
       "oklch",
       "onexc",
+      "Pythonic",
       "PYTHONPATH",
       "pywebviewready",
       "sonner",
@@ -26,7 +38,9 @@
       "startfile",
       "Tamma",
       "unevolved",
-      "UNORM"
+      "UNORM",
+      "venv",
+      "virtualenv"
     ]
   }
 }

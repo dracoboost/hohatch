@@ -4,8 +4,7 @@ import {HeroUIProvider} from "@heroui/system";
 import {ThemeProvider as NextThemesProvider} from "next-themes";
 import {useRouter} from "next/navigation";
 
-import "@/styles/globals.css";
-import "@/styles/tailwind.css";
+import "./globals.css";
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   const router = useRouter();

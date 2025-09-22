@@ -6,10 +6,8 @@ const MarkdownLink = forwardRef<HTMLAnchorElement, LinkProps>((props, ref) => {
 
   return (
     <Component
-      {...getLinkProps({
-        className:
-          "inline-flex items-center text-link-color hover:opacity-75 active:opacity-50 transition-opacity duration-200",
-      })}
+      {...getLinkProps()}
+      className="text-hochan-red inline-flex items-center transition-opacity duration-200 hover:opacity-75 active:opacity-50"
     >
       {children}
     </Component>

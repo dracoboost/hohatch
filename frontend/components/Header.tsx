@@ -17,7 +17,7 @@ interface HeaderProps {
   page: "index" | "settings";
   onReload?: () => void;
   selectedImagesCount?: number;
-  isProcessing?: boolean;
+  isOperationInProgress?: boolean;
   onBatchDownload?: () => Promise<void>;
   onBatchTrash?: () => Promise<void>;
   lang?: "en" | "ja";
@@ -26,7 +26,7 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  isProcessing,
+  isOperationInProgress,
   selectedImagesCount,
   lang = "en",
   mounted,
@@ -159,24 +159,28 @@ export const Header: React.FC<HeaderProps> = ({
           <>
             {(selectedImagesCount ?? 0) > 0 && (
               <>
-                <button
-                  className="inline-flex items-center justify-center rounded-md bg-sky-500 px-3 py-1 text-sm font-semibold text-white transition-colors duration-200 hover:bg-sky-600"
+                <Button
+                  className="flex items-center gap-2"
+                  color="primary"
                   data-testid="batch-download-button"
-                  disabled={isProcessing}
+                  isDisabled={isOperationInProgress}
+                  size="sm"
                   onClick={onBatchDownload}
                 >
                   <Download color="white" size={16} />
                   {i18n.download_to_btn_text} ({selectedImagesCount})
-                </button>
-                <button
-                  className="inline-flex items-center justify-center rounded-md bg-rose-500 px-3 py-1 text-sm font-semibold text-white transition-colors duration-200 hover:bg-rose-600"
+                </Button>
+                <Button
+                  className="flex items-center gap-2"
+                  color="danger"
                   data-testid="batch-trash-button"
-                  disabled={isProcessing}
+                  isDisabled={isOperationInProgress}
+                  size="sm"
                   onClick={onBatchTrash}
                 >
                   <Trash2 color="white" size={16} />
                   {i18n.trash_btn_text} ({selectedImagesCount})
-                </button>
+                </Button>
               </>
             )}
           </>

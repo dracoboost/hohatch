@@ -1,22 +1,56 @@
-# 📄 HoHatch Application Changelog
+<p align="center">
+  <a href="https://hohatch.draco.moe" target="_blank">
+    <img alt="HoHatch" src="https://raw.githubusercontent.com/dracoboost/hohatch/refs/heads/master/images/hohatch-logo.png" height="60">
+  </a>
+  <span>Application 📝CHANGELOG</span>
 
-All notable changes to this project will be documented in this file.
+  <p align="center">
+    <a href="https://github.com/dracoboost/hohatch/releases">
+      <img alt="version" src="https://img.shields.io/badge/version-1.1.0-b7465a">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml">
+      <img alt="Preflight" src="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml/badge.svg">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/actions/workflows/release.yml">
+      <img alt="Release Application" src="https://github.com/dracoboost/hohatch/actions/workflows/release.yml/badge.svg">
+    </a>
+    <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
+      <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
+    </a>
+  </p>
+</p>
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+> [!TIP]
+> All notable changes to this project will be documented in this file.
+> The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
-## [1.1.0] - 2025-09-07
+## [1.1.0] - 2025-09-21
 
-### Fixed
+### Added
 
-- Resolved a critical `ImportError` for relative imports that occurred in the packaged executable by converting all backend imports to absolute paths.
-- Removed an unused variable assignment in `backend/services.py`.
+- Implemented comprehensive logging for the backend, saving logs to `hohatch.log` in the user data directory.
+- Added an "Open Log Folder" button in the settings to easily access log files.
+- Added an Aspect Ratio selector in settings, allowing users to lock the aspect ratio for image conversions or set custom dimensions.
 
 ### Changed
 
+- **Refactored UI Components**:
+  - The `Button` component was completely overhauled with new variants, colors, and sizes for project-wide consistency.
+  - Replaced generic "Processing..." notifications with more specific messages for each operation (e.g., "Replacing image...", "Converting to JPG...").
+- **Improved Caching**: The logic for caching display images is now more efficient, checking file modification times to avoid unnecessary reconversions.
+- **Project Structure**:
+  - Consolidated documentation into a new `GEMINI.md` system, removing the old `docs` folder.
+  - Updated and standardized all `README.md` and `CHANGELOG.md` headers.
+  - Unified `npm` scripts for versioning and dependency management (`update-versions`, corrected `freeze` path).
 - Updated the release workflow to use `ncipollo/release-action@v1`, resolving `set-output` deprecation warnings.
+
+### Fixed
+
+- Enhanced backend stability with more robust error handling and logging in `texconv` service and file operations.
+- Resolved a critical `ImportError` for relative imports that occurred in the packaged executable by converting all backend imports to absolute paths.
+- Removed an unused variable assignment in `backend/services.py`.
 
 ## [1.0.4] - 2025-09-06
 
