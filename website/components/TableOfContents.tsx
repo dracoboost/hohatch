@@ -3,7 +3,7 @@
 import {Link} from "@heroui/react";
 import React, {useEffect, useState} from "react";
 
-import {HeadingItem, useHeadingsData} from "../lib/useHeadingsData";
+import {HeadingItem} from "../lib/getHeadingsFromMarkdown";
 import {useIntersectionObserver} from "../lib/useIntersectionObserver";
 
 interface HeadingsProps {
@@ -77,23 +77,22 @@ const Headings: React.FC<HeadingsProps> = ({headings, activeId}) => (
   </ul>
 );
 
-export const TableOfContents: React.FC = () => {
+export const TableOfContents: React.FC<{headings: HeadingItem[]}> = ({headings}) => {
   const [activeId, setActiveId] = useState<string>();
-  const {nestedHeadings} = useHeadingsData();
   useIntersectionObserver(setActiveId, activeId);
 
   useEffect(() => {
-    if (nestedHeadings.length > 0 && !activeId) {
-      setActiveId(nestedHeadings[0].id);
+    if (headings.length > 0 && !activeId) {
+      setActiveId(headings[0].id);
     }
-  }, [nestedHeadings, activeId]);
+  }, [headings, activeId]);
 
   return (
     <nav
       aria-label="Table of contents"
       className="sticky top-6 max-h-[calc(100vh-40px)] overflow-y-auto"
     >
-      <Headings activeId={activeId} headings={nestedHeadings} />
+      <Headings activeId={activeId} headings={headings} />
     </nav>
   );
 };

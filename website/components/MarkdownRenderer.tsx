@@ -4,7 +4,6 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
-// import {useLightbox} from "./Lightbox"; // Removed
 import {MarkdownImage} from "./MarkdownImage";
 import {MarkdownLink} from "./MarkdownLink";
 
@@ -92,7 +91,12 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   const components = {...defaultComponents, ...overrideComponents};
 
   return (
-    <ReactMarkdown components={components} remarkPlugins={[remarkGfm]}>
+    <ReactMarkdown
+      components={components}
+      // @ts-ignore: rehypeRaw and rehypeImgSize might not have direct type definitions or they are not picked up
+      rehypePlugins={[rehypeRaw, [rehypeImgSize, {dir: "public"}]]}
+      remarkPlugins={[remarkGfm]}
+    >
       {markdownContent}
     </ReactMarkdown>
   );

@@ -9,12 +9,17 @@ import {SocialIconButton} from "../components/SocialIconButton";
 import {TableOfContents} from "../components/TableOfContents";
 import {WebsiteHeader} from "../components/WebsiteHeader";
 import {metadata} from "../config/consts";
+import {HeadingItem, getHeadingsFromMarkdown} from "../lib/getHeadingsFromMarkdown";
+
+// Add this import
 
 export {metadata};
 
 export default async function Home() {
   const markdownFilePath = path.join(process.cwd(), "content", "index.md");
   const markdownContent = await fs.readFile(markdownFilePath, "utf-8");
+
+  const nestedHeadings: HeadingItem[] = await getHeadingsFromMarkdown(markdownContent); // Call the function
 
   const appVersion = packageJson.version;
 
@@ -50,7 +55,7 @@ export default async function Home() {
           {/* Table of Contents - Right (lg only) */}
           <nav className="bg-muted/30 sticky top-0 h-screen w-[200px] overflow-y-auto border-l border-slate-700 px-6">
             <div className="sticky top-6">
-              <TableOfContents />
+              <TableOfContents headings={nestedHeadings} />
             </div>
           </nav>
         </div>
@@ -64,7 +69,7 @@ export default async function Home() {
             </article>
             <nav className="bg-muted/30 w-[200px] border-l border-slate-700 p-6">
               <div className="sticky top-4">
-                <TableOfContents />
+                <TableOfContents headings={nestedHeadings} />
               </div>
             </nav>
           </div>
