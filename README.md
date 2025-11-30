@@ -32,7 +32,7 @@
 
 ## 📦 Installation
 
-To use HoHatch, download the latest HoHatch application directly: [HoHatch-v1.1.0.zip](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.1.0.zip).
+To use HoHatch, download the latest HoHatch application directly: [HoHatch-v1.2.0.zip](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v1.2.0.zip).
 > [!NOTE]
 > For older versions, go to the [Releases](https://github.com/dracoboost/hohatch/releases) page.
 

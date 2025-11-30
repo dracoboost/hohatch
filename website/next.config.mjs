@@ -7,11 +7,17 @@ const nextConfig = {
     unoptimized: true,
   },
   trailingSlash: true,
-  webpack: (config) => {
+  webpack: (config, {isServer}) => {
     config.module.rules.push({
       test: /\.md$/,
       use: "raw-loader",
     });
+
+    if (!isServer) {
+      config.externals.push({
+        "rehype-img-size": "rehype-img-size",
+      });
+    }
 
     return config;
   },

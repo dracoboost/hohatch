@@ -2,6 +2,8 @@
 
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeImgSize from "rehype-img-size";
+import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
 import {MarkdownImage} from "./MarkdownImage";

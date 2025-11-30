@@ -1,6 +1,6 @@
 import {Link} from "@heroui/react";
 import {promises as fs} from "fs";
-import imageSize from "image-size";
+import {imageSize} from "image-size";
 import path from "path";
 import React from "react";
 

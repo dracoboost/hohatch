@@ -34,6 +34,7 @@ export default defineConfig([
   {
     extends: fixupConfigRules(
       compat.extends(
+        "eslint-config-next/core-web-vitals",
         "plugin:@next/next/recommended",
         "plugin:react/recommended",
         "prettier",
@@ -66,6 +67,9 @@ export default defineConfig([
     },
     settings: {
       "import/resolver": {
+        node: {
+          extensions: [".js", ".jsx", ".ts", ".tsx"],
+        },
         alias: {
           map: [["@", "."]],
           extensions: [".js", ".jsx", ".ts", ".tsx"],
@@ -106,7 +110,7 @@ export default defineConfig([
           reservedFirst: true,
         },
       ],
-      "padding-line-between-statements": "off",
+      "import/no-unresolved": ["error", { ignore: ["unist"] }],
     },
   },
   {

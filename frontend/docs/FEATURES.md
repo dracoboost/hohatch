@@ -6,7 +6,7 @@
 
   <p align="center">
     <a href="https://github.com/dracoboost/hohatch/releases">
-      <img alt="version" src="https://img.shields.io/badge/version-1.1.0-b7465a">
+      <img alt="version" src="https://img.shields.io/badge/version-1.2.0-b7465a">
     </a>
     <a href="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml">
       <img alt="Preflight" src="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml/badge.svg">

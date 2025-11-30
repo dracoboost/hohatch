@@ -227,6 +227,13 @@ class VersionManager:
                 "Frontend GEMINI.md badge",
             )
 
+            # Update frontend/docs/FEATURES.md badge
+            self._update_file_content(
+                self.project_root / "frontend" / "docs" / "FEATURES.md",
+                [(frontend_badge_pattern, frontend_badge_replacement)],
+                "Frontend FEATURES.md badge",
+            )
+
             # Update website/README.md badge
             self._update_file_content(
                 self.project_root / "website" / "README.md",
@@ -274,8 +281,8 @@ class VersionManager:
                 self.project_root / "README.md",
                 [
                     (
-                        r"(\[HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip\](https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9.]+(\.zip))",
-                        r'\g<1>' + frontend_version + r'\g<2>' + frontend_version + r'\g<3>',
+                        r"(HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip)",
+                        r"\g<1>" + frontend_version + r"\g<2>",
                     )
                 ],
                 "Main README.md download link",
