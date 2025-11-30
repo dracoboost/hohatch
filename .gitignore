@@ -4,6 +4,7 @@ _next/
 .vscode/
 build/
 dist/
+hohatch/
 lightbox-app/
 node_modules/
 venv/

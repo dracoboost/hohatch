@@ -173,12 +173,17 @@ const ImageSection: React.FC<ImageSectionProps> = ({
 };
 
 export default function MainScreen() {
-  const [injectImages, setInjectImages] = useState<ImageInfo[]>([]);
-  const [dumpImages, setDumpImages] = useState<ImageInfo[]>([]);
-  const [currentPageDump, setCurrentPageDump] = useState(1);
-  const [currentPageInject, setCurrentPageInject] = useState(1);
-  const [isLoadingDump, setIsLoadingDump] = useState<boolean>(true);
-  const [isLoadingInject, setIsLoadingInject] = useState<boolean>(true);
+  interface ImageState {
+    images: ImageInfo[];
+    currentPage: number;
+    isLoading: boolean;
+  }
+
+  const [imageStates, setImageStates] = useState<Record<"dump" | "inject", ImageState>>({
+    dump: {images: [], currentPage: 1, isLoading: true},
+    inject: {images: [], currentPage: 1, isLoading: true},
+  });
+
   const [isOperationInProgress, setIsOperationInProgress] = useState<boolean>(false);
   const [currentLangCode, setCurrentLangCode] = useState<"en" | "ja">("en");
   const [i18n, setI18n] = useState<typeof I18N.en | typeof I18N.ja>(I18N.en);
@@ -215,16 +220,25 @@ export default function MainScreen() {
       options: {use_hash_check?: boolean; silent?: boolean} = {},
     ) => {
       const {use_hash_check = false, silent = false} = options;
-      const setIsLoading = folderType === "dump" ? setIsLoadingDump : setIsLoadingInject;
-      const setImages = folderType === "dump" ? setDumpImages : setInjectImages;
 
       if (!silent) {
-        setIsLoading(true);
+        setImageStates((prev) => ({
+          ...prev,
+          [folderType]: {...prev[folderType], isLoading: true},
+        }));
       }
       try {
         const response = await window.pywebview.api.get_image_list(folderType, use_hash_check);
         if (response.success) {
-          setImages(ensureArray(response.images));
+          console.log(`Loaded ${response.images.length} ${folderType} images from backend.`);
+          const imagesWithIsDump = ensureArray(response.images).map((img) => ({
+            ...img,
+            isDumpImage: folderType === "dump",
+          }));
+          setImageStates((prev) => ({
+            ...prev,
+            [folderType]: {...prev[folderType], images: imagesWithIsDump},
+          }));
         } else {
           console.error(`Failed to load ${folderType} images:`, response.error);
         }
@@ -232,7 +246,10 @@ export default function MainScreen() {
         console.error(`Error loading ${folderType} images:`, e);
       } finally {
         if (!silent) {
-          setIsLoading(false);
+          setImageStates((prev) => ({
+            ...prev,
+            [folderType]: {...prev[folderType], isLoading: false},
+          }));
         }
       }
     },
@@ -240,7 +257,7 @@ export default function MainScreen() {
   );
 
   useEffect(() => {
-    const allImages = [...dumpImages, ...injectImages];
+    const allImages = [...imageStates.dump.images, ...imageStates.inject.images];
     const imagesToFetch = allImages.filter(
       (img) => !img.src && !fetchingImagesRef.current.has(img.path),
     );
@@ -250,20 +267,33 @@ export default function MainScreen() {
     imagesToFetch.forEach(async (image) => {
       fetchingImagesRef.current.add(image.path);
       try {
-        const result = await window.pywebview.api.convert_dds_for_display(image.path);
+        const result = await window.pywebview.api.convert_dds_for_display(
+          image.path,
+          image.isDumpImage ?? false,
+        );
         if (result.success) {
-          const updateState = (setter: React.Dispatch<React.SetStateAction<ImageInfo[]>>) => {
-            setter((prevImages) =>
-              prevImages.map((img) => (img.path === image.path ? {...img, src: result.src} : img)),
-            );
-          };
+          setImageStates((prev) => {
+            const newStates = {...prev};
+            let updated = false;
 
-          if (dumpImages.some((img) => img.path === image.path)) {
-            updateState(setDumpImages);
-          }
-          if (injectImages.some((img) => img.path === image.path)) {
-            updateState(setInjectImages);
-          }
+            const updateImages = (type: "dump" | "inject") => {
+              newStates[type] = {
+                ...newStates[type],
+                images: newStates[type].images.map((img) =>
+                  img.path === image.path ? {...img, src: result.src} : img,
+                ),
+              };
+              updated = true;
+            };
+
+            if (prev.dump.images.some((img) => img.path === image.path)) {
+              updateImages("dump");
+            }
+            if (prev.inject.images.some((img) => img.path === image.path)) {
+              updateImages("inject");
+            }
+            return updated ? newStates : prev;
+          });
         }
       } catch (e) {
         console.error(`Failed to convert image ${image.path}`, e);
@@ -271,7 +301,7 @@ export default function MainScreen() {
         fetchingImagesRef.current.delete(image.path);
       }
     });
-  }, [dumpImages, injectImages]);
+  }, [imageStates]);
 
   const handleOpenFolder = async (folderType: "dump" | "inject") => {
     if (activeView !== folderType) return;
@@ -304,8 +334,7 @@ export default function MainScreen() {
         setActiveView(settings.last_active_view || "dump");
         setTheme(settings.theme || "dark");
 
-        loadImages("dump");
-        loadImages("inject");
+        (["dump", "inject"] as const).forEach((folderType) => loadImages(folderType));
       } catch (e: any) {
         console.error("Failed to load initial data:", e);
       }
@@ -319,8 +348,7 @@ export default function MainScreen() {
       setCurrentLangCode(settings.language);
       setI18n(I18N[settings.language]);
 
-      loadImages("dump");
-      loadImages("inject");
+      (["dump", "inject"] as const).forEach((folderType) => loadImages(folderType));
     };
 
     if (window.pywebview && window.pywebview.api) {
@@ -387,8 +415,16 @@ export default function MainScreen() {
 
       toast.info(i18n.replacing_image);
 
-      const setImages = isDumpImage ? setDumpImages : setInjectImages;
-      setImages((prev) => prev.map((img) => (img.path === imagePath ? {...img, src: ""} : img)));
+      const folderType = isDumpImage ? "dump" : "inject";
+      setImageStates((prev) => ({
+        ...prev,
+        [folderType]: {
+          ...prev[folderType],
+          images: prev[folderType].images.map((img) =>
+            img.path === imagePath ? {...img, src: ""} : img,
+          ),
+        },
+      }));
 
       const replacementImage = replacementImageResult.files[0];
       const replaceResult = await window.pywebview.api.replace_dds(
@@ -403,8 +439,9 @@ export default function MainScreen() {
         );
         if (isDumpImage) {
           await loadImages("dump", {silent: true, use_hash_check: true});
+        } else {
+          await loadImages("inject", {silent: true, use_hash_check: true});
         }
-        await loadImages("inject", {silent: true, use_hash_check: true});
       } else {
         toast.error(replaceResult.error || i18n.replace_conversion_failed || "Replacement failed!");
         if (isDumpImage) {
@@ -457,12 +494,28 @@ export default function MainScreen() {
       const result = await window.pywebview.api.delete_dds_file(imagePath);
       if (result.success) {
         toast.success(result.message || i18n.delete_success);
-        if (dumpImages.some((image) => image.path === imagePath)) {
-          setDumpImages(dumpImages.filter((image) => image.path !== imagePath));
-        }
-        if (injectImages.some((image) => image.path === imagePath)) {
-          setInjectImages(injectImages.filter((image) => image.path !== imagePath));
-        }
+
+        setImageStates((prev) => {
+          const newStates = {...prev};
+          let updated = false;
+
+          if (prev.dump.images.some((img) => img.path === imagePath)) {
+            newStates.dump = {
+              ...newStates.dump,
+              images: newStates.dump.images.filter((img) => img.path !== imagePath),
+            };
+            updated = true;
+          }
+          if (prev.inject.images.some((img) => img.path === imagePath)) {
+            newStates.inject = {
+              ...newStates.inject,
+              images: newStates.inject.images.filter((img) => img.path !== imagePath),
+            };
+            updated = true;
+          }
+
+          return updated ? newStates : prev;
+        });
       } else {
         toast.error(result.error || i18n.delete_failed);
       }
@@ -509,8 +562,17 @@ export default function MainScreen() {
       );
       if (result.success) {
         toast.success(result.message || i18n.batch_delete_success);
-        setDumpImages(dumpImages.filter((image) => !selectedImages.has(image.path)));
-        setInjectImages(injectImages.filter((image) => !selectedImages.has(image.path)));
+        setImageStates((prev) => ({
+          ...prev,
+          dump: {
+            ...prev.dump,
+            images: prev.dump.images.filter((image) => !selectedImages.has(image.path)),
+          },
+          inject: {
+            ...prev.inject,
+            images: prev.inject.images.filter((image) => !selectedImages.has(image.path)),
+          },
+        }));
         setSelectedImages(new Set()); // Clear selection
       } else {
         toast.error(result.error || i18n.batch_delete_failed);
@@ -534,8 +596,9 @@ export default function MainScreen() {
         onBatchTrash={handleBatchTrash}
         onReload={() => {
           fetchingImagesRef.current.clear();
-          loadImages("dump", {use_hash_check: true});
-          loadImages("inject", {use_hash_check: true});
+          (["dump", "inject"] as const).forEach((folderType) =>
+            loadImages(folderType, {use_hash_check: true}),
+          );
         }}
       />
 
@@ -554,111 +617,110 @@ export default function MainScreen() {
             variant="underlined"
             onSelectionChange={(key) => setActiveView(key as "dump" | "inject")}
           >
-            <Tab
-              key="dump"
-              title={
-                <div className="flex items-center space-x-2 px-1">
-                  <span className={activeView === "dump" ? "text-hochan-red" : "text-gray-500"}>
-                    {i18n.dumped_images}
-                  </span>
-                  <Chip size="sm" variant="faded">
-                    {dumpImages.length}
-                  </Chip>
-                  <Tooltip
-                    color={mounted && theme === "light" ? "foreground" : "default"}
-                    content={i18n.dump_folder || "Open Dump Folder"}
-                  >
-                    <div
-                      aria-label="Open Dump Folder"
-                      className="cursor-pointer"
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => handleOpenFolder("dump")}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          handleOpenFolder("dump");
-                        }
-                      }}
+            {(["dump", "inject"] as const).map((folderType) => (
+              <Tab
+                key={folderType}
+                title={
+                  <div className="flex items-center space-x-2 px-1">
+                    <span
+                      className={activeView === folderType ? "text-hochan-red" : "text-gray-500"}
                     >
-                      <Folder size={20} />
-                    </div>
-                  </Tooltip>
-                </div>
-              }
-            />
-            <Tab
-              key="inject"
-              title={
-                <div className="flex items-center space-x-2 px-1">
-                  <span className={activeView === "inject" ? "text-hochan-red" : "text-gray-500"}>
-                    {i18n.injected_images}
-                  </span>
-                  <Chip size="sm" variant="faded">
-                    {injectImages.length}
-                  </Chip>
-                  <Tooltip
-                    color={mounted && theme === "light" ? "foreground" : "default"}
-                    content={i18n.inject_folder || "Open Inject Folder"}
-                  >
-                    <div
-                      aria-label="Open Inject Folder"
-                      className="cursor-pointer"
-                      role="button"
-                      tabIndex={0}
-                      onClick={() => handleOpenFolder("inject")}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          handleOpenFolder("inject");
-                        }
-                      }}
+                      {folderType === "dump" ? i18n.dumped_images : i18n.injected_images}
+                    </span>
+                    <Chip size="sm" variant="faded">
+                      {imageStates[folderType].images.length}
+                    </Chip>
+                    <Tooltip
+                      color={mounted && theme === "light" ? "foreground" : "default"}
+                      content={
+                        folderType === "dump"
+                          ? i18n.dump_folder || "Open Dump Folder"
+                          : i18n.inject_folder || "Open Inject Folder"
+                      }
                     >
-                      <Folder size={20} />
-                    </div>
-                  </Tooltip>
-                </div>
-              }
-            />
+                      <div
+                        aria-label={
+                          folderType === "dump" ? "Open Dump Folder" : "Open Inject Folder"
+                        }
+                        className="cursor-pointer"
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => handleOpenFolder(folderType)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            handleOpenFolder(folderType);
+                          }
+                        }}
+                      >
+                        <Folder size={20} />
+                      </div>
+                    </Tooltip>
+                  </div>
+                }
+              />
+            ))}
           </Tabs>
         </div>
-        <div className={`flex flex-grow flex-col gap-2 ${activeView === "dump" ? "" : "hidden"}`}>
-          <ImageSection
-            currentPage={currentPageDump}
-            folderType="dump"
-            images={dumpImages}
-            imagesPerPage={imagesPerPage}
-            isAllSelected={
-              selectedImages.size > 0 && dumpImages.every((img) => selectedImages.has(img.path))
+        {(["dump", "inject"] as const).map((folderType) => {
+          const state = imageStates[folderType];
+          const images = state.images;
+
+          const handlePageChange = (page: number) => {
+            setImageStates((prev) => ({
+              ...prev,
+              [folderType]: {...prev[folderType], currentPage: page},
+            }));
+          };
+
+          const handleSelectAll = () => {
+            const allPaths = images.map((img) => img.path);
+            const areAllSelected = allPaths.every((path) => selectedImages.has(path));
+            if (areAllSelected) {
+              setSelectedImages(
+                (prev) => new Set([...prev].filter((path) => !allPaths.includes(path))),
+              );
+            } else {
+              setSelectedImages((prev) => new Set([...prev, ...allPaths]));
             }
-            isLoading={isLoadingDump}
-            isOperationInProgress={isOperationInProgress}
-            isPartiallySelected={
-              selectedImages.size > 0 &&
-              dumpImages.some((img) => selectedImages.has(img.path)) &&
-              !dumpImages.every((img) => selectedImages.has(img.path))
-            }
-            languageData={i18n}
-            mounted={mounted}
-            noImagesMessage={i18n.no_dump_images}
-            selectedImages={selectedImages}
-            theme={theme}
-            onDownloadJPG={handleDownloadSingle}
-            onImageSelectionChange={handleImageSelectionChange}
-            onPageChange={setCurrentPageDump}
-            onReplaceDDS={(imagePath) => handleReplace(imagePath, true)}
-            onSelectAll={() => {
-              const allDumpPaths = dumpImages.map((img) => img.path);
-              const areAllSelected = allDumpPaths.every((path) => selectedImages.has(path));
-              if (areAllSelected) {
-                setSelectedImages(
-                  (prev) => new Set([...prev].filter((path) => !allDumpPaths.includes(path))),
-                );
-              } else {
-                setSelectedImages((prev) => new Set([...prev, ...allDumpPaths]));
-              }
-            }}
-            onTrash={handleTrash}
-          />
-        </div>
+          };
+
+          return (
+            <div
+              key={folderType}
+              className={`flex flex-grow flex-col gap-2 ${activeView === folderType ? "" : "hidden"}`}
+            >
+              <ImageSection
+                currentPage={state.currentPage}
+                folderType={folderType}
+                images={images}
+                imagesPerPage={imagesPerPage}
+                isAllSelected={
+                  selectedImages.size > 0 && images.every((img) => selectedImages.has(img.path))
+                }
+                isLoading={state.isLoading}
+                isOperationInProgress={isOperationInProgress}
+                isPartiallySelected={
+                  selectedImages.size > 0 &&
+                  images.some((img) => selectedImages.has(img.path)) &&
+                  !images.every((img) => selectedImages.has(img.path))
+                }
+                languageData={i18n}
+                mounted={mounted}
+                noImagesMessage={
+                  folderType === "dump" ? i18n.no_dump_images : i18n.no_inject_images
+                }
+                selectedImages={selectedImages}
+                theme={theme}
+                onDownloadJPG={handleDownloadSingle}
+                onImageSelectionChange={handleImageSelectionChange}
+                onPageChange={handlePageChange}
+                onReplaceDDS={(imagePath) => handleReplace(imagePath, folderType === "dump")}
+                onSelectAll={handleSelectAll}
+                onTrash={handleTrash}
+              />
+            </div>
+          );
+        })}
       </main>
     </div>
   );

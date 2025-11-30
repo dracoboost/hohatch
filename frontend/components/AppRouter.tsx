@@ -61,14 +61,32 @@ const AppRouter: React.FC = () => {
     }
   };
 
+  // useEffect(() => {
+  //   const initialize = async () => {
+  //     await window.pywebview.api.frontend_ready();
+  //     await loadLangData();
+  //     setLoading(false);
+  //   };
+
+  //   initialize();
+  // }, []);
   useEffect(() => {
-    const initialize = async () => {
+    const onPywebviewReady = async () => {
       await window.pywebview.api.frontend_ready();
       await loadLangData();
       setLoading(false);
     };
 
-    initialize();
+    if (window.pywebview) {
+      onPywebviewReady();
+    } else {
+      // Wait event
+      window.addEventListener("pywebviewready", onPywebviewReady);
+    }
+
+    return () => {
+      window.removeEventListener("pywebviewready", onPywebviewReady);
+    };
   }, []);
 
   if (loading) {

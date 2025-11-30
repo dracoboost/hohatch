@@ -5,7 +5,7 @@
 
   <p align="center">
     <a href="https://github.com/dracoboost/hohatch/releases">
-      <img alt="version" src="https://img.shields.io/badge/version-1.1.0-b7465a">
+      <img alt="version" src="https://img.shields.io/badge/version-1.2.0-b7465a">
     </a>
     <a href="https://discord.gg/fEUMrTGb23" target="_blank">
       <img alt="Discord" src="https://img.shields.io/discord/1408725175532519448?logo=discord&logoColor=white&color=5662f6">

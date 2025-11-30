@@ -6,7 +6,7 @@ from pathlib import Path
 from unittest.mock import patch, MagicMock
 import time
 
-from backend.backend_api import HoHatchBackend
+from backend.backend_api import BackendApi
 from backend.dto import ImageInfo
 
 
@@ -21,17 +21,19 @@ def backend_instance():
              patch("backend.backend_api.DownloadService") as MockDownloadService, \
              patch("backend.backend_api.FileService") as MockFileService, \
              patch("backend.backend_api.ImageService") as MockImageService, \
+             patch("backend.backend_api.ImageDiscoveryService") as MockImageDiscoveryService, \
              patch("backend.backend_api.TexconvService") as MockTexconvService, \
-             patch("backend.backend_api.HoHatchBackend._ensure_texconv_exists") as mock_ensure_texconv_exists:
+             patch("backend.backend_api.BackendApi._ensure_texconv_exists") as mock_ensure_texconv_exists:
 
             # Prevent auto-download during init
             mock_ensure_texconv_exists.return_value = None
 
-            # Setup mock instances for each service
+             # Setup mock instances for each service
             mock_config_service = MockConfigService.return_value
             mock_download_service = MockDownloadService.return_value
             mock_file_service = MockFileService.return_value
             mock_image_service = MockImageService.return_value
+            mock_image_discovery_service = MockImageDiscoveryService.return_value # Create the mock instance here
             mock_texconv_service = MockTexconvService.return_value
 
             # Mock config settings for paths
@@ -56,7 +58,7 @@ def backend_instance():
                 parents=True, exist_ok=True
             )
 
-            backend = HoHatchBackend()
+            backend = BackendApi()
             backend.temp_base_dir.mkdir(parents=True, exist_ok=True) # Ensure temp_base_dir exists
 
             # Attach mocks to the instance for easy access in tests
@@ -64,6 +66,7 @@ def backend_instance():
             backend.mock_download_service = mock_download_service
             backend.mock_file_service = mock_file_service
             backend.mock_image_service = mock_image_service
+            backend.mock_image_discovery_service = mock_image_discovery_service # Assign here
             backend.mock_texconv_service = mock_texconv_service
 
             yield backend
@@ -76,8 +79,8 @@ def backend_instance():
 
 
 def test_reload_scenario_no_permission_error(backend_instance):
-    # Mock image_service.get_image_list to return dummy images
-    backend_instance.mock_image_service.get_image_list.side_effect = [
+    # Mock image_discovery_service.discover_images to return dummy images
+    backend_instance.mock_image_discovery_service.discover_images.side_effect = [
         [ImageInfo(src="", alt="dump1.dds", path="/path/to/dump1.dds")],
         [ImageInfo(src="", alt="inject1.dds", path="/path/to/inject1.dds")],
     ] * 5 # Simulate 5 reloads
@@ -94,14 +97,14 @@ def test_reload_scenario_no_permission_error(backend_instance):
             inject_images = backend_instance.get_image_list("inject")["images"]
 
             for img in dump_images:
-                backend_instance.convert_dds_for_display(img["path"])
+                backend_instance.convert_dds_for_display(img["path"], True)
             for img in inject_images:
-                backend_instance.convert_dds_for_display(img["path"])
+                backend_instance.convert_dds_for_display(img["path"], False)
         except Exception as e:
             pytest.fail(f"Unexpected error occurred during reload {i+1}: {e}")
 
-    # Verify that image_service.get_image_list was called for each reload
-    assert backend_instance.mock_image_service.get_image_list.call_count == num_reloads * 2
+    # Verify that image_discovery_service.discover_images was called for each reload
+    assert backend_instance.mock_image_discovery_service.discover_images.call_count == num_reloads * 2
     # Verify that texconv_service.get_displayable_image was called for each image
     assert backend_instance.mock_texconv_service.get_displayable_image.call_count == num_reloads * 2
 
@@ -110,8 +113,8 @@ def test_reload_scenario_no_permission_error(backend_instance):
 
 
 def test_reload_scenario_temp_dir_cleanup(backend_instance):
-    # Mock image_service.get_image_list to return dummy images
-    backend_instance.mock_image_service.get_image_list.side_effect = [
+    # Mock image_discovery_service.discover_images to return dummy images
+    backend_instance.mock_image_discovery_service.discover_images.side_effect = [
         [ImageInfo(src="", alt="dump1.dds", path="/path/to/dump1.dds")],
         [ImageInfo(src="", alt="inject1.dds", path="/path/to/inject1.dds")],
     ] * 3 # Simulate 3 reloads

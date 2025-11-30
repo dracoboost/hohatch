@@ -5,13 +5,12 @@ from pathlib import Path
 import webview
 import requests
 
-from backend.backend_api import HoHatchBackend
-
+from backend.backend_api import BackendApi
 
 
 class Api:
     def __init__(self):
-        self.backend = HoHatchBackend()
+        self.backend = BackendApi()
         self.window = None
 
     def set_window(self, window):
@@ -33,7 +32,7 @@ class Api:
         html_file_name = "index.html" if url_path == "/" else f"{url_path.lstrip('/')}.html"
 
         if getattr(sys, "frozen", False):
-            frontend_dist_dir = Path(sys._MEIPASS) / "frontend" / "dist"
+            frontend_dist_dir = Path(sys._MEIPASS) / "frontend" / "dist"  # type: ignore
         else:
             frontend_dist_dir = Path(__file__).parent.parent / "frontend" / "dist"
 
@@ -51,9 +50,9 @@ class Api:
         logging.debug(f"get_image_list called with type: {folder_type}, hash_check: {use_hash_check}")
         return self.backend.get_image_list(folder_type, use_hash_check)
 
-    def convert_dds_for_display(self, dds_path):
+    def convert_dds_for_display(self, dds_path, is_dump_image):
         logging.debug(f"convert_dds_for_display called for path: {dds_path}")
-        return self.backend.convert_dds_for_display(dds_path)
+        return self.backend.convert_dds_for_display(dds_path, is_dump_image)
 
     def get_image_counts(self):
         logging.debug("get_image_counts called")
@@ -162,13 +161,25 @@ class Api:
 
     def open_dump_folder(self):
         logging.debug("open_dump_folder called")
-        dump_folder_path = self.backend.get_dump_folder_path()
-        return self.backend.open_folder_in_explorer(dump_folder_path)
+        dump_folder_path = self.backend.image_service.get_dump_folder_path()
+        if not dump_folder_path:
+            return {"success": False, "error": "Dump folder not found"}
+        try:
+            self.backend.file_service.open_folder(dump_folder_path)
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
 
     def open_inject_folder(self):
         logging.debug("open_inject_folder called")
-        inject_folder_path = self.backend.get_inject_folder_path()
-        return self.backend.open_folder_in_explorer(inject_folder_path)
+        inject_folder_path = self.backend.image_service.get_inject_folder_path()
+        if not inject_folder_path:
+            return {"success": False, "error": "Inject folder not found"}
+        try:
+            self.backend.file_service.open_folder(inject_folder_path)
+            return {"success": True}
+        except Exception as e:
+            return {"success": False, "error": str(e)}
 
     def get_default_sk_path(self):
         from backend.services import get_special_k_dir
@@ -190,6 +201,10 @@ class Api:
     def open_cache_folder(self):
         logging.debug("open_cache_folder called")
         return self.backend.open_cache_folder()
+
+    def clear_cache(self):
+        logging.debug("clear_cache called")
+        return self.backend.clear_cache()
 
     def open_log_folder(self):
         logging.debug("open_log_folder called")

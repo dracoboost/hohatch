@@ -64,6 +64,22 @@ export default function SettingsScreen() {
 
   // console.log("Settings:", settings);
 
+  useEffect(() => {
+    const onPywebviewReady = () => {
+      loadSettingsAndLanguage();
+    };
+
+    if (window.pywebview) {
+      onPywebviewReady();
+    } else {
+      window.addEventListener("pywebviewready", onPywebviewReady);
+    }
+
+    return () => {
+      window.removeEventListener("pywebviewready", onPywebviewReady);
+    };
+  }, []);
+
   const loadSettingsAndLanguage = async () => {
     try {
       setLoading(true);
@@ -193,6 +209,19 @@ export default function SettingsScreen() {
       }
     } catch (e: any) {
       toast.error("Failed to open log folder: " + e.message);
+    }
+  };
+
+  const handleClearCache = async () => {
+    try {
+      const result = await window.pywebview.api.clear_cache();
+      if (result.success) {
+        toast.success(i18n.cache_cleared_success || "Cache cleared successfully.");
+      } else {
+        toast.error(result.error || "Failed to clear cache.");
+      }
+    } catch (e: any) {
+      toast.error("Failed to clear cache: " + e.message);
     }
   };
 
@@ -359,6 +388,15 @@ export default function SettingsScreen() {
               >
                 <Folder size={18} />
                 {i18n.open_log_folder_btn || "Open Log Folder"}
+              </Button>
+              <Button
+                className="flex items-center gap-2"
+                color="secondary"
+                variant="solid"
+                onClick={handleClearCache}
+              >
+                <Folder size={18} />
+                {i18n.clear_cache_btn || "Clear Cache"}
               </Button>
             </div>
           </div>

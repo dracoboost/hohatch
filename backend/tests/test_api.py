@@ -7,12 +7,12 @@ from backend.api import Api
 
 @pytest.fixture
 def mock_api_instance():
-    with patch("backend.api.HoHatchBackend") as MockHoHatchBackend, \
+    with patch("backend.api.BackendApi") as MockBackendApi, \
          patch("backend.api.webview") as MockWebview, \
          patch("backend.api.logging.info") as mock_logging_info, \
          patch("backend.api.logging.error") as mock_logging_error:
 
-        mock_backend = MockHoHatchBackend.return_value
+        mock_backend = MockBackendApi.return_value
         mock_backend.get_current_settings.return_value = {"lang": "en"}
 
         mock_active_window = MagicMock()

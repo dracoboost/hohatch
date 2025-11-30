@@ -26,9 +26,14 @@ Object.defineProperty(window, "pywebview", {
       load_url: jest.fn(),
       delete_dds_file: jest.fn(),
       convert_single_dds_to_jpg: jest.fn(),
-      convert_dds_for_display: jest.fn(),
+    convert_dds_for_display: jest.fn(async (imagePath, isDumpImage) => {
+      // Simple mock: return a base64 string based on the image path
+      const mockData = `MOCK_DATA_FOR_${imagePath.replace(/[^a-zA-Z0-9]/g, "_")}${isDumpImage ? "_DUMP" : "_INJECT"}`;
+      return {success: true, src: `data:image/png;base64,${mockData}`};
+    }),
       open_dump_folder: jest.fn(),
       open_inject_folder: jest.fn(),
+      clear_cache: jest.fn(),
     },
   },
   writable: true,

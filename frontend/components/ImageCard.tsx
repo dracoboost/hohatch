@@ -7,7 +7,7 @@ import {Button} from "@/components/Button";
 import {cn} from "@/lib/utils";
 
 export interface ImageInfo {
-  src: string;
+  src: string | undefined;
   alt: string;
   path: string;
   width: number;
@@ -44,6 +44,23 @@ export const ImageCard: React.FC<ImageCardProps> = ({
   const [isImageLoading, setIsImageLoading] = useState(true);
   const uniqueId = `checkbox-${image.path.replace(/[^a-zA-Z0-9]/g, "-")}`;
   const displayName = image.alt.replace(/\.dds$/, "");
+
+  if (!image.src) {
+    return (
+      <div>
+        <div
+          className={cn(
+            "group relative m-0 inline-flex w-full max-w-md cursor-pointer rounded-lg border border-gray-700 p-0 shadow-md transition-shadow duration-300",
+            "items-center justify-start overflow-hidden hover:shadow-lg",
+          )}
+        >
+          <div className="aspect-[53/64] w-full bg-gray-900">
+            <Skeleton className="h-full w-full" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>

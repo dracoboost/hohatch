@@ -18,12 +18,13 @@ else:
 
 # This ensures that imports like 'from backend.api import Api' work correctly,
 # especially when bundled with PyInstaller.
+from datetime import datetime
 from backend.api import Api
 
 def setup_logging():
     log_dir = Path(appdirs.user_data_dir("HoHatch", "")) / "logs"
     log_dir.mkdir(parents=True, exist_ok=True)
-    log_file = log_dir / "hohatch.log"
+    log_file = log_dir / f"{datetime.now().strftime('%Y-%m-%d')}.log"
 
     # Configure root logger
     logging.basicConfig(

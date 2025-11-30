@@ -2,7 +2,7 @@ import pytest
 from unittest.mock import MagicMock, patch
 from pathlib import Path
 
-from backend.backend_api import HoHatchBackend
+from backend.backend_api import BackendApi
 from backend.services import get_config_file
 from backend.dto import ImageInfo
 
@@ -14,24 +14,27 @@ def backend():
          patch("backend.backend_api.DownloadService") as MockDownloadService, \
          patch("backend.backend_api.FileService") as MockFileService, \
          patch("backend.backend_api.ImageService") as MockImageService, \
+         patch("backend.backend_api.ImageDiscoveryService") as MockImageDiscoveryService, \
          patch("backend.backend_api.TexconvService") as MockTexconvService, \
-         patch("backend.backend_api.HoHatchBackend._ensure_texconv_exists"):
+         patch("backend.backend_api.BackendApi._ensure_texconv_exists"):
 
         # Setup mock instances for each service
         mock_config_service = MockConfigService.return_value
         mock_download_service = MockDownloadService.return_value
         mock_file_service = MockFileService.return_value
         mock_image_service = MockImageService.return_value
+        mock_image_discovery_service = MockImageDiscoveryService.return_value
         mock_texconv_service = MockTexconvService.return_value
 
         # Instantiate the backend - it will get the mocked services
-        backend_instance = HoHatchBackend()
+        backend_instance = BackendApi()
 
         # Attach mocks to the instance for easy access in tests
         backend_instance.mock_config_service = mock_config_service
         backend_instance.mock_download_service = mock_download_service
         backend_instance.mock_file_service = mock_file_service
         backend_instance.mock_image_service = mock_image_service
+        backend_instance.mock_image_discovery_service = mock_image_discovery_service
         backend_instance.mock_texconv_service = mock_texconv_service
 
         yield backend_instance
@@ -65,7 +68,7 @@ def test_get_image_list_dump_success(backend):
         ImageInfo(src="", alt="dumped_image_01.dds", path="/mock/dump/dumped_image_01.dds"),
         ImageInfo(src="", alt="dumped_image_02.dds", path="/mock/dump/dumped_image_02.dds"),
     ]
-    backend.mock_image_service.get_image_list.return_value = mock_images
+    backend.mock_image_discovery_service.discover_images.return_value = mock_images
 
     result = backend.get_image_list("dump")
     assert result["success"] is True

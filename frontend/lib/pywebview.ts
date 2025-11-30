@@ -26,7 +26,10 @@ declare global {
           dds_path_list: string[],
           output_folder: string,
         ) => Promise<any>;
-        convert_dds_for_display: (dds_path: string) => Promise<any>;
+        convert_dds_for_display: (
+          dds_path: string,
+          is_dump_image: boolean,
+        ) => Promise<{success: boolean; src?: string; error?: string}>;
         frontend_ready: () => Promise<void>;
         load_url: (url: string) => Promise<any>;
         open_dump_folder: () => Promise<any>;
@@ -36,6 +39,7 @@ declare global {
         get_default_sk_path: () => Promise<string>;
         open_cache_folder: () => Promise<any>;
         open_log_folder: () => Promise<{success: boolean; error?: string}>;
+        clear_cache: () => Promise<{success: boolean; error?: string}>;
         notify_settings_changed: () => Promise<any>;
         get_app_version: () => Promise<{success: boolean; version?: string; error?: string}>;
         check_for_updates: () => Promise<{

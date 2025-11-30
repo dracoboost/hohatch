@@ -1,6 +1,5 @@
 import logging
 import os
-import shutil
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -9,20 +8,22 @@ from backend.services import (
     DownloadService,
     FileService,
     ImageService,
+    ImageDiscoveryService,
     TexconvService,
 )
 from backend.exceptions import HoHatchError, FileSystemError
 
 
-class HoHatchBackend:
+class BackendApi:
     """The main backend facade that orchestrates all services."""
 
     def __init__(self):
-        logging.info("Initializing HoHatchBackend...")
+        logging.info("Initializing BackendApi...")
         self.config_service = ConfigService()
         self.file_service = FileService(self.config_service)
         self.download_service = DownloadService(self.config_service)
         self.image_service = ImageService(self.config_service)
+        self.image_discovery_service = ImageDiscoveryService(self.config_service)
         self.texconv_service = TexconvService(self.config_service, self.file_service, self.image_service)
         self.last_image_dir = Path.home()
 
@@ -31,7 +32,7 @@ class HoHatchBackend:
         self.clean_temp_directories()
 
         self._ensure_texconv_exists()
-        logging.info("HoHatchBackend initialized successfully.")
+        logging.info("BackendApi initialized successfully.")
 
     def _ensure_texconv_exists(self):
         settings = self.config_service.get_settings()
@@ -66,8 +67,8 @@ class HoHatchBackend:
             "output_width": settings.output_width,
             "last_active_view": settings.last_active_view,
             "theme": settings.theme,
-            "dump_folder_path": self.image_service.get_dump_folder_path(),
-            "inject_folder_path": self.image_service.get_inject_folder_path(),
+            "dump_folder_path": self.image_discovery_service.get_dump_folder_path(),
+            "inject_folder_path": self.image_discovery_service.get_inject_folder_path(),
         }
 
     def download_texconv(self):
@@ -105,20 +106,29 @@ class HoHatchBackend:
         except HoHatchError as e:
             return self._handle_error(e, "Failed to delete selected files")
 
+    # dump folder
+    def get_dump_folder_path(self) -> str | None:
+        return self.image_discovery_service.get_dump_folder_path()
+
     def open_dump_folder(self):
         try:
-            self.file_service.open_folder(self.image_service.get_dump_folder_path())
+            self.file_service.open_folder(self.image_discovery_service.get_dump_folder_path())
             return {"success": True}
         except HoHatchError as e:
             return self._handle_error(e, "Failed to open dump folder")
 
+    # inject folder
+    def get_inject_folder_path(self) -> str | None:
+        return self.image_discovery_service.get_inject_folder_path()
+
     def open_inject_folder(self):
         try:
-            self.file_service.open_folder(self.image_service.get_inject_folder_path())
+            self.file_service.open_folder(self.image_discovery_service.get_inject_folder_path())
             return {"success": True}
         except HoHatchError as e:
             return self._handle_error(e, "Failed to open inject folder")
 
+    # cache folder
     def get_cache_folder_path(self) -> str:
         return str(self.image_service.cache_dir)
 
@@ -129,6 +139,14 @@ class HoHatchBackend:
         except HoHatchError as e:
             return self._handle_error(e, "Failed to open cache folder")
 
+    def clear_cache(self):
+        try:
+            self.file_service.clean_directory(self.image_service.cache_dir)
+            return {"success": True, "message": "Cache cleared successfully."}
+        except HoHatchError as e:
+            return self._handle_error(e, "Failed to clear cache")
+
+    # log folder
     def open_log_folder(self):
         try:
             self.file_service.open_log_folder()
@@ -156,20 +174,31 @@ class HoHatchBackend:
 
     def get_image_list(self, folder_type: str, use_hash_check: bool = False):
         try:
-            images = self.image_service.get_image_list(folder_type)
+            images = self.image_discovery_service.discover_images(folder_type)
+            logging.info(f"Loaded {len(images)} images for folder_type='{folder_type}'.")
+            for image in images:
+                logging.debug(f"  - Loaded {folder_type} image: {image.path}")
             return {"success": True, "images": [img.__dict__ for img in images]}
         except HoHatchError as e:
             return self._handle_error(e, f"Failed to get image list for {folder_type}")
 
     def get_image_counts(self):
         try:
-            return {"success": True, **self.image_service.get_image_counts()}
+            return {"success": True, **self.image_discovery_service.get_image_counts()}
         except HoHatchError as e:
             return self._handle_error(e, "Failed to get image counts")
 
-    def convert_dds_for_display(self, dds_path_str: str):
+    def convert_dds_for_display(self, dds_path_str: str, is_dump_image: bool):
         try:
-            src = self.texconv_service.get_displayable_image(dds_path_str)
+            base_dir_str = (
+                self.image_discovery_service.get_dump_folder_path()
+                if is_dump_image
+                else self.image_discovery_service.get_inject_folder_path()
+            )
+            if not base_dir_str:
+                raise FileSystemError(f"Could not determine base directory for {'dump' if is_dump_image else 'inject'}")
+            base_dir = Path(base_dir_str)
+            src = self.texconv_service.get_displayable_image(dds_path_str, is_dump_image, base_dir)
             return {"success": True, "src": src}
         except HoHatchError as e:
             return self._handle_error(e, f"Failed to convert {dds_path_str} for display")
@@ -208,7 +237,7 @@ class HoHatchBackend:
             )
             logging.info(f"Successfully converted to DDS: {final_dds}")
 
-            inject_folder = self.image_service.get_inject_folder_path()
+            inject_folder = self.image_discovery_service.get_inject_folder_path()
             if not inject_folder:
                 logging.error("Could not determine inject folder path.")
                 raise FileSystemError("Could not determine inject folder path.")
@@ -237,7 +266,7 @@ class HoHatchBackend:
 
     def check_for_updates(self):
         try:
-            return self.download_service.check_for_updates()
+            return self.download_service.check_for_updates()  # type: ignore
         except HoHatchError as e:
             return self._handle_error(e, "Failed to check for updates")
 
@@ -246,4 +275,4 @@ class HoHatchBackend:
         return {"success": True}
 
     def get_default_sk_path(self):
-        return self.config_service.get_default_sk_path()
+        return self.config_service.get_default_sk_path()  # type: ignore

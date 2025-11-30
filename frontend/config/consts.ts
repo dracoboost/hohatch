@@ -38,6 +38,8 @@ export const I18N = {
     inject_folder: "Open Inject Folder",
     cache_settings: "Cache",
     open_cache_folder_btn: "Open Cache Folder",
+    clear_cache_btn: "Clear Cache",
+    cache_cleared_success: "Cache cleared successfully.",
     log_settings: "Log",
     open_log_folder_btn: "Open Log Folder",
     folder_settings: "Application Folders",
@@ -87,6 +89,8 @@ export const I18N = {
     inject_folder: "Injectフォルダを開く",
     cache_settings: "キャッシュ",
     open_cache_folder_btn: "キャッシュフォルダを開く",
+    clear_cache_btn: "キャッシュをクリア",
+    cache_cleared_success: "キャッシュを正常にクリアしました。",
     log_settings: "ログ",
     open_log_folder_btn: "ログフォルダーを開く",
     folder_settings: "アプリケーションフォルダー",
@@ -99,4 +103,4 @@ export const I18N = {
   },
 } as const;
 
-export const appVersion = "1.1.0";
+export const appVersion = "1.2.0";
