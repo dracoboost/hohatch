@@ -2,7 +2,6 @@
 
 import React from "react";
 import ReactMarkdown from "react-markdown";
-import rehypeImgSize from "rehype-img-size";
 import rehypeRaw from "rehype-raw";
 import remarkGfm from "remark-gfm";
 
@@ -94,7 +93,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
     <ReactMarkdown
       components={components}
       // @ts-ignore: rehypeRaw and rehypeImgSize might not have direct type definitions or they are not picked up
-      rehypePlugins={[rehypeRaw, [rehypeImgSize, {dir: "public"}]]}
+      rehypePlugins={[rehypeRaw]}
       remarkPlugins={[remarkGfm]}
     >
       {markdownContent}

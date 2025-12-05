@@ -345,7 +345,10 @@ class TexconvService:
         if not dds_p.exists():
             raise FileSystemError(f"DDS file not found: {dds_path}")
 
-        relative_path = dds_p.relative_to(base_dir)
+        # Use os.path.relpath for robustness
+        relative_path_str = os.path.relpath(dds_path, base_dir)
+        relative_path = Path(relative_path_str)
+
         cache_file = (cache_dir / relative_path).with_suffix(".jpg")
         hash_file = (cache_dir / relative_path).with_suffix(".hash")
 

@@ -6,7 +6,7 @@
 
   <p align="center">
     <a href="https://github.com/dracoboost/hohatch/releases">
-      <img alt="version" src="https://img.shields.io/badge/version-1.2.0-b7465a">
+      <img alt="version" src="https://img.shields.io/badge/version-1.2.1-b7465a">
     </a>
     <a href="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml">
       <img alt="Preflight" src="https://github.com/dracoboost/hohatch/actions/workflows/preflight.yml/badge.svg">
@@ -25,6 +25,16 @@
 > The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.2.1] - 2025-12-05
+
+### Changed
+
+- Ensured all image conversions (JPG to DDS and DDS to JPG) consistently apply vertical flipping for correct image orientation.
+
+### Fixed
+
+- Addressed a PermissionError during DDS to JPG conversion by correctly forming the output file path, preventing attempts to open a directory as a file.
 
 ## [1.2.0] - 2025-11-30
 
@@ -149,7 +159,8 @@
 
 - Initial commit.
 
-[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.2.0...HEAD
+[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/dracoboost/hohatch/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/dracoboost/hohatch/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/dracoboost/hohatch/compare/v1.0.4...v1.1.0
 [1.0.4]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.4

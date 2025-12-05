@@ -176,7 +176,7 @@ class VersionManager:
             # Update website/content/index.md
             index_md_path = self.project_root / "website" / "content" / "index.md"
             index_md_patterns = [
-                (r"(\[Download Latest HoHatch \(v)([0-9.]+\))", r'\g<1>' + frontend_version + r'\g<2>'),
+                (r'(\[latest HoHatch \(v)[0-9.]+(\)\])', r'\g<1>' + frontend_version + r'\g<2>'),
                 (
                     r"(\(https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9.]+(\.zip\))",
                     r'\g<1>' + frontend_version + r'\g<2>',

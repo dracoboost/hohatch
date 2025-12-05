@@ -205,7 +205,9 @@ class BackendApi:
 
     def convert_single_dds_to_jpg(self, dds_path: str, output_folder: str):
         try:
-            path = self.texconv_service.convert_to_jpg(dds_path, output_folder)
+            output_filename = f"{Path(dds_path).stem}.jpg"
+            output_file_path = str(Path(output_folder) / output_filename)
+            path = self.texconv_service.convert_to_jpg(dds_path, output_file_path)
             return {"success": True, "output_path": path}
         except HoHatchError as e:
             return self._handle_error(e, f"Failed to convert {dds_path} to JPG")
@@ -213,7 +215,9 @@ class BackendApi:
     def batch_download_selected_dds_as_jpg(self, dds_path_list: List[str], output_folder: str):
         try:
             for dds_path in dds_path_list:
-                self.texconv_service.convert_to_jpg(dds_path, output_folder)
+                output_filename = f"{Path(dds_path).stem}.jpg"
+                output_file_path = str(Path(output_folder) / output_filename)
+                self.texconv_service.convert_to_jpg(dds_path, output_file_path)
             return {"success": True}
         except HoHatchError as e:
             return self._handle_error(e, "Failed during batch conversion")
@@ -223,13 +227,9 @@ class BackendApi:
         logging.info(f"Replacement image: {replacement_image_path}")
         logging.info(f"Is dump image: {is_dump_image}")
         try:
-            # This is a simplified orchestration. A real implementation might have more complex temp dir handling.
             temp_dir = self.temp_base_dir / f"replace_{Path(target_dds_path).stem}"
             logging.info(f"Using temporary directory: {temp_dir}")
             self.file_service.clean_directory(temp_dir)
-
-            # In a real scenario, you might process the replacement image first (e.g., resize)
-            # For now, we assume it's ready for conversion.
 
             logging.info("Converting replacement image to DDS...")
             final_dds = self.texconv_service.convert_to_dds(
@@ -237,18 +237,20 @@ class BackendApi:
             )
             logging.info(f"Successfully converted to DDS: {final_dds}")
 
-            inject_folder = self.image_discovery_service.get_inject_folder_path()
-            if not inject_folder:
-                logging.error("Could not determine inject folder path.")
-                raise FileSystemError("Could not determine inject folder path.")
-            logging.info(f"Target inject folder: {inject_folder}")
-
-            final_path = Path(inject_folder) / Path(final_dds).name
-            self.file_service.move_file(final_dds, str(final_path))
-
             if is_dump_image:
+                inject_folder = self.image_discovery_service.get_inject_folder_path()
+                if not inject_folder:
+                    logging.error("Could not determine inject folder path.")
+                    raise FileSystemError("Could not determine inject folder path.")
+                logging.info(f"Target inject folder: {inject_folder}")
+                final_path = Path(inject_folder) / Path(final_dds).name
+                self.file_service.move_file(final_dds, str(final_path))
+
                 logging.info(f"Deleting original dump image: {target_dds_path}")
                 self.file_service.delete_file(target_dds_path)
+            else:
+                final_path = Path(target_dds_path)
+                self.file_service.move_file(final_dds, str(final_path))
 
             logging.info(f"DDS replacement successful. Final path: {final_path}")
             return {"success": True, "output_path": str(final_path)}
