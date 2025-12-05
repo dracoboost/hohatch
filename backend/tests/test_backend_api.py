@@ -99,8 +99,25 @@ class TestBackendApi:
     def test_convert_single_dds_to_jpg(self, backend):
         dds_path = "/path/to/file.dds"
         output_folder = "/path/to/output"
+        expected_output_file_path = str(Path(output_folder) / "file.jpg")
         backend.convert_single_dds_to_jpg(dds_path, output_folder)
-        backend.mock_texconv_service.convert_to_jpg.assert_called_once_with(dds_path, output_folder)
+        backend.mock_texconv_service.convert_to_jpg.assert_called_once_with(dds_path, expected_output_file_path)
+
+    def test_batch_download_selected_dds_as_jpg(self, backend):
+        dds_paths = ["/path/to/file1.dds", "/path/to/file2.dds"]
+        output_folder = "/path/to/output"
+        
+        expected_calls = [
+            (dds_paths[0], str(Path(output_folder) / "file1.jpg")),
+            (dds_paths[1], str(Path(output_folder) / "file2.jpg")),
+        ]
+
+        backend.batch_download_selected_dds_as_jpg(dds_paths, output_folder)
+        
+        # Verify that convert_to_jpg was called for each dds_path with the correct output path
+        assert backend.mock_texconv_service.convert_to_jpg.call_count == len(dds_paths)
+        for dds_path, expected_output_file_path in expected_calls:
+            backend.mock_texconv_service.convert_to_jpg.assert_any_call(dds_path, expected_output_file_path)
 
     @patch("shutil.move")
     @patch("os.rename")

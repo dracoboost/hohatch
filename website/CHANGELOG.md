@@ -6,7 +6,7 @@
 
   <p align="center">
     <a href="https://github.com/dracoboost/hohatch/releases">
-      <img alt="website version" src="https://img.shields.io/badge/website%20version-1.0.5-lightgrey">
+      <img alt="website version" src="https://img.shields.io/badge/website%20version-1.0.6-lightgrey">
     </a>
     <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
       <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
@@ -19,6 +19,13 @@
 > The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.0.6] - 2025-12-05
+
+### Fixed
+
+- Resolved `ReferenceError: rehype is not defined` by removing the redundant and incompatible `rehype-img-size` plugin.
+- Corrected regex pattern in version management script to accurately update the HoHatch version in `content/index.md`.
 
 ## [1.0.5] - 2025-09-21
 
@@ -96,7 +103,8 @@
 
 - Initial commit.
 
-[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.5...HEAD
+[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.6...HEAD
+[1.0.6]: https://github.com/dracoboost/hohatch/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/dracoboost/hohatch/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/dracoboost/hohatch/releases/tag/v1.0.4
 [1.0.3]: https://github.com/dracoboost/hohatch/compare/v1.0.2...v1.0.3
