@@ -26,12 +26,6 @@
 
 ## [Unreleased]
 
-## [1.2.2] - 2025-12-05
-
-### Fixed
-
-- Updated backend test (`test_backend_api.py`) to reflect changes in `convert_to_jpg` output path handling, ensuring preflight checks pass.
-
 ## [1.2.1] - 2025-12-05
 
 ### Changed
@@ -41,6 +35,7 @@
 ### Fixed
 
 - Addressed a PermissionError during DDS to JPG conversion by correctly forming the output file path, preventing attempts to open a directory as a file.
+- Updated backend test (`test_backend_api.py`) to reflect changes in `convert_to_jpg` output path handling, ensuring preflight checks pass.
 
 ## [1.2.0] - 2025-11-30
 
@@ -165,8 +160,7 @@
 
 - Initial commit.
 
-[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.2.2...HEAD
-[1.2.2]: https://github.com/dracoboost/hohatch/compare/v1.2.1...v1.2.2
+[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.2.1...HEAD
 [1.2.1]: https://github.com/dracoboost/hohatch/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/dracoboost/hohatch/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/dracoboost/hohatch/compare/v1.0.4...v1.1.0
