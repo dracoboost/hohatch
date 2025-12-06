@@ -6,7 +6,7 @@
 
   <p align="center">
     <a href="https://github.com/dracoboost/hohatch/releases">
-      <img alt="website version" src="https://img.shields.io/badge/website%20version-1.0.6-lightgrey">
+      <img alt="website version" src="https://img.shields.io/badge/website%20version-1.0.7-lightgrey">
     </a>
     <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
       <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
