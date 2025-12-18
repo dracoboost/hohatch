@@ -1,53 +1,8 @@
 {
+  // This file is not used in compilation. It is here just for a nice editor experience.
+  "extends": "@docusaurus/tsconfig",
   "compilerOptions": {
-    "allowJs": true,
-    "esModuleInterop": true,
-    "isolatedModules": true,
-    "incremental": true,
-    "jsx": "preserve",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "noEmit": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
-    "paths": {
-      "@/*": [
-        "./*"
-      ]
-    },
-    "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "target": "ESNext",
-    "types": [
-      "node",
-      "jest",
-      "@testing-library/jest-dom"
-    ],
-    "allowImportingTsExtensions": true,
-    "typeRoots": [
-      "./node_modules/@types",
-      "./types"
-    ]
+    "baseUrl": "."
   },
-  "include": [
-    "**/*.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "dist/types/**/*.ts",
-    "lib/**/*",
-    "next-env.d.ts"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": [".docusaurus", "build"]
 }

@@ -1,0 +1,54 @@
+hohatch:
+  label: HoHatch
+  description: 'All posts related to HoHatch application development and updates.'
+  permalink: /hohatch
+
+website:
+  label: Website
+  description: 'Posts related to the HoHatch website development and updates.'
+  permalink: /website
+
+release:
+  label: Release
+  description: 'Posts detailing new software releases, including version numbers and key features.'
+  permalink: /release
+
+documentation:
+  label: Documentation
+  description: 'Updates and improvements related to project documentation.'
+  permalink: /documentation
+
+bugfix:
+  label: Bugfix
+  description: 'Posts addressing and resolving bugs and other issues.'
+  permalink: /bugfix
+
+maintenance:
+  label: Maintenance
+  description: 'Posts about routine maintenance, dependency updates, and general upkeep.'
+  permalink: /maintenance
+
+feature:
+  label: Feature
+  description: 'Posts announcing new features and functionality.'
+  permalink: /feature
+
+ui:
+  label: UI
+  description: 'Posts related to User Interface design and updates.'
+  permalink: /ui
+
+ux:
+  label: UX
+  description: 'Posts related to User Experience improvements.'
+  permalink: /ux
+
+security:
+  label: Security
+  description: 'Posts about security vulnerabilities and patches.'
+  permalink: /security
+
+seo:
+  label: SEO
+  description: 'Posts related to Search Engine Optimization improvements.'
+  permalink: /seo

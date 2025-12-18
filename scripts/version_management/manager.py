@@ -143,46 +143,15 @@ class VersionManager:
 
             self.update_backend_app_version()
 
-            # Update website/app/page.tsx
-            page_tsx_path = self.project_root / "website" / "app" / "page.tsx"
+            # Update website/src/pages/index.tsx
+            page_tsx_path = self.project_root / "website" / "src" / "pages" / "index.tsx"
             page_tsx_patterns = [
                 (
-                    r'(src="https://img.shields.io/badge/version-)[^"-]+-b7465a(")', 
-                    r'\g<1>' + frontend_version + r'-b7465a\g<2>',
-                ),
-                (
-                    r'("downloadUrl":\s*"https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip")', 
-                    r'\g<1>' + frontend_version + r'\g<2>',
-                ),
-                (
-                    r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(" isExternal>)"', 
+                    r'(const version = ")[^"]+(")',
                     r'\g<1>' + frontend_version + r'\g<2>',
                 ),
             ]
-            self._update_file_content(page_tsx_path, page_tsx_patterns, "website/app/page.tsx")
-
-            # Update website/components/WebsiteHeader.tsx download link
-            website_header_path = self.project_root / "website" / "components" / "WebsiteHeader.tsx"
-            website_header_patterns = [
-                (
-                    r'(<Link href="https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9]+\.[0-9]+\.[0-9]+(\.zip" isExternal>)"', 
-                    r'\g<1>' + frontend_version + r'\g<2>',
-                ),
-            ]
-            self._update_file_content(
-                website_header_path, website_header_patterns, "website/components/WebsiteHeader.tsx"
-            )
-
-            # Update website/content/index.md
-            index_md_path = self.project_root / "website" / "content" / "index.md"
-            index_md_patterns = [
-                (r'(\[latest HoHatch \(v)[0-9.]+(\)\])', r'\g<1>' + frontend_version + r'\g<2>'),
-                (
-                    r"(\(https://github.com/dracoboost/hohatch/releases/latest/download/HoHatch-v)[0-9.]+(\.zip\))",
-                    r'\g<1>' + frontend_version + r'\g<2>',
-                ),
-            ]
-            self._update_file_content(index_md_path, index_md_patterns, "website/content/index.md")
+            self._update_file_content(page_tsx_path, page_tsx_patterns, "website/src/pages/index.tsx")
 
             # Update frontend/config/consts.ts
             self._update_file_content(

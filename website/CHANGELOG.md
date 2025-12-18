@@ -6,7 +6,7 @@
 
   <p align="center">
     <a href="https://github.com/dracoboost/hohatch/releases">
-      <img alt="website version" src="https://img.shields.io/badge/website%20version-1.0.7-lightgrey">
+      <img alt="website version" src="https://img.shields.io/badge/website%20version-1.1.0-lightgrey">
     </a>
     <a href="https://github.com/dracoboost/hohatch/blob/master/LICENSE">
       <img alt="license" src="https://img.shields.io/badge/license-MIT-lightgrey.svg">
@@ -19,6 +19,33 @@
 > The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [1.1.0] - 2025-12-19
+
+### Added
+
+- Implemented comprehensive SEO improvements, including `robots.txt` creation and `sitemap.xml` generation.
+- Added truncation markers (`<!-- truncate -->`) to all blog posts to resolve build warnings.
+- Defined all blog tags in `tags.yml` to fix warnings and improve tag management.
+
+### Changed
+
+- Rebuilt the entire website using Docusaurus, replacing the previous Next.js implementation.
+- Changed the homepage layout to a two-column design, featuring text on the left and a screenshot on the right.
+- Updated Navbar theme switcher to only toggle between light and dark modes, removing the "system" option.
+- Reordered Navbar items to place the search box before social icons.
+- Navbar social icons now dynamically switch between black and white versions based on the current theme (light/dark).
+- Homepage particle effects now dynamically change color based on the theme.
+
+### Fixed
+
+- Resolved a crash on the homepage (`index.tsx`) caused by `useColorMode` hook being called outside its provider. This was fixed by refactoring the component structure.
+- Corrected a Docusaurus validation error (`Bad navbar item type`) by implementing a CSS-based solution for theme-aware icons.
+
+### Removed
+
+- Deleted obsolete tutorial files that were causing build errors.
+- Removed the unused `SocialLink.tsx` component after changing the icon implementation.
 
 ## [1.0.7] - 2025-12-07
 
@@ -110,6 +137,7 @@
 - Initial commit.
 
 [unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.7...HEAD
+[1.1.0]: https://github.com/dracoboost/hohatch/compare/v1.0.7...v1.1.0
 [1.0.7]: https://github.com/dracoboost/hohatch/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/dracoboost/hohatch/compare/v1.0.5...v1.0.6
 [1.0.5]: https://github.com/dracoboost/hohatch/compare/v1.0.4...v1.0.5

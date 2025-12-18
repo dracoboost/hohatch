@@ -1,0 +1,28 @@
+/**
+ * Global styles for the website.
+ */
+
+body {
+  /* background-color: #0d1117; */
+  /* color: #f0f6fc; */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.navbar__brand {
+  margin-left: 14px;
+}
+
+.social-icon-link .social-icon {
+  height: 24px;
+  width: 24px;
+  vertical-align: middle;
+}
+
+html[data-theme='dark'] .social-icon-light {
+  display: none;
+}
+
+html[data-theme='light'] .social-icon-dark {
+  display: none;
+}

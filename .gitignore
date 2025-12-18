@@ -8,6 +8,7 @@ hohatch/
 lightbox-app/
 node_modules/
 venv/
+website_old/
 
 *.exe
 *.lnk
