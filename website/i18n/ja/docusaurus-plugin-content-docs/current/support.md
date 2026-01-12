@@ -1,13 +1,12 @@
 ---
 sidebar_position: 5
-title: サポートとコミュニティ
 ---
 
 # サポートとコミュニティ
 
 ## 🐤 MODコミュニティサーバーに参加しよう！
 
-:::note[サーバーについて]
+:::note[Discordサーバーについて]
 シャドウバース ワールズビヨンドのMOD制作コミュニティ。
 MODの共有やインストールのサポートを行っている。
 
@@ -16,8 +15,8 @@ MODの共有やインストールのサポートを行っている。
 
 ## 🐛 バグ報告
 
-バグを見つけた場合は、[X (@dracoboost)](https://x.com/dracoboost) でDMを送るか、Discordサーバーに参加して報告してほしい。
-あるいは、GitHubで機能を実装することも可能です。
+バグを見つけた場合は、[X (@dracoboost)](https://x.com/dracoboost) でDMを送るか、  
+Discordサーバーに参加して報告してほしい。
 
 ## 今後の展望
 
@@ -30,15 +29,18 @@ MODの共有やインストールのサポートを行っている。
 
   HoHatchは現在、個人で開発している。主な機能は既に実装済みだが、新しい機能を追加したいかつ、[Python](https://www.python.org)や[Next.js](https://nextjs.org)を書ける方のコントリビュートを歓迎する！
 
-  [GitHub (dracoboost/HoHatch)](https://github.com/dracoboost/hohatch)
+  [HoHatch on GitHub (dracoboost/HoHatch)](https://github.com/dracoboost/hohatch)
 
+  :::note[アプリ開発のガイドライン]
   アップデートを送信する前に、preflightチェックが通ることを確認してほしい。
-  詳細なガイドライン（英語）については、`GEMINI.md` を読んでほしい。
 
   ```sh
   # frontendディレクトリから
   cd frontend
   npm run preflight
   ```
+
+  詳細なガイドライン (英語) については、`GEMINI.md` を読んでほしい。
+  :::
 
 </details>

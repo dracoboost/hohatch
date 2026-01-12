@@ -1,12 +1,11 @@
 ---
 sidebar_position: 2
-title: インストール
 ---
 
 # インストール
 
 HoHatchを使用するには、GitHubから最新バージョンをダウンロードする。
-ダウンロードしたzipファイルを解凍し、解凍されたフォルダ内の実行ファイル `HoHatch.exe` から起動できる。
+ダウンロードしたzipファイルを[7-Zip](https://7-zip.opensource.jp)などで解凍し、解凍されたフォルダ内の実行ファイル `HoHatch.exe` から起動できる。
 
 - **[最新版HoHatchをダウンロード（直リンク）](https://github.com/dracoboost/hohatch/releases/latest)**
 

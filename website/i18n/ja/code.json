@@ -360,5 +360,12 @@
   "theme.tags.tagsPageTitle": {
     "message": "タグ",
     "description": "The title of the tag list page"
+  },
+  "homepage.tagline": {
+    "message": "ShadowverseWBのMOD作成のためのJPG/DDS変換器"
+  },
+  "homepage.metaDescription": {
+    "message": "ShadowverseWBのMOD作成のためのJPG/DDS変換器HoHatchを配布している。",
+    "description": "Meta description for the homepage"
   }
 }

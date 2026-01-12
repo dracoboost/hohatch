@@ -1,8 +1,9 @@
 import DocusaurusLink from "@docusaurus/Link";
-import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import HomepageParticles from "../components/HomepageParticles";
 import Layout from "@theme/Layout";
 import React from "react";
-import HomepageParticles from "../components/HomepageParticles";
+import Translate, { translate } from "@docusaurus/Translate";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
 function HoHatchGetStarted() {
   const version = "1.2.2";
@@ -29,7 +30,9 @@ function HoHatchGetStarted() {
         </a>
       </div>
       <p className="text-muted-foreground mt-14 max-w-md text-lg sm:text-xl md:max-w-3xl md:text-2xl">
-        JPG/DDS image converter for Shadowverse: Worlds Beyond
+        <Translate id="homepage.tagline">
+          a JPG/DDS converter for modding ShadowverseWB
+        </Translate>
       </p>
       {/* Container for buttons with increased margin and gap */}
       <div className="mt-12 flex flex-wrap gap-4">
@@ -62,22 +65,20 @@ function HomepageContent() {
           />
         </div>
       </div>
-      {/* <div className="flex flex-col border">
-        <div className="w-32 h-32 bg-red-500">A</div>
-        <div className="w-32 h-32 bg-blue-500">B</div>
-        <div className="test">TEST</div>
-      </div> */}
     </main>
   );
 }
 
 export default function Home(): React.ReactElement {
   const { siteConfig } = useDocusaurusContext();
+  const metaDescription = translate({
+    id: "homepage.metaDescription",
+    message: "a JPG/DDS converter for modding ShadowverseWB",
+    description: "Meta description for the homepage",
+  });
+
   return (
-    <Layout
-      title={`${siteConfig.title}`}
-      description="JPG/DDS image converter for Shadowverse: Worlds Beyond"
-    >
+    <Layout title={`${siteConfig.title}`} description={metaDescription}>
       <HomepageContent />
     </Layout>
   );

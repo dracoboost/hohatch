@@ -25,9 +25,9 @@ Click the image name (`XXXXXXXX` part) to multi-select files. Once multiple file
 * **Save**: Batch export selected images as JPGs to a folder you choose.
 * **Delete**: Batch delete selected images.
 
-:::danger
-There is no "undo" function, so please be careful when deleting.
-:::
+  :::danger[deleating]
+  There is no "undo" function, so please be careful when deleting.
+  :::
 
 ## Settings Screen (accessible via the gear icon)
 
