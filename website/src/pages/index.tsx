@@ -1,8 +1,8 @@
-import React from 'react';
-import Layout from '@theme/Layout';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import DocusaurusLink from '@docusaurus/Link';
-import HomepageParticles from '../components/HomepageParticles';
+import DocusaurusLink from "@docusaurus/Link";
+import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
+import Layout from "@theme/Layout";
+import React from "react";
+import HomepageParticles from "../components/HomepageParticles";
 
 function HoHatchGetStarted() {
   const version = "1.2.2";
@@ -13,7 +13,7 @@ function HoHatchGetStarted() {
         <img
           alt="HoHatch Logo"
           src="/img/logos/hohatch-logo.png"
-          style={{ width: "420px", height: "auto", maxWidth: "80vw" }}
+          className="w-[427px] aspect-[427/73] max-w-[80vw]"
         />
         <a
           className="block"
@@ -23,9 +23,8 @@ function HoHatchGetStarted() {
         >
           <img
             alt="version"
-            height={20}
             src={`https://img.shields.io/badge/version-${version}-b7465a`}
-            width={90}
+            className="w-[90px] h-[20px]"
           />
         </a>
       </div>
@@ -49,20 +48,25 @@ function HomepageContent() {
   return (
     <main className="container md:px-5 flex h-screen items-center justify-center">
       <HomepageParticles />
-      <div className="relative z-10 flex w-full max-w-screen-lg flex-row md:flex-row items-center justify-between">
+      <div className="relative z-10 flex w-full max-w-screen-lg flex-row sm:flex-row items-center justify-between">
         {/* Left Column (Text Content) */}
-        <div className="flex flex-col items-start text-left md:w-1/2">
+        <div className="flex flex-col md:w-1/2">
           <HoHatchGetStarted />
         </div>
         {/* Right Column (Image) */}
-        <div className="mt-8 flex justify-center md:mt-0 md:w-1/2">
+        <div className="mt-8 flex md:mt-0 w-1/2 md:w-1/2">
           <img
             src="/img/screenshot/hohatch-screenshot-v1.1.0.png"
             alt="HoHatch Screenshot v1.1.0"
-            className="max-h-[400px] w-auto rounded-lg shadow-lg"
+            className="w-[632px] aspect-[632/340]"
           />
         </div>
       </div>
+      {/* <div className="flex flex-col border">
+        <div className="w-32 h-32 bg-red-500">A</div>
+        <div className="w-32 h-32 bg-blue-500">B</div>
+        <div className="test">TEST</div>
+      </div> */}
     </main>
   );
 }

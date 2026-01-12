@@ -2,25 +2,38 @@
 sidebar_position: 4
 ---
 
-# Features
+The application consists of two main screens: the Main screen and the Settings screen.
 
-### 🖼️ Main Screen
+## Main Screen
 
-On the main screen, thumbnails of both "dumped" DDS images (extracted from the game) and "injected" DDS images (converted from JPGs for modding) are displayed.  
-You can perform individual actions on each image or select multiple for batch processing. The table below summarizes the key features available for managing these images.
+The main screen provides image conversion and management features.
 
-| Feature | Description |
-|---|---|
-| Convert to JPG | Convert a single DDS image to JPG format and save it to a chosen location. |
-| Replace DDS | Replace an existing DDS file with a new JPG image, converting it to DDS during the process. |
-| Delete DDS | Permanently delete a single DDS file from its respective folder. |
+* **Dumped DDS images**: Original textures extracted from the game using [Special K](https://www.special-k.info/).
+* **Injected DDS images**: Modified textures ready to be injected into the game. (The destination is determined by the filename `XXXXXXXX.dds`)
 
-### ⚙️ Settings Screen
+When you hover over a DDS image, the following action buttons appear:
 
-On the settings screen, you can configure various settings for the application.
+* **JPG → DDS**: Converts your edited JPG into the DDS format required by the game and automatically places it into the `inject/textures` folder.
+* **DDS → JPG**: Converts dumped DDS files into editable JPG images so you can open them in your favorite image editor.
 
-| Feature | Description |
-|---|---|
-| Language Selection | Toggle between English (en) and Japanese (ja) for the application's UI. |
-| Special K Folder Path | Specify the installation directory of Special K. Includes a "Download" button to easily download the Special K setup application. |
-| DDS to JPG Output Resolution | Set the desired height for JPG output when converting DDS files. The corresponding width is automatically calculated (53/64 of the height) and displayed. |
+### Batch operations
+
+Click the image name (`XXXXXXXX` part) to multi-select files. Once multiple files are selected, the following buttons appear:
+
+* **Save**: Batch export selected images as JPGs to a folder you choose.
+* **Delete**: Batch delete selected images.
+  *There is no "undo" function, so please be careful when deleting.*
+
+## Settings Screen (accessible via the gear icon)
+
+From top to bottom:
+
+* **Language**: Choose between Japanese or English.
+* **Special K folder path**: Specify the folder where the Special K executable is located.
+* **Saved JPG size**: Option to save card images with 53:64 aspect ratio (recommended for cards).
+* **System folders**: Quick access buttons to open the cache and log folders.
+  *(Useful for troubleshooting — feel free to send them to me via [Discord (HoHatch)](https://discord.gg/fEUMrTGb23) or [X (@dracoboost)](https://x.com/dracoboost) if you encounter issues)*
+
+## Tips
+
+If DDS images do not display thumbnails/previews in Windows Explorer, installing a DDS-compatible image viewer/editor such as [paint.net](https://www.getpaint.net/) usually resolves the issue.

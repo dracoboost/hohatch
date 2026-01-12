@@ -2,6 +2,10 @@
  * Global styles for the website.
  */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
   /* background-color: #0d1117; */
   /* color: #f0f6fc; */
