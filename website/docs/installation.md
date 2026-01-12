@@ -12,4 +12,3 @@ Extract the downloaded zip file using [7-Zip](https://www.7-zip.org) or similar 
 :::note[Older versions]
 For older versions, visit the [Releases page](https://github.com/dracoboost/hohatch/releases).
 :::
-
