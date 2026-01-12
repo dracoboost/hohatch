@@ -2,6 +2,8 @@
 sidebar_position: 4
 ---
 
+# Features
+
 The application consists of two main screens: the Main screen and the Settings screen.
 
 ## Main Screen
@@ -22,7 +24,10 @@ Click the image name (`XXXXXXXX` part) to multi-select files. Once multiple file
 
 * **Save**: Batch export selected images as JPGs to a folder you choose.
 * **Delete**: Batch delete selected images.
-  *There is no "undo" function, so please be careful when deleting.*
+
+:::danger
+There is no "undo" function, so please be careful when deleting.
+:::
 
 ## Settings Screen (accessible via the gear icon)
 
@@ -32,8 +37,12 @@ From top to bottom:
 * **Special K folder path**: Specify the folder where the Special K executable is located.
 * **Saved JPG size**: Option to save card images with 53:64 aspect ratio (recommended for cards).
 * **System folders**: Quick access buttons to open the cache and log folders.
-  *(Useful for troubleshooting — feel free to send them to me via [Discord (HoHatch)](https://discord.gg/fEUMrTGb23) or [X (@dracoboost)](https://x.com/dracoboost) if you encounter issues)*
 
-## Tips
+:::note[If you encounter a problem]
+If you encounter a problem, looking at the logs can help with troubleshooting.
+If you can't resolve it, feel free to contact me on [Discord (HoHatch)](https://discord.gg/fEUMrTGb23) or [X (@dracoboost)](https://x.com/dracoboost).
+:::
 
-If DDS images do not display thumbnails/previews in Windows Explorer, installing a DDS-compatible image viewer/editor such as [paint.net](https://www.getpaint.net/) usually resolves the issue.
+:::tip[DDS Image Previews in Explorer]
+If DDS image previews do not appear in Explorer, installing a DDS-compatible image viewer/editor like [paint.net](https://www.getpaint.net/) will usually resolve the issue.
+:::

@@ -34,7 +34,11 @@ This section explains how to convert a JPG image to DDS and inject it into the g
 ![Inject JPG with HoHatch](/img/guide/inject-jpg-with-hohatch.jpg)
 
 Just click the "Replace" button
-(If images don't load, click the "Reload" button)
+
+:::info[About Reloading]
+If images don't load, click the "Reload" button
+:::
+
 
 ## ⬅️ Extracting JPGs (Getting Game Assets)
 
@@ -51,4 +55,8 @@ This section explains how to extract in-game images as JPG files.
 ![Convert to JPG with HoHatch](/img/guide/convert-to-jpg-with-hohatch.jpg)
 
 Just click the "Convert to JPG" button
-(If images don't load, click the "Reload" button)
+
+:::info[About Reloading]
+If images don't load, click the "Reload" button
+:::
+
