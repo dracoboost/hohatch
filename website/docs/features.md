@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # Features
 
-The application consists of two main screens: the Main screen and the Settings screen.
+The HoHatch application consists of two main screens: the main screen and the settings screen.
 
 ## Main Screen
 

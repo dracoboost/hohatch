@@ -161,7 +161,7 @@ class Api:
 
     def open_dump_folder(self):
         logging.debug("open_dump_folder called")
-        dump_folder_path = self.backend.image_service.get_dump_folder_path()
+        dump_folder_path = self.backend.get_dump_folder_path()
         if not dump_folder_path:
             return {"success": False, "error": "Dump folder not found"}
         try:
@@ -172,7 +172,7 @@ class Api:
 
     def open_inject_folder(self):
         logging.debug("open_inject_folder called")
-        inject_folder_path = self.backend.image_service.get_inject_folder_path()
+        inject_folder_path = self.backend.get_inject_folder_path()
         if not inject_folder_path:
             return {"success": False, "error": "Inject folder not found"}
         try:

@@ -9,6 +9,6 @@ HoHatchを使用するには、GitHubから最新バージョンをダウンロ�
 
 - **[最新版HoHatchをダウンロード（直リンク）](https://github.com/dracoboost/hohatch/releases/latest)**
 
-:::info[以前のバージョン]
+:::note[以前のバージョン]
 以前のバージョンは、[リリースページ](https://github.com/dracoboost/hohatch/releases)に置いている。
 :::

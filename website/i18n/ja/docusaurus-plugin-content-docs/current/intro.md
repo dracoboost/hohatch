@@ -23,7 +23,7 @@ HoHatchは、このワークフローの画像変換とファイル管理の部�
 
 ![HoHatchアプリケーションのスクリーンショット](/img/screenshot/hohatch-screenshot-v1.1.0.png)
 
-:::info[Android, iOSでのMODはある？]
+:::note[Android, iOSでのMODはある？]
 一般的に、モバイルOSは強力なセキュリティ制限があるため、アプリのインジェクションは非常に困難である。そのため、現在AndroidおよびiOSでのビヨンドのMOD制作は行われていない。
 :::
 

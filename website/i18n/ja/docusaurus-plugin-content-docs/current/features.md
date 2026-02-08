@@ -37,12 +37,11 @@ DDS画像にカーソルを合わせると、以下のアクションボタン�
 * **Special Kフォルダパス**: Special Kの実行ファイルがあるフォルダを指定します。
 * **保存するJPGのサイズ**: カード画像を53:64のアスペクト比で保存するオプション (カードの場合はこのアスペクト比が推奨)。
 * **システムフォルダ**: キャッシュフォルダとログフォルダを素早く開くためのボタン。
-  :::info
-  トラブルシューティングに役立つ。問題が発生した場合は、[Discord (HoHatch)](https://discord.gg/fEUMrTGb23) または [X (@dracoboost)](https://x.com/dracoboost) に連絡してほしい。
-  :::
 
-<details>
-  <summary>エクスプローラーでDDS画像のプレビュー</summary>
+:::note[問題が発生した場合]
+トラブルシューティングに役立つ。問題が発生した場合は、[Discord (HoHatch)](https://discord.gg/fEUMrTGb23) または [X (@dracoboost)](https://x.com/dracoboost) に連絡してほしい。
+:::
 
-  エクスプローラーでDDS画像のプレビューが表示されない場合、[paint.net](https://www.getpaint.net/) のようなDDS互換の画像編集ソフトをインストールすると、プレビューが表示されるようになる。
-</details>
+:::tip[エクスプローラーでDDS画像のプレビュー]
+エクスプローラーでDDS画像のプレビューが表示されない場合、[paint.net](https://www.getpaint.net/) のようなDDS互換の画像編集ソフトをインストールすると、プレビューが表示されるようになる。
+:::

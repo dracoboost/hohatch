@@ -13,7 +13,7 @@ sidebar_position: 3
 ![シャドウバースWBにJPGをインジェクト](/img/guide/inject-jpg-into-shadowversewb.jpg)
 
 1. インジェクト用のJPGを準備する
-2. [Special K](https://www.special-k.info/) を使ってシャドウバースWBを起動し、DDSを抽出する*
+2. [Special K](https://www.special-k.note/) を使ってシャドウバースWBを起動し、DDSを抽出する*
 3. JPGをDDSとしてインジェクトする**
 4. 以上！
 
@@ -35,7 +35,7 @@ sidebar_position: 3
 
 「置換」ボタンをクリックする
 
-:::info[リロードについて]
+:::note[リロードについて]
 画像が読み込まれない場合は、「リロード」ボタンをクリックする
 :::
 
@@ -55,6 +55,6 @@ sidebar_position: 3
 
 「JPGに変換」ボタンをクリックする
 
-:::info[リロードについて]
+:::note[リロードについて]
 画像が読み込まれない場合は、「リロード」ボタンをクリックする
 :::

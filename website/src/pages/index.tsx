@@ -6,7 +6,7 @@ import Translate, { translate } from "@docusaurus/Translate";
 import useDocusaurusContext from "@docusaurus/useDocusaurusContext";
 
 function HoHatchGetStarted() {
-  const version = "1.2.2";
+  const version = "1.2.3";
 
   return (
     <div className="flex flex-col items-center py-8 text-center">
