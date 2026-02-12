@@ -69,27 +69,22 @@ const config: Config = {
         theme: {
           customCss: ["./src/css/custom.css"],
         },
-      } satisfies Preset.Options,
-      "@docusaurus/preset-classic",
-      {
         gtag: {
           trackingID: "G-ZMBEYWE7BW",
           anonymizeIP: true,
         },
-      },
+      } satisfies Preset.Options,
     ],
   ],
   plugins: [
     async function myPlugin(context, options) {
       return {
         name: "docusaurus-tailwindcss",
-        // Removed configurePostCss as it will be handled by postcss.config.js
       };
     },
   ],
   themes: ["@easyops-cn/docusaurus-search-local"],
   themeConfig: {
-    // Replace with your project's social card
     image: "img/og/hohatch-og-1200x630.png",
     colorMode: {
       defaultMode: "dark",
