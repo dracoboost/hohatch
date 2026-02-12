@@ -70,6 +70,13 @@ const config: Config = {
           customCss: ["./src/css/custom.css"],
         },
       } satisfies Preset.Options,
+      "@docusaurus/preset-classic",
+      {
+        gtag: {
+          trackingID: "G-ZMBEYWE7BW",
+          anonymizeIP: true,
+        },
+      },
     ],
   ],
   plugins: [
