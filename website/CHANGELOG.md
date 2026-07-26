@@ -20,6 +20,13 @@
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-07-27
+
+### Fixed
+
+- Fixed a Vercel build failure caused by missing `@docusaurus/faster` dependency when Docusaurus Faster options were enabled.
+- Fixed an MDX compilation error on blog posts by replacing HTML truncation comments (`<!-- truncate -->`) with JSX-style comments (`{/* truncate */}`).
+
 ## [1.1.0] - 2025-12-19
 
 ### Added
@@ -136,7 +143,8 @@
 
 - Initial commit.
 
-[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.0.7...HEAD
+[unreleased]: https://github.com/dracoboost/hohatch/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/dracoboost/hohatch/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/dracoboost/hohatch/compare/v1.0.7...v1.1.0
 [1.0.7]: https://github.com/dracoboost/hohatch/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/dracoboost/hohatch/compare/v1.0.5...v1.0.6
