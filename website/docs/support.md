@@ -21,16 +21,16 @@ or join our Discord server to report it.
 ## Future Plans
 
 - DDS ↔ PNG conversion is not yet implemented.
-  When using [Texconv](https://github.com/microsoft/DirectXTex) with PNG input, it often produces completely black output.
+  When using [Texconv](https://github.com/microsoft/DirectXTex) with PNG input, it often produces completely black output.  
+  Fixing this issue would likely require a fundamental change  
+  to the conversion pipeline, so it has been postponed for now.
 
   <details>
     <summary>What is Texconv?</summary>
+
     Texconv is a command-line utility developed as part of the Microsoft DirectXTex library.  
     It is primarily used for converting and processing texture files for use in Direct3D applications.
   </details>
-
-  Fixing this issue would likely require a fundamental change  
-  to the conversion pipeline, so it has been postponed for now.
 
 <details>
   <summary>For Contributors</summary>

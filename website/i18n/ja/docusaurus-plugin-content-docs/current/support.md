@@ -24,6 +24,13 @@ Discordサーバーに参加して報告してほしい。
   画像変換器 [Texconv](https://github.com/microsoft/DirectXTex) をPNG入力で使用すると、しばしば真っ黒な出力が生成されてしまう。
   この問題を修正するには、変換パイプラインの根本的な変更が必要になる可能性が高いため、現在は行っていない。
 
+  <details>
+    <summary>Texconvとは？</summary>
+
+    TexconvはDirectXTexライブラリの一部として開発されたCLIソフトウェアである。  
+    主にDirect3Dを利用したソフトウェアにおいて、テクスチャファイルを適切な形式に変換するために用いられる。
+  </details>
+
 <details>
   <summary>コントリビューターの方へ</summary>
 
@@ -32,7 +39,7 @@ Discordサーバーに参加して報告してほしい。
   [HoHatch on GitHub (dracoboost/HoHatch)](https://github.com/dracoboost/hohatch)
 
   :::note[アプリ開発のガイドライン]
-  アップデートを送信する前に、preflightチェックが通ることを確認してほしい。
+  プルリクエストを送る前に、preflightチェックが通ることを確認してほしい。
 
   ```sh
   # frontendディレクトリから
@@ -40,6 +47,6 @@ Discordサーバーに参加して報告してほしい。
   npm run preflight
   ```
 
-  詳細なガイドライン (英語) については、`GEMINI.md` を読んでほしい。
+  詳細なガイドラインについては、`GEMINI.md` (英語) を読んでほしい。
   :::
 </details>
